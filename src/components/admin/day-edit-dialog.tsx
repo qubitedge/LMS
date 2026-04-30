@@ -20,10 +20,12 @@ interface DayEditDialogProps {
     tutor_name: string | null;
     video_url: string | null;
     resource_link: string | null;
+    sub_topics?: string | null;
   };
+  children?: React.ReactNode;
 }
 
-export default function DayEditDialog({ day }: DayEditDialogProps) {
+export default function DayEditDialog({ day, children }: DayEditDialogProps) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -68,9 +70,11 @@ export default function DayEditDialog({ day }: DayEditDialogProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger 
         render={
-          <button className="p-3 rounded-xl bg-white border border-slate-100 text-[#7182C7] hover:text-[#4A5DB5] hover:border-[#4A5DB5]/30 transition-all shadow-sm">
-            <Edit3 size={18} />
-          </button>
+          children || (
+            <button className="p-3 rounded-xl bg-white border border-slate-100 text-[#7182C7] hover:text-[#4A5DB5] hover:border-[#4A5DB5]/30 transition-all shadow-sm">
+              <Edit3 size={18} />
+            </button>
+          )
         }
       />
       <DialogContent className="sm:max-w-[600px] p-0 overflow-hidden rounded-[3rem] border-none bg-white shadow-2xl">
