@@ -103,7 +103,7 @@ export default function DashboardContent({
               hasAttemptedTodayQuiz={hasAttemptedTodayQuiz}
             />
 
-            {/* My Learning Section */}
+            {/* My Previous Works Section */}
             {showPreviousWorks && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -115,7 +115,7 @@ export default function DashboardContent({
                   <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600">
                     <Sparkles size={20} />
                   </div>
-                  <h2 className="text-2xl font-black text-[#1A1A2E]">My Learning</h2>
+                  <h2 className="text-2xl font-black text-[#1A1A2E]">My Previous Works</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

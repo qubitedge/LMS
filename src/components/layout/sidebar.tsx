@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const internNav = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/progress', label: 'Progress', icon: TrendingUp },
+  { href: '/progress', label: 'My Learning', icon: TrendingUp },
   { href: '/attendance', label: 'Attendance', icon: CalendarCheck },
   { href: '/tasks', label: 'Tasks', icon: ClipboardList },
   { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },

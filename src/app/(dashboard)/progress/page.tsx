@@ -36,7 +36,9 @@ export default async function ProgressPage() {
   const isAdmin = profile?.role === 'admin';
 
   // Process data
-  const weeks: WeekWithDays[] = (weeksData || []).map((week: any) => ({
+  const weeks: WeekWithDays[] = (weeksData || [])
+    .filter((week: any) => week.title !== 'Capstone Project')
+    .map((week: any) => ({
     ...week,
     days: (week.days || []).map((day: any): DayWithStatus => {
       const quizId = day.quizzes?.[0]?.id;
