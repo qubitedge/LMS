@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
@@ -134,9 +135,19 @@ export default function Sidebar({ user, completedDays }: SidebarProps) {
                 <motion.div 
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 4, repeat: Infinity }}
-                  className="w-14 h-14 rounded-[1.25rem] flex items-center justify-center text-white text-lg font-black shadow-2xl"
-                  style={{ background: `linear-gradient(135deg, ${accentColor}, ${activeColor})` }}>
-                  {user?.full_name?.charAt(0) || 'U'}
+                  className="w-14 h-14 rounded-[1.25rem] flex items-center justify-center text-white text-lg font-black shadow-2xl overflow-hidden"
+                  style={{ background: user?.avatar_url ? 'transparent' : `linear-gradient(135deg, ${accentColor}, ${activeColor})` }}>
+                  {user?.avatar_url ? (
+                    <Image 
+                      src={user.avatar_url} 
+                      alt={user.full_name || 'Profile'} 
+                      width={56} 
+                      height={56} 
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    user?.full_name?.charAt(0) || 'U'
+                  )}
                 </motion.div>
                 {/* Online Indicator */}
                 <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 border-4 border-white rounded-full shadow-sm">
