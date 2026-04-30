@@ -22,7 +22,8 @@ export async function POST(req: Request) {
     if (quizError || !quiz) return NextResponse.json({ message: 'Quiz not found' }, { status: 404 });
 
     // 2. Validate Date Lock (Server-side enforcement)
-    const dayDate = quiz.days?.date;
+    const daysData = quiz.days as any;
+    const dayDate = Array.isArray(daysData) ? daysData[0]?.date : daysData?.date;
     if (!dayDate || !canAttemptQuiz(dayDate)) {
       return NextResponse.json({ message: 'This quiz is not available for attempt today.' }, { status: 403 });
     }
