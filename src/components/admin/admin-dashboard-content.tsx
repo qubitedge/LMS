@@ -37,7 +37,7 @@ export default function AdminDashboardContent({
       if (!res.ok) throw new Error('Failed to update setting');
       
       setShowWorks(checked);
-      toast.success(`Previous Works section is now ${checked ? 'visible' : 'hidden'} to interns.`);
+      toast.success(`My Learning section is now ${checked ? 'visible' : 'hidden'} to interns.`);
     } catch (error) {
       toast.error('Failed to update setting');
     } finally {
@@ -159,7 +159,7 @@ export default function AdminDashboardContent({
                       {showWorks ? <Eye size={20} /> : <EyeOff size={20} />}
                     </div>
                     <div>
-                      <p className="font-black text-[#1A1A2E] text-sm">Previous Works</p>
+                      <p className="font-black text-[#1A1A2E] text-sm">My Learning</p>
                       <p className="text-[10px] font-bold text-[#7182C7]">Toggle visibility for interns</p>
                     </div>
                   </div>
