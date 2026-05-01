@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
 import bgImage from '@/assets/wmremove-transformed.png';
 
 export default function LoginPage() {
@@ -113,9 +114,12 @@ export default function LoginPage() {
                 <Label htmlFor="password" className="text-xs font-black uppercase tracking-widest text-[#1A1A2E]/60">
                   Password
                 </Label>
-                <button type="button" className="text-xs font-black text-blue-500 hover:text-blue-600 transition-colors">
+                <Link 
+                  href="/forgot-password" 
+                  className="text-xs font-black text-blue-500 hover:text-blue-600 transition-colors"
+                >
                   Forgot Password?
-                </button>
+                </Link>
               </div>
               <Input 
                 id="password" 
