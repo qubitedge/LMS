@@ -10,6 +10,8 @@ import { toast } from 'sonner';
 import { Loader2, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
+import bgImage from '@/assets/wmremove-transformed.png';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -52,85 +54,102 @@ export default function ForgotPasswordPage() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: 'easeOut' }}
-      className="flex flex-col w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl overflow-hidden p-10 lg:p-16 space-y-8"
+      className="flex flex-col md:flex-row w-full bg-white rounded-[2.5rem] shadow-2xl overflow-hidden min-h-[620px]"
     >
-      <div className="flex flex-col items-center text-center space-y-4">
-        <motion.div
-          initial={{ opacity: 0, rotate: -10 }}
-          animate={{ opacity: 1, rotate: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-        >
-          <QubitedgeLogo size={64} />
-        </motion.div>
-        
-        {!isSubmitted ? (
-          <>
-            <div className="space-y-2">
-              <h1 className="text-3xl font-black text-[#1A1A2E]" style={{ fontFamily: 'Playfair Display' }}>
-                Forgot Password?
-              </h1>
-              <p className="text-sm font-bold text-[#7182C7] max-w-[300px]">
-                Enter your email address and we'll send you a link to reset your password.
-              </p>
-            </div>
+      {/* Left Side: Image & Message */}
+      <div className="hidden md:flex md:w-1/2 relative overflow-hidden group">
+        <Image 
+          src={bgImage}
+          alt="Auth Background"
+          fill
+          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          priority
+        />
+        <div className="absolute inset-0 bg-black/5" />
+      </div>
 
-            <form onSubmit={handleResetRequest} className="w-full space-y-6 text-left">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-xs font-black uppercase tracking-widest text-[#1A1A2E]/60 ml-1">
-                  Email Address
-                </Label>
-                <Input 
-                  id="email" 
-                  type="email" 
-                  placeholder="name@qubitedge.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 font-bold px-6 focus:ring-4 focus:ring-blue-50 transition-all"
-                  disabled={isLoading}
-                />
+      {/* Right Side: Form */}
+      <div className="w-full md:w-1/2 p-10 lg:p-16 flex flex-col justify-center">
+        <div className="max-w-md mx-auto w-full space-y-8 text-center">
+          <div className="flex flex-col items-center text-center space-y-4">
+            <motion.div
+              initial={{ opacity: 0, rotate: -10 }}
+              animate={{ opacity: 1, rotate: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+            >
+              <QubitedgeLogo size={64} />
+            </motion.div>
+            
+            {!isSubmitted ? (
+              <>
+                <div className="space-y-2">
+                  <h1 className="text-3xl font-black text-[#1A1A2E]" style={{ fontFamily: 'Playfair Display' }}>
+                    Forgot Password?
+                  </h1>
+                  <p className="text-sm font-bold text-[#7182C7] max-w-[300px] mx-auto">
+                    Enter your email address and we&apos;ll send you a link to reset your password.
+                  </p>
+                </div>
+
+                <form onSubmit={handleResetRequest} className="w-full space-y-6 text-left">
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-xs font-black uppercase tracking-widest text-[#1A1A2E]/60 ml-1">
+                      Email Address
+                    </Label>
+                    <Input 
+                      id="email" 
+                      type="email" 
+                      placeholder="name@qubitedge.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 font-bold px-6 focus:ring-4 focus:ring-blue-50 transition-all"
+                      disabled={isLoading}
+                    />
+                  </div>
+
+                  <Button 
+                    type="submit" 
+                    className="w-full h-14 rounded-2xl bg-[#4A5DB5] hover:bg-[#2238A4] text-white font-black text-lg shadow-xl shadow-blue-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] mt-4" 
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        Sending Link...
+                      </>
+                    ) : (
+                      'Send Reset Link'
+                    )}
+                  </Button>
+                </form>
+              </>
+            ) : (
+              <div className="space-y-6 py-4">
+                <div className="space-y-2">
+                  <h1 className="text-3xl font-black text-[#1A1A2E]" style={{ fontFamily: 'Playfair Display' }}>
+                    Check Your Email
+                  </h1>
+                  <p className="text-sm font-bold text-[#7182C7]">
+                    We&apos;ve sent a password reset link to <span className="text-[#1A1A2E] font-black">{email}</span>.
+                  </p>
+                </div>
+                <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100">
+                  <p className="text-xs text-blue-600 font-bold">
+                    Didn&apos;t receive the email? Check your spam folder or try again in a few minutes.
+                  </p>
+                </div>
               </div>
+            )}
 
-              <Button 
-                type="submit" 
-                className="w-full h-14 rounded-2xl bg-[#4A5DB5] hover:bg-[#2238A4] text-white font-black text-lg shadow-xl shadow-blue-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] mt-4" 
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Sending Link...
-                  </>
-                ) : (
-                  'Send Reset Link'
-                )}
-              </Button>
-            </form>
-          </>
-        ) : (
-          <div className="space-y-6 py-4">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-black text-[#1A1A2E]" style={{ fontFamily: 'Playfair Display' }}>
-                Check Your Email
-              </h1>
-              <p className="text-sm font-bold text-[#7182C7]">
-                We've sent a password reset link to <span className="text-[#1A1A2E] font-black">{email}</span>.
-              </p>
-            </div>
-            <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100">
-              <p className="text-xs text-blue-600 font-bold">
-                Didn't receive the email? Check your spam folder or try again in a few minutes.
-              </p>
-            </div>
+            <Link 
+              href="/login" 
+              className="flex items-center justify-center text-sm font-black text-[#7182C7] hover:text-[#1A1A2E] transition-colors pt-4 group"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
+              Back to Login
+            </Link>
           </div>
-        )}
-
-        <Link 
-          href="/login" 
-          className="flex items-center text-sm font-black text-[#7182C7] hover:text-[#1A1A2E] transition-colors pt-4 group"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
-          Back to Login
-        </Link>
+        </div>
       </div>
     </motion.div>
   );

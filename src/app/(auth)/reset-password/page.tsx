@@ -11,6 +11,9 @@ import { toast } from 'sonner';
 import { Loader2, Lock } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+import Image from 'next/image';
+import bgImage from '@/assets/wmremove-transformed.png';
+
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -63,72 +66,89 @@ export default function ResetPasswordPage() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: 'easeOut' }}
-      className="flex flex-col w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl overflow-hidden p-10 lg:p-16 space-y-8"
+      className="flex flex-col md:flex-row w-full bg-white rounded-[2.5rem] shadow-2xl overflow-hidden min-h-[620px]"
     >
-      <div className="flex flex-col items-center text-center space-y-4">
-        <motion.div
-          initial={{ opacity: 0, rotate: -10 }}
-          animate={{ opacity: 1, rotate: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-        >
-          <QubitedgeLogo size={64} />
-        </motion.div>
-        
-        <div className="space-y-2">
-          <h1 className="text-3xl font-black text-[#1A1A2E]" style={{ fontFamily: 'Playfair Display' }}>
-            Reset Password
-          </h1>
-          <p className="text-sm font-bold text-[#7182C7] max-w-[300px]">
-            Please enter your new password below.
-          </p>
+      {/* Left Side: Image & Message */}
+      <div className="hidden md:flex md:w-1/2 relative overflow-hidden group">
+        <Image 
+          src={bgImage}
+          alt="Auth Background"
+          fill
+          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          priority
+        />
+        <div className="absolute inset-0 bg-black/5" />
+      </div>
+
+      {/* Right Side: Form */}
+      <div className="w-full md:w-1/2 p-10 lg:p-16 flex flex-col justify-center">
+        <div className="max-w-md mx-auto w-full space-y-8 text-center">
+          <div className="flex flex-col items-center text-center space-y-4">
+            <motion.div
+              initial={{ opacity: 0, rotate: -10 }}
+              animate={{ opacity: 1, rotate: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+            >
+              <QubitedgeLogo size={64} />
+            </motion.div>
+            
+            <div className="space-y-2">
+              <h1 className="text-3xl font-black text-[#1A1A2E]" style={{ fontFamily: 'Playfair Display' }}>
+                Reset Password
+              </h1>
+              <p className="text-sm font-bold text-[#7182C7] max-w-[300px] mx-auto">
+                Please enter your new password below.
+              </p>
+            </div>
+
+            <form onSubmit={handleResetPassword} className="w-full space-y-6 text-left">
+              <div className="space-y-2">
+                <Label htmlFor="password" title="New Password" />
+                <div className="relative">
+                  <Input 
+                    id="password" 
+                    type="password" 
+                    placeholder="New Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 font-bold px-6 focus:ring-4 focus:ring-blue-50 transition-all"
+                    disabled={isLoading}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword" title="Confirm Password" />
+                <div className="relative">
+                  <Input 
+                    id="confirmPassword" 
+                    type="password" 
+                    placeholder="Confirm New Password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 font-bold px-6 focus:ring-4 focus:ring-blue-50 transition-all"
+                    disabled={isLoading}
+                  />
+                </div>
+              </div>
+
+              <Button 
+                type="submit" 
+                className="w-full h-14 rounded-2xl bg-[#4A5DB5] hover:bg-[#2238A4] text-white font-black text-lg shadow-xl shadow-blue-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] mt-4" 
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Updating...
+                  </>
+                ) : (
+                  'Update Password'
+                )}
+              </Button>
+            </form>
+          </div>
         </div>
-
-        <form onSubmit={handleResetPassword} className="w-full space-y-6 text-left">
-          <div className="space-y-2">
-            <Label htmlFor="password" title="New Password" />
-            <div className="relative">
-              <Input 
-                id="password" 
-                type="password" 
-                placeholder="New Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 font-bold px-6 focus:ring-4 focus:ring-blue-50 transition-all"
-                disabled={isLoading}
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword" title="Confirm Password" />
-            <div className="relative">
-              <Input 
-                id="confirmPassword" 
-                type="password" 
-                placeholder="Confirm New Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 font-bold px-6 focus:ring-4 focus:ring-blue-50 transition-all"
-                disabled={isLoading}
-              />
-            </div>
-          </div>
-
-          <Button 
-            type="submit" 
-            className="w-full h-14 rounded-2xl bg-[#4A5DB5] hover:bg-[#2238A4] text-white font-black text-lg shadow-xl shadow-blue-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] mt-4" 
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Updating...
-              </>
-            ) : (
-              'Update Password'
-            )}
-          </Button>
-        </form>
       </div>
     </motion.div>
   );

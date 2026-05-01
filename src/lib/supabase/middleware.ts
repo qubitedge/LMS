@@ -35,8 +35,13 @@ export async function updateSession(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
-  // Allow login page for unauthenticated users
-  if (!user && pathname !== '/login') {
+  // Allow auth pages for unauthenticated users
+  const isAuthPage = pathname === '/login' || 
+                    pathname === '/forgot-password' || 
+                    pathname === '/reset-password' ||
+                    pathname.startsWith('/auth/');
+
+  if (!user && !isAuthPage) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     return NextResponse.redirect(url);
