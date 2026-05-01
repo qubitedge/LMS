@@ -146,7 +146,13 @@ export default function LoginPage() {
           
           <div className="pt-4 text-center">
             <p className="text-sm font-bold text-[#7182C7]">
-              Don't have an account? <span className="text-[#1A1A2E]">Contact your administrator.</span>
+              Don&apos;t have an account?{' '}
+              <a 
+                href="mailto:likhithmanakala@gmail.com" 
+                className="text-[#1A1A2E] hover:text-[#4A5DB5] transition-colors cursor-pointer underline decoration-dotted underline-offset-4"
+              >
+                Contact your administrator.
+              </a>
             </p>
           </div>
         </div>
