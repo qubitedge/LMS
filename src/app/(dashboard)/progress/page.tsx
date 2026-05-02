@@ -35,8 +35,14 @@ export default async function ProgressPage() {
     .eq('is_active', true)
     .order('created_at', { ascending: true });
 
-  // Filter out invisible weeks
-  const events = (eventsData || []).map(event => ({
+  // Filter out invisible weeks and specific workshops for interns
+  const events = (eventsData || [])
+    .filter(event => {
+      if (isAdmin) return true;
+      // Interns should NOT see these archived workshops in their learning path
+      return !['Data Workshop', 'Quantum Workshop'].includes(event.title);
+    })
+    .map(event => ({
     ...event,
     weeks: (event.weeks as any[] || [])
       .filter(week => week.is_visible)

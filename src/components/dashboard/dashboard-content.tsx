@@ -127,11 +127,11 @@ export default function DashboardContent({
                       <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-500 mb-6 group-hover:scale-110 transition-transform">
                         <Binary size={24} />
                       </div>
-                      <h3 className="text-xl font-black text-[#1A1A2E] mb-2">Data Science Mastery</h3>
-                      <p className="text-sm font-bold text-[#7182C7] mb-6">Explore the depths of predictive modeling and neural networks.</p>
-                      <Button variant="ghost" className="p-0 h-auto font-black text-blue-500 hover:bg-transparent flex items-center group-hover:gap-2 transition-all">
-                        View Resources <ChevronRight size={18} />
-                      </Button>
+                      <h3 className="text-xl font-black text-[#1A1A2E] mb-2">Data Workshop</h3>
+                      <p className="text-sm font-bold text-[#7182C7] mb-6">Historical data science and analytics workshop archives.</p>
+                      <div className="flex items-center gap-2 text-slate-400 font-bold text-xs">
+                         Archive Only • No Curriculum Access
+                      </div>
                     </div>
                     <div className="absolute -bottom-10 -right-10 opacity-5 group-hover:opacity-10 transition-opacity">
                       <Binary size={120} />
@@ -146,11 +146,11 @@ export default function DashboardContent({
                       <div className="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-500 mb-6 group-hover:scale-110 transition-transform">
                         <Cpu size={24} />
                       </div>
-                      <h3 className="text-xl font-black text-[#1A1A2E] mb-2">Quantum Computing</h3>
-                      <p className="text-sm font-bold text-[#7182C7] mb-6">Introduction to qubits, superposition, and quantum algorithms.</p>
-                      <a href="https://youtu.be/zsQ6ieXahg8?si=OtsG_c66PGeAOGhk" target="_blank" rel="noopener noreferrer">
+                      <h3 className="text-xl font-black text-[#1A1A2E] mb-2">Foundations of Quantum Technologies: Physics and Linear Algebra in Action</h3>
+                      <p className="text-sm font-bold text-[#7182C7] mb-6">Advanced quantum computing and algorithm exploration.</p>
+                      <a href="https://youtu.be/q2mOLaAenwI?si=VUDT879rTShM2yhQ" target="_blank" rel="noopener noreferrer">
                         <Button variant="ghost" className="p-0 h-auto font-black text-purple-500 hover:bg-transparent flex items-center group-hover:gap-2 transition-all">
-                          View Resources <ChevronRight size={18} />
+                          Watch Recording <ChevronRight size={18} />
                         </Button>
                       </a>
                     </div>
