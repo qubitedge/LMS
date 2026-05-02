@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS profiles (
   current_streak INT DEFAULT 0,
   longest_streak INT DEFAULT 0,
   last_active_date DATE,
+  is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

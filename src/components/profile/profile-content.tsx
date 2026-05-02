@@ -6,7 +6,7 @@ import {
   Mail, Briefcase, MapPin, Phone, Edit2, 
   Camera, Lock, Save, X, Trophy, Flame, 
   Star, CheckCircle2, LogOut, Key, Loader2,
-  ChevronRight, Globe
+  ChevronRight, Globe, Eye, EyeOff
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -103,6 +103,7 @@ export default function ProfileContent({ initialProfile, stats }: ProfileContent
 
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [newPassword, setNewPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
 
   const handlePasswordUpdate = async () => {
@@ -124,6 +125,7 @@ export default function ProfileContent({ initialProfile, stats }: ProfileContent
       toast.success('Password changed successfully!');
       setShowPasswordDialog(false);
       setNewPassword('');
+      setShowNewPassword(false);
     } catch (error) {
       toast.error('Failed to update password');
     } finally {
@@ -145,15 +147,23 @@ export default function ProfileContent({ initialProfile, stats }: ProfileContent
           <div className="mt-6 space-y-4">
             <div className="space-y-2">
               <Label className="text-[10px] font-black uppercase tracking-widest text-[#A0ACDC] ml-2">New Password</Label>
-              <div className="relative">
+              <div className="relative group/pass">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#4A5DB5]" size={18} />
                 <Input 
-                  type="password"
+                  type={showNewPassword ? "text" : "password"}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="pl-12 h-14 rounded-2xl border-blue-50 bg-slate-50 focus:bg-white font-bold transition-all"
+                  className="pl-12 pr-12 h-14 rounded-2xl border-blue-50 bg-slate-50 focus:bg-white font-bold transition-all"
                   placeholder="••••••••"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all focus:outline-none"
+                  aria-label={showNewPassword ? "Hide password" : "Show password"}
+                >
+                  {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
             </div>
           </div>

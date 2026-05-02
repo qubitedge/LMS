@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { Loader2, Lock } from 'lucide-react';
+import { Loader2, Lock, Eye, EyeOff } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import Image from 'next/image';
@@ -17,6 +17,8 @@ import bgImage from '@/assets/wmremove-transformed.png';
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -103,32 +105,52 @@ export default function ResetPasswordPage() {
 
             <form onSubmit={handleResetPassword} className="w-full space-y-6 text-left">
               <div className="space-y-2">
-                <Label htmlFor="password" title="New Password" />
-                <div className="relative">
+                <Label htmlFor="password" className="text-xs font-black uppercase tracking-widest text-[#1A1A2E]/60 ml-1">
+                  New Password
+                </Label>
+                <div className="relative group/pass">
                   <Input 
                     id="password" 
-                    type="password" 
+                    type={showPassword ? "text" : "password"}
                     placeholder="New Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 font-bold px-6 focus:ring-4 focus:ring-blue-50 transition-all"
+                    className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 font-bold px-6 pr-14 focus:ring-4 focus:ring-blue-50 transition-all"
                     disabled={isLoading}
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all focus:outline-none"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword" title="Confirm Password" />
-                <div className="relative">
+                <Label htmlFor="confirmPassword" className="text-xs font-black uppercase tracking-widest text-[#1A1A2E]/60 ml-1">
+                  Confirm Password
+                </Label>
+                <div className="relative group/pass">
                   <Input 
                     id="confirmPassword" 
-                    type="password" 
+                    type={showConfirmPassword ? "text" : "password"}
                     placeholder="Confirm New Password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 font-bold px-6 focus:ring-4 focus:ring-blue-50 transition-all"
+                    className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 font-bold px-6 pr-14 focus:ring-4 focus:ring-blue-50 transition-all"
                     disabled={isLoading}
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all focus:outline-none"
+                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                  >
+                    {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
                 </div>
               </div>
 

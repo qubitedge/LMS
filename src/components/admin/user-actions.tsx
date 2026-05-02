@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Trash2, Edit3, MoreVertical, Loader2, User, Mail, Shield, Lock } from 'lucide-react';
+import { Trash2, Edit3, MoreVertical, Loader2, User, Mail, Shield, Lock, CheckCircle2 } from 'lucide-react';
 import { 
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, 
   DropdownMenuTrigger, DropdownMenuSeparator 
@@ -24,6 +24,8 @@ interface UserActionsProps {
     full_name: string;
     email: string;
     domain?: string;
+    role: string;
+    is_active: boolean;
   };
 }
 
@@ -32,6 +34,8 @@ export default function UserActions({ user }: UserActionsProps) {
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isTogglingStatus, setIsTogglingStatus] = useState(false);
+  const [isPromoting, setIsPromoting] = useState(false);
   const [editData, setEditData] = useState({
     full_name: user.full_name,
     email: user.email,
@@ -40,6 +44,50 @@ export default function UserActions({ user }: UserActionsProps) {
   });
 
   const router = useRouter();
+
+  const handleToggleStatus = async () => {
+    setIsTogglingStatus(true);
+    try {
+      const res = await fetch('/api/admin/update-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: user.id,
+          is_active: !user.is_active,
+        }),
+      });
+
+      if (!res.ok) throw new Error('Failed to update status');
+      toast.success(user.is_active ? 'User disabled.' : 'User enabled.');
+      router.refresh();
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsTogglingStatus(false);
+    }
+  };
+
+  const handleMakeAdmin = async () => {
+    setIsPromoting(true);
+    try {
+      const res = await fetch('/api/admin/update-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: user.id,
+          role: 'admin',
+        }),
+      });
+
+      if (!res.ok) throw new Error('Failed to promote user');
+      toast.success('User promoted to Administrator.');
+      router.refresh();
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsPromoting(false);
+    }
+  };
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -94,13 +142,13 @@ export default function UserActions({ user }: UserActionsProps) {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger 
-          render={
-            <Button variant="ghost" className="h-10 w-10 p-0 rounded-xl hover:bg-slate-100">
-              <MoreVertical size={18} className="text-[#7182C7]" />
-            </Button>
-          }
-        />
-        <DropdownMenuContent align="end" className="w-48 rounded-2xl p-2 shadow-2xl border-none bg-white">
+          asChild
+        >
+          <Button variant="ghost" className="h-10 w-10 p-0 rounded-xl hover:bg-slate-100">
+            <MoreVertical size={18} className="text-[#7182C7]" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl border-none bg-white">
           <DropdownMenuItem 
             className="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-slate-50 text-[#1A1A2E] font-bold transition-colors"
             onClick={() => setShowEditDialog(true)}
@@ -108,6 +156,27 @@ export default function UserActions({ user }: UserActionsProps) {
             <Edit3 size={16} className="text-[#4A5DB5]" />
             Edit Profile
           </DropdownMenuItem>
+
+          {user.role !== 'admin' && (
+            <DropdownMenuItem 
+              className="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-slate-50 text-[#1A1A2E] font-bold transition-colors"
+              onClick={handleMakeAdmin}
+              disabled={isPromoting}
+            >
+              {isPromoting ? <Loader2 size={16} className="animate-spin" /> : <Shield size={16} className="text-amber-500" />}
+              Make Administrator
+            </DropdownMenuItem>
+          )}
+
+          <DropdownMenuItem 
+            className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer font-bold transition-colors ${user.is_active ? 'hover:bg-slate-50 text-[#1A1A2E]' : 'hover:bg-emerald-50 text-emerald-600'}`}
+            onClick={handleToggleStatus}
+            disabled={isTogglingStatus}
+          >
+            {isTogglingStatus ? <Loader2 size={16} className="animate-spin" /> : user.is_active ? <User size={16} className="text-slate-400" /> : <CheckCircle2 size={16} className="text-emerald-500" />}
+            {user.is_active ? 'Disable Access' : 'Restore Access'}
+          </DropdownMenuItem>
+
           <DropdownMenuSeparator className="my-2 bg-slate-50" />
           <DropdownMenuItem 
             className="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-rose-50 text-rose-500 font-bold transition-colors"
