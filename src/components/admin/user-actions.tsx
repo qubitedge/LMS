@@ -142,12 +142,12 @@ export default function UserActions({ user }: UserActionsProps) {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger 
-          asChild
-        >
-          <Button variant="ghost" className="h-10 w-10 p-0 rounded-xl hover:bg-slate-100">
-            <MoreVertical size={18} className="text-[#7182C7]" />
-          </Button>
-        </DropdownMenuTrigger>
+          render={
+            <Button variant="ghost" className="h-10 w-10 p-0 rounded-xl hover:bg-slate-100">
+              <MoreVertical size={18} className="text-[#7182C7]" />
+            </Button>
+          }
+        />
         <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl border-none bg-white">
           <DropdownMenuItem 
             className="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-slate-50 text-[#1A1A2E] font-bold transition-colors"
