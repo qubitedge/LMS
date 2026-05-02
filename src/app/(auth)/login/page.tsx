@@ -14,7 +14,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import bgImage from '@/assets/wmremove-transformed.png';
 
-export default function LoginPage() {
+import { Suspense } from 'react';
+
+function LoginContent() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -183,5 +185,17 @@ export default function LoginPage() {
         </div>
       </div>
     </motion.div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-[620px]">
+        <Loader2 className="h-12 w-12 animate-spin text-[#4A5DB5]" />
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }
