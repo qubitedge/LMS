@@ -1,0 +1,61 @@
+{
+  "timestamp": "2026-05-01T08:19:05.426Z",
+  "tests": {
+    "api-endpoints.spec.ts > API Endpoint Testing > POST /api/admin/create-user - should fail without auth/fields": {
+      "status": "failed",
+      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m200\u001b[39m",
+      "diagnosis": {
+        "cause": "Unexpected error. See details in the error log.",
+        "fix": "Review the failing test code and the target component implementation."
+      }
+    },
+    "api-endpoints.spec.ts > API Endpoint Testing > POST /api/attendance/mark - should fail for unauthorized": {
+      "status": "failed",
+      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m200\u001b[39m",
+      "diagnosis": {
+        "cause": "Authentication failed. The user session is invalid or missing.",
+        "fix": "Ensure the test user is correctly signed in or that the API route correctly handles auth cookies."
+      }
+    },
+    "api-endpoints.spec.ts > API Endpoint Testing > POST /api/quiz/submit - should fail for unauthorized": {
+      "status": "failed",
+      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m200\u001b[39m",
+      "diagnosis": {
+        "cause": "Authentication failed. The user session is invalid or missing.",
+        "fix": "Ensure the test user is correctly signed in or that the API route correctly handles auth cookies."
+      }
+    },
+    "api-endpoints.spec.ts > API Endpoint Testing > POST /api/tasks/submit - should fail for unauthorized": {
+      "status": "failed",
+      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m200\u001b[39m",
+      "diagnosis": {
+        "cause": "Authentication failed. The user session is invalid or missing.",
+        "fix": "Ensure the test user is correctly signed in or that the API route correctly handles auth cookies."
+      }
+    },
+    "auth.spec.ts > Authentication Flow > Login page should render correctly": {
+      "status": "failed",
+      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/Login/i\u001b[39m\nReceived string:  \u001b[31m\"qubitedge LMS | Internship Learning Management System\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 5000ms\u001b[22m\n\u001b[2m    8 × unexpected value \"qubitedge LMS | Internship Learning Management System\"\u001b[22m\n",
+      "diagnosis": {
+        "cause": "Unexpected error. See details in the error log.",
+        "fix": "Review the failing test code and the target component implementation."
+      }
+    },
+    "frontend.spec.ts > Frontend Route Testing > Public pages should be accessible": {
+      "status": "failed",
+      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mnot\u001b[2m.\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: not \u001b[32m\"/login\"\u001b[39m\nReceived string:        \u001b[31m\"http://localhost:3000\u001b[7m/login\u001b[27m\"\u001b[39m",
+      "diagnosis": {
+        "cause": "Unexpected error. See details in the error log.",
+        "fix": "Review the failing test code and the target component implementation."
+      }
+    }
+  },
+  "typescript": {
+    "status": "passed"
+  },
+  "summary": {
+    "passed": 22,
+    "failed": 6,
+    "warnings": 0
+  }
+}
