@@ -11,13 +11,6 @@ export default async function ProgressPage() {
 
   if (!user) return null;
 
-  // Fetch weeks and days
-  const { data: weeksData } = await supabase
-    .from('weeks')
-    .select('*, days(*, quizzes(id, max_score))')
-    .order('week_number', { ascending: true })
-    .order('day_number', { referencedTable: 'days', ascending: true });
-
   // Fetch user's scores
   const { data: scores } = await supabase
     .from('scores')
@@ -35,29 +28,52 @@ export default async function ProgressPage() {
   
   const isAdmin = profile?.role === 'admin';
 
-  // Process data
-  const weeks: WeekWithDays[] = (weeksData || [])
-    .filter((week: any) => week.title !== 'Capstone Project')
-    .map((week: any) => ({
-    ...week,
-    days: (week.days || []).map((day: any): DayWithStatus => {
-      const quizId = day.quizzes?.[0]?.id;
-      const hasAttempted = !!(quizId && scoresMap.has(quizId));
-      const score = quizId ? scoresMap.get(quizId) : undefined;
-      const status = getDayStatus(day.date, hasAttempted);
+  // Fetch events with visible weeks and days
+  const { data: eventsData } = await supabase
+    .from('events')
+    .select('*, weeks(*, days(*, quizzes(id, max_score)))')
+    .eq('is_active', true)
+    .order('created_at', { ascending: true });
 
-      return {
-        ...day,
-        status,
-        score,
-        quiz: day.quizzes?.[0] ? { ...day.quizzes[0] } : null,
-      };
-    })
+  // Filter out invisible weeks
+  const events = (eventsData || []).map(event => ({
+    ...event,
+    weeks: (event.weeks as any[] || [])
+      .filter(week => week.is_visible)
+      .sort((a: any, b: any) => a.week_number - b.week_number)
+      .map((week: any) => ({
+        ...week,
+        days: (week.days || []).sort((a: any, b: any) => a.day_number - b.day_number).map((day: any): DayWithStatus => {
+          const quizId = day.quizzes?.[0]?.id;
+          const hasAttempted = !!(quizId && scoresMap.has(quizId));
+          const score = quizId ? scoresMap.get(quizId) : undefined;
+          const status = getDayStatus(day.date, hasAttempted);
+
+          return {
+            ...day,
+            status,
+            score,
+            quiz: day.quizzes?.[0] ? { ...day.quizzes[0] } : null,
+          };
+        })
+      }))
   }));
 
   return (
-    <div className="pb-20">
-      <CurriculumGrid weeks={weeks} isAdmin={isAdmin} />
+    <div className="pb-20 space-y-20">
+      {events.map(event => (
+        <div key={event.id} className="space-y-10">
+          <div className="px-4">
+            <h2 className="text-4xl font-black text-[#1A1A2E] tracking-tight italic">
+              {event.title}
+            </h2>
+            {event.description && (
+              <p className="text-[#7182C7] font-bold mt-2">{event.description}</p>
+            )}
+          </div>
+          <CurriculumGrid weeks={event.weeks} isAdmin={isAdmin} />
+        </div>
+      ))}
     </div>
   );
 }

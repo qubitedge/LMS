@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard, TrendingUp, CalendarCheck, ClipboardList,
-  Trophy, User, LogOut, Shield,
+  Trophy, User, LogOut, Shield, BookOpen
 } from 'lucide-react';
 import QubitedgeLogo from '@/components/logo';
 import { createClient } from '@/lib/supabase/client';
@@ -14,6 +14,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const internNav = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/progress', label: 'My Learning', icon: TrendingUp },
+  { href: '/programmes', label: 'Programmes', icon: BookOpen },
   { href: '/attendance', label: 'Attendance', icon: CalendarCheck },
   { href: '/tasks', label: 'Tasks', icon: ClipboardList },
   { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
@@ -23,7 +24,7 @@ const internNav = [
 const adminNav = [
   { href: '/admin', label: 'Overview', icon: LayoutDashboard },
   { href: '/admin/users', label: 'Users', icon: User },
-  { href: '/admin/curriculum', label: 'Curriculum', icon: ClipboardList },
+  { href: '/admin/curriculum', label: 'Events', icon: CalendarCheck },
   { href: '/admin/quizzes', label: 'Quizzes', icon: TrendingUp },
   { href: '/admin/submissions', label: 'Submissions', icon: ClipboardList },
   { href: '/admin/attendance', label: 'Attendance', icon: CalendarCheck },

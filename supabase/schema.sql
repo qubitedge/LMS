@@ -22,18 +22,33 @@ CREATE TABLE IF NOT EXISTS profiles (
 );
 
 -- =====================
--- WEEKS
+-- EVENTS
+-- =====================
+CREATE TABLE IF NOT EXISTS events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  description TEXT,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- =====================
+-- WEEKS (MODULES)
 -- =====================
 CREATE TABLE IF NOT EXISTS weeks (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_id UUID REFERENCES events(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
   domain TEXT NOT NULL,
   week_number INT NOT NULL,
-  start_date DATE NOT NULL
+  start_date DATE NOT NULL,
+  end_date DATE,
+  is_visible BOOLEAN DEFAULT TRUE,
+  order_index INT DEFAULT 0
 );
 
 DO $$ BEGIN
-  ALTER TABLE weeks ADD CONSTRAINT unique_week_per_domain UNIQUE (domain, week_number);
+  ALTER TABLE weeks ADD CONSTRAINT unique_week_per_event UNIQUE (event_id, week_number);
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 
@@ -154,6 +169,7 @@ ON CONFLICT (key) DO NOTHING;
 -- ═══════════════════════════════════════════════════════
 
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE weeks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE days ENABLE ROW LEVEL SECURITY;
 ALTER TABLE quizzes ENABLE ROW LEVEL SECURITY;
@@ -205,6 +221,10 @@ CREATE POLICY "profiles_admin_delete" ON profiles FOR DELETE TO authenticated
 -- =====================
 -- GENERIC ADMIN POLICIES
 -- =====================
+CREATE POLICY "events_select_all" ON events FOR SELECT TO authenticated USING (true);
+CREATE POLICY "events_admin_write" ON events FOR ALL TO authenticated
+  USING (is_admin());
+
 CREATE POLICY "weeks_select_all" ON weeks FOR SELECT TO authenticated USING (true);
 CREATE POLICY "weeks_admin_write" ON weeks FOR ALL TO authenticated
   USING (is_admin());
