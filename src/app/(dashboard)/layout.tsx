@@ -21,6 +21,11 @@ export default async function DashboardLayout({
     .eq('id', user.id)
     .single();
 
+  if (profile && profile.is_active === false) {
+    await supabase.auth.signOut();
+    redirect('/login?error=account_disabled');
+  }
+
   const { count: completedDays } = await supabase
     .from('scores')
     .select('*', { count: 'exact', head: true })
