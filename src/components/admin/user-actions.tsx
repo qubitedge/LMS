@@ -89,6 +89,28 @@ export default function UserActions({ user }: UserActionsProps) {
     }
   };
 
+  const handleRemoveAdmin = async () => {
+    setIsPromoting(true); // Reuse promoting state
+    try {
+      const res = await fetch('/api/admin/update-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: user.id,
+          role: 'intern',
+        }),
+      });
+
+      if (!res.ok) throw new Error('Failed to remove admin privileges');
+      toast.success('Administrator privileges removed.');
+      router.refresh();
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsPromoting(false);
+    }
+  };
+
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
@@ -157,7 +179,7 @@ export default function UserActions({ user }: UserActionsProps) {
             Edit Profile
           </DropdownMenuItem>
 
-          {user.role !== 'admin' && (
+          {user.role !== 'admin' ? (
             <DropdownMenuItem 
               className="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-slate-50 text-[#1A1A2E] font-bold transition-colors"
               onClick={handleMakeAdmin}
@@ -165,6 +187,15 @@ export default function UserActions({ user }: UserActionsProps) {
             >
               {isPromoting ? <Loader2 size={16} className="animate-spin" /> : <Shield size={16} className="text-amber-500" />}
               Make Administrator
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem 
+              className="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-amber-50 text-amber-600 font-bold transition-colors"
+              onClick={handleRemoveAdmin}
+              disabled={isPromoting}
+            >
+              {isPromoting ? <Loader2 size={16} className="animate-spin" /> : <Shield size={16} className="opacity-50" />}
+              Remove Admin Privileges
             </DropdownMenuItem>
           )}
 
