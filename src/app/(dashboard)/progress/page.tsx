@@ -69,15 +69,12 @@ export default async function ProgressPage() {
     <div className="pb-20 space-y-20">
       {events.map(event => (
         <div key={event.id} className="space-y-10">
-          <div className="px-4">
-            <h2 className="text-4xl font-black text-[#1A1A2E] tracking-tight italic">
-              {event.title}
-            </h2>
-            {event.description && (
-              <p className="text-[#7182C7] font-bold mt-2">{event.description}</p>
-            )}
-          </div>
-          <CurriculumGrid weeks={event.weeks} isAdmin={isAdmin} />
+          <CurriculumGrid 
+            weeks={event.weeks} 
+            title={event.title}
+            description={event.description || undefined}
+            isAdmin={isAdmin} 
+          />
         </div>
       ))}
     </div>

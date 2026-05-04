@@ -127,7 +127,7 @@ export default function DashboardContent({
                       <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-500 mb-6 group-hover:scale-110 transition-transform">
                         <Binary size={24} />
                       </div>
-                      <h3 className="text-xl font-black text-[#1A1A2E] mb-2">Data Workshop</h3>
+                      <h3 className="text-xl font-black text-[#1A1A2E] mb-2">Learning to Make Data-Driven Decisions Through Machine Learning and PowerBI</h3>
                       <p className="text-sm font-bold text-[#7182C7] mb-6">Historical data science and analytics workshop archives.</p>
                       <div className="flex items-center gap-2 text-slate-400 font-bold text-xs">
                          Archive Only • No Curriculum Access
