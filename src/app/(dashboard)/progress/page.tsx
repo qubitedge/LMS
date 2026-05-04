@@ -39,8 +39,8 @@ export default async function ProgressPage() {
   const events = (eventsData || [])
     .filter(event => {
       if (isAdmin) return true;
-      // Interns should NOT see these archived workshops in their learning path
-      return !['Data Workshop', 'Quantum Workshop'].includes(event.title);
+      // Interns should ONLY see their enrolled bootcamp in their learning path
+      return event.title === 'Applied AI & Data Science Bootcamp';
     })
     .map(event => ({
     ...event,

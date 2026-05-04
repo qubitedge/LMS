@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
-import { Playfair_Display, DM_Sans, JetBrains_Mono } from 'next/font/google';
+import { Inter, DM_Sans, JetBrains_Mono } from 'next/font/google';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import './globals.css';
 
-const playfair = Playfair_Display({
+const inter = Inter({
   subsets: ['latin'],
   variable: '--font-heading',
-  weight: ['400', '700'],
+  weight: ['400', '500', '600', '700', '800', '900'],
   display: 'swap',
 });
 
@@ -41,7 +41,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${dmSans.variable} ${jetbrains.variable} h-full antialiased`}
+      className={`${inter.variable} ${dmSans.variable} ${jetbrains.variable} h-full antialiased`}
       data-scroll-behavior="smooth"
     >
       <body 

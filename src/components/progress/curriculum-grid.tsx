@@ -33,6 +33,7 @@ export default function CurriculumGrid({
 }: CurriculumGridProps) {
   const [selectedDay, setSelectedDay] = useState<DayWithStatus | null>(null);
   const [expandedWeeks, setExpandedWeeks] = useState<Set<string>>(new Set(weeks.length > 0 ? [weeks[0].id] : []));
+  const [isMainExpanded, setIsMainExpanded] = useState(false);
 
   const toggleWeek = (weekId: string) => {
     setExpandedWeeks(prev => {
@@ -73,11 +74,15 @@ export default function CurriculumGrid({
       <motion.div 
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="flex flex-col md:flex-row md:items-end justify-between gap-6 p-10 rounded-[2.5rem] bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl shadow-blue-900/5"
+        onClick={() => setIsMainExpanded(!isMainExpanded)}
+        className="flex flex-col md:flex-row md:items-end justify-between gap-6 p-10 rounded-[2.5rem] bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl shadow-blue-900/5 cursor-pointer group hover:bg-white/80 transition-all"
       >
         <div>
-          <h1 className="text-5xl font-black mb-3 tracking-tight" style={{ fontFamily: 'Playfair Display', color: '#1A1A2E' }}>
+          <h1 className="text-5xl font-black mb-3 tracking-tight text-[#1A1A2E] flex items-center gap-4">
             {title}
+            <div className="text-[#A0ACDC] group-hover:text-[#4A5DB5] transition-colors">
+              {isMainExpanded ? <ChevronUp size={40} /> : <ChevronDown size={40} />}
+            </div>
           </h1>
           <p className="text-[#7182C7] font-bold text-lg">{description}</p>
         </div>
@@ -109,7 +114,15 @@ export default function CurriculumGrid({
       </motion.div>
 
       {/* Week Sections */}
-      <div className="space-y-20">
+      <AnimatePresence>
+        {isMainExpanded && (
+          <motion.div 
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.5, ease: [0.04, 0.62, 0.23, 0.98] }}
+            className="space-y-20 overflow-hidden"
+          >
         {weeks.map((week, weekIdx) => {
           const weekCompleted = week.days.filter(d => d.status === 'completed').length;
           const weekProgress = Math.round((weekCompleted / week.days.length) * 100) || 0;
@@ -170,7 +183,7 @@ export default function CurriculumGrid({
                       variants={container}
                       initial="hidden"
                       animate="show"
-                      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 pt-4"
+                      className="flex flex-col gap-3 pt-4"
                     >
                       {week.days.map((day) => {
                         const isLocked = day.status === 'locked';
@@ -182,71 +195,55 @@ export default function CurriculumGrid({
                             key={day.id} 
                             variants={item}
                             whileHover={(!isLocked || isAdmin) ? { 
-                              scale: 1.05,
-                              y: -10,
-                              transition: { type: "spring", stiffness: 200 }
+                              x: 10,
+                              transition: { type: "spring", stiffness: 400, damping: 25 }
                             } : {}}
                             onClick={() => (!isLocked || isAdmin) && setSelectedDay(day)}
-                            className={`relative group rounded-[2rem] p-7 transition-all duration-500 cursor-pointer overflow-hidden border
-                              ${(isLocked && !isAdmin) ? 'opacity-60 grayscale-[0.5] cursor-not-allowed bg-slate-50 border-slate-200' : 'bg-white shadow-sm border-white hover:shadow-[0_20px_50px_rgba(34,56,164,0.12)]'}
-                              ${isActive ? 'ring-4 ring-[#4A5DB5]/20 border-[#4A5DB5]/30' : ''}
+                            className={`relative group rounded-2xl p-4 transition-all duration-300 cursor-pointer overflow-hidden border flex items-center gap-5
+                              ${(isLocked && !isAdmin) ? 'opacity-60 bg-slate-50 border-slate-200 cursor-not-allowed' : 'bg-white shadow-sm border-white hover:shadow-md hover:border-blue-100'}
+                              ${isActive ? 'ring-2 ring-[#4A5DB5]/10 border-[#4A5DB5]/20' : ''}
                             `}
                           >
-                            {/* Premium Glow Overlay */}
-                            {(!isLocked || isAdmin) && (
-                              <div className="absolute inset-0 bg-gradient-to-br from-[#4A5DB5]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                            )}
-                            
-                            {/* Top Action / Status Row */}
-                            <div className="flex justify-between items-start mb-8">
-                              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 
-                                ${(isLocked && !isAdmin) ? 'bg-slate-100 text-slate-400' : 
-                                  isCompleted ? 'bg-emerald-50 text-emerald-500 shadow-inner' : 
-                                  isActive ? 'bg-[#4A5DB5] text-white shadow-lg shadow-blue-500/30' : 
-                                  'bg-[#E9EEF9] text-[#4A5DB5]'}`}
-                              >
-                                {(isLocked && !isAdmin) ? <Lock size={22} /> : 
-                                 isCompleted ? <CheckCircle2 size={22} /> : 
-                                 isActive ? <Zap size={22} className="fill-white" /> : 
-                                 <BookOpen size={22} />}
-                              </div>
-                              <span className="text-[10px] font-black px-3 py-1.5 rounded-xl bg-slate-50 text-[#7182C7] uppercase tracking-widest border border-slate-100">
-                                Day {day.day_number}
-                              </span>
+                            {/* Icon / Status */}
+                            <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 
+                              ${(isLocked && !isAdmin) ? 'bg-slate-100 text-slate-400' : 
+                                isCompleted ? 'bg-emerald-50 text-emerald-500' : 
+                                isActive ? 'bg-[#4A5DB5] text-white' : 
+                                'bg-[#E9EEF9] text-[#4A5DB5]'}`}
+                            >
+                              {(isLocked && !isAdmin) ? <Lock size={20} /> : 
+                               isCompleted ? <CheckCircle2 size={20} /> : 
+                               isActive ? <Zap size={20} className="fill-white" /> : 
+                               <BookOpen size={20} />}
                             </div>
 
-                            {/* Content */}
-                            <div className="space-y-3">
-                              <h3 className="font-black text-xl leading-tight text-[#1A1A2E] group-hover:text-[#2238A4] transition-colors">
+                            {/* Content Middle */}
+                            <div className="flex-grow min-w-0">
+                              <div className="flex items-center gap-3 mb-0.5">
+                                <span className="text-[10px] font-bold text-[#7182C7] uppercase tracking-wider">
+                                  Day {day.day_number}
+                                </span>
+                                {isActive && (
+                                  <Badge className="bg-[#4A5DB5] text-white text-[9px] px-2 py-0 h-4 uppercase font-black">Active Now</Badge>
+                                )}
+                              </div>
+                              <h3 className="font-bold text-lg text-[#1A1A2E] truncate group-hover:text-[#2238A4] transition-colors">
                                 {day.topic}
                               </h3>
-                              <p className="text-xs font-medium line-clamp-2 leading-relaxed text-[#7182C7]">
-                                {day.description || 'Master the essential skills for today\'s module.'}
-                              </p>
                             </div>
 
-                            {/* Bottom Meta */}
-                            <div className="mt-8 pt-6 border-t border-slate-50 flex items-center justify-between">
-                              <div className="flex items-center gap-2 text-[10px] font-black text-[#A0ACDC]">
-                                <Clock size={14} />
-                                {format(parseISO(day.date), 'MMM d, yyyy')}
+                            {/* Meta Right (Desktop) */}
+                            <div className="hidden md:flex items-center gap-8 flex-shrink-0 text-right pr-4">
+                              <div className="flex flex-col items-end">
+                                <p className="text-[10px] font-bold text-[#A0ACDC] uppercase tracking-tighter">Instructor</p>
+                                <p className="text-xs font-bold text-[#4A5DB5]">{day.tutor_name || 'TBA'}</p>
                               </div>
-                              <div className="flex items-center gap-2 text-[10px] font-black text-[#4A5DB5] truncate max-w-[100px]">
-                                <User size={14} />
-                                {day.tutor_name || 'TBA'}
+                              <div className="flex flex-col items-end min-w-[80px]">
+                                <p className="text-[10px] font-bold text-[#A0ACDC] uppercase tracking-tighter">Date</p>
+                                <p className="text-xs font-bold text-[#1A1A2E]">{format(parseISO(day.date), 'MMM d')}</p>
                               </div>
-                              {(!isLocked || isAdmin) && (
-                                <div className="flex items-center text-[#2238A4] opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0">
-                                  <span className="text-[10px] font-black uppercase tracking-tighter mr-1">Dive in</span>
-                                  <ChevronRight size={16} />
-                                </div>
-                              )}
+                              <ChevronRight className="text-[#A0ACDC] group-hover:text-[#2238A4] transition-colors" size={20} />
                             </div>
-
-                            {/* Dynamic Background Glow */}
-                            <div className={`absolute -bottom-12 -right-12 w-32 h-32 blur-[4rem] opacity-0 group-hover:opacity-30 transition-opacity rounded-full
-                              ${isCompleted ? 'bg-emerald-400' : isActive ? 'bg-[#4A5DB5]' : 'bg-[#7182C7]'}`} 
-                            />
                           </motion.div>
                         );
                       })}
@@ -257,7 +254,9 @@ export default function CurriculumGrid({
             </div>
           );
         })}
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Hybrid Modal */}
       <Dialog open={!!selectedDay} onOpenChange={(open) => !open && setSelectedDay(null)}>
@@ -281,7 +280,7 @@ export default function CurriculumGrid({
 
               <div className="px-10 pb-10 pt-8">
                 <DialogHeader className="mb-8">
-                  <DialogTitle className="text-4xl font-black mb-3 tracking-tight" style={{ fontFamily: 'Playfair Display', color: '#1A1A2E' }}>
+                  <DialogTitle className="text-4xl font-black mb-3 tracking-tight text-[#1A1A2E]">
                     {selectedDay.topic}
                   </DialogTitle>
                   <DialogDescription className="text-md font-medium leading-relaxed text-[#7182C7]">
