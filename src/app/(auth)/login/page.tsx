@@ -56,7 +56,7 @@ function LoginContent() {
       }
 
       toast.success('Login successful');
-      router.push('/dashboard');
+      router.push('/');
       router.refresh();
       
     } catch (error) {
