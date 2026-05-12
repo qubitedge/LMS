@@ -78,10 +78,8 @@ export default function BulkUserUpload() {
       setIsOpen(open);
       if (!open) setResults(null);
     }}>
-      <DialogTrigger asChild>
-        <Button className="h-12 px-6 rounded-xl font-black text-xs uppercase tracking-widest bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/20 flex gap-2">
-          <Upload size={16} /> Bulk Upload
-        </Button>
+      <DialogTrigger render={<Button className="h-12 px-6 rounded-xl font-black text-xs uppercase tracking-widest bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/20 flex gap-2" />}>
+        <Upload size={16} /> Bulk Upload
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px] rounded-[2.5rem] bg-white/90 backdrop-blur-xl border-white/40 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
