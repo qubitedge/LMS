@@ -1,7 +1,7 @@
 import { QuizQuestion } from '@/types';
 
-// Start date: May 4, 2026
-export const INTERNSHIP_START_DATE = '2026-05-04';
+// Start date: May 18, 2026
+export const INTERNSHIP_START_DATE = '2026-05-18';
 export const ADMIN_EMAIL = 'likhithmanakala@gmail.com';
 
 export const WEEKS = [
