@@ -34,7 +34,7 @@ export default async function ProfilePage() {
       initialProfile={profile} 
       stats={{
         totalPoints,
-        completedTasksCount: completedTasksCount || 0,
+        quizzesCount: scores?.length || 0,
         attendanceCount: attendanceCount || 0,
         totalExpectedDays
       }}

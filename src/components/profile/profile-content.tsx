@@ -25,7 +25,7 @@ interface ProfileContentProps {
   initialProfile: any;
   stats: {
     totalPoints: number;
-    completedTasksCount: number;
+    quizzesCount: number;
     attendanceCount: number;
     totalExpectedDays: number;
   };
@@ -408,39 +408,7 @@ export default function ProfileContent({ initialProfile, stats }: ProfileContent
         {/* Right Side: Performance Dashboard */}
         <div className="lg:col-span-8 space-y-10">
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <motion.div whileHover={{ y: -5 }} className="p-8 rounded-[2.5rem] bg-gradient-to-br from-white to-[#E9EEF9] border-2 border-white shadow-xl relative overflow-hidden group">
-               <div className="relative z-10">
-                  <div className="w-14 h-14 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-500 mb-6 shadow-inner group-hover:scale-110 group-hover:rotate-6 transition-transform">
-                     <Flame size={28} />
-                  </div>
-                  <p className="text-xs font-black uppercase tracking-widest text-[#7182C7] mb-2">Active Streak</p>
-                  <div className="flex items-baseline gap-3">
-                    <span className="text-6xl font-black tracking-tighter text-[#1A1A2E]">{profile?.current_streak || 0}</span>
-                    <span className="text-xl font-bold text-[#A0ACDC]">Days 🔥</span>
-                  </div>
-               </div>
-               <div className="absolute -bottom-10 -right-10 opacity-5 group-hover:opacity-10 transition-opacity">
-                  <Flame size={180} />
-               </div>
-            </motion.div>
-
-            <motion.div whileHover={{ y: -5 }} className="p-8 rounded-[2.5rem] bg-gradient-to-br from-white to-[#E9EEF9] border-2 border-white shadow-xl relative overflow-hidden group">
-               <div className="relative z-10">
-                  <div className="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-[#2238A4] mb-6 shadow-inner group-hover:scale-110 group-hover:rotate-6 transition-transform">
-                     <Trophy size={28} />
-                  </div>
-                  <p className="text-xs font-black uppercase tracking-widest text-[#7182C7] mb-2">Record Streak</p>
-                  <div className="flex items-baseline gap-3">
-                    <span className="text-6xl font-black tracking-tighter text-[#1A1A2E]">{profile?.longest_streak || 0}</span>
-                    <span className="text-xl font-bold text-[#A0ACDC]">Days 🏆</span>
-                  </div>
-               </div>
-               <div className="absolute -bottom-10 -right-10 opacity-5 group-hover:opacity-10 transition-opacity">
-                  <Trophy size={180} />
-               </div>
-            </motion.div>
-
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <motion.div whileHover={{ y: -5 }} className="p-8 rounded-[2.5rem] bg-gradient-to-br from-white to-[#E9EEF9] border-2 border-white shadow-xl relative overflow-hidden group">
                <div className="relative z-10">
                   <div className="w-14 h-14 rounded-2xl bg-yellow-50 flex items-center justify-center text-yellow-600 mb-6 shadow-inner group-hover:scale-110 group-hover:rotate-6 transition-transform">
@@ -462,14 +430,30 @@ export default function ProfileContent({ initialProfile, stats }: ProfileContent
                   <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 mb-6 shadow-inner group-hover:scale-110 group-hover:rotate-6 transition-transform">
                      <CheckCircle2 size={28} />
                   </div>
-                  <p className="text-xs font-black uppercase tracking-widest text-[#7182C7] mb-2">Tasks Done</p>
+                  <p className="text-xs font-black uppercase tracking-widest text-[#7182C7] mb-2">Quizzes Done</p>
                   <div className="flex items-baseline gap-3">
-                    <span className="text-6xl font-black tracking-tighter text-[#1A1A2E]">{stats.completedTasksCount}</span>
+                    <span className="text-6xl font-black tracking-tighter text-[#1A1A2E]">{stats.quizzesCount}</span>
                     <span className="text-xl font-bold text-[#A0ACDC]">Passed ✅</span>
                   </div>
                </div>
                <div className="absolute -bottom-10 -right-10 opacity-5 group-hover:opacity-10 transition-opacity">
                   <CheckCircle2 size={180} />
+               </div>
+            </motion.div>
+
+            <motion.div whileHover={{ y: -5 }} className="p-8 rounded-[2.5rem] bg-gradient-to-br from-white to-[#E9EEF9] border-2 border-white shadow-xl relative overflow-hidden group">
+               <div className="relative z-10">
+                  <div className="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-[#2238A4] mb-6 shadow-inner group-hover:scale-110 group-hover:rotate-6 transition-transform">
+                     <Trophy size={28} />
+                  </div>
+                  <p className="text-xs font-black uppercase tracking-widest text-[#7182C7] mb-2">Performance</p>
+                  <div className="flex items-baseline gap-3">
+                    <span className="text-6xl font-black tracking-tighter text-[#1A1A2E]">{Math.round((stats.attendanceCount / stats.totalExpectedDays) * 100)}%</span>
+                    <span className="text-xl font-bold text-[#A0ACDC]">Rank 🏆</span>
+                  </div>
+               </div>
+               <div className="absolute -bottom-10 -right-10 opacity-5 group-hover:opacity-10 transition-opacity">
+                  <Trophy size={180} />
                </div>
             </motion.div>
           </div>

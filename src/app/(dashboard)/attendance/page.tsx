@@ -13,7 +13,10 @@ export default async function AttendancePage() {
 
   if (!user) return null;
 
-  const todayStr = new Date().toISOString().split('T')[0];
+  const now = new Date();
+  const todayStr = now.toISOString().split('T')[0];
+  const currentHour = now.getHours();
+  const isWithinWindow = currentHour >= 10 && currentHour < 14;
 
   const { data: attendanceHistory } = await supabase
     .from('attendance')
@@ -30,7 +33,7 @@ export default async function AttendancePage() {
           Attendance
         </h1>
         <p className="text-lg font-bold text-[#7182C7]">
-          Mark your daily presence to maintain your streak and fuel your mastery.
+          Mark your daily presence between <span className="text-[#2238A4]">10:00 AM</span> and <span className="text-[#2238A4]">2:00 PM</span>.
         </p>
       </div>
 
@@ -56,8 +59,17 @@ export default async function AttendancePage() {
                   <div className="w-24 h-24 rounded-[2rem] bg-amber-50 flex items-center justify-center mb-6 shadow-inner border border-amber-100">
                     <Clock size={48} className="text-[#F59E0B]" />
                   </div>
-                  <h3 className="text-2xl font-black text-[#F59E0B] mb-6 uppercase tracking-tight">Pending</h3>
-                  <MarkAttendanceButton />
+                  <h3 className="text-2xl font-black text-[#F59E0B] mb-2 uppercase tracking-tight">
+                    {currentHour < 10 ? 'Not Started' : currentHour >= 14 ? 'Too Late!' : 'Pending'}
+                  </h3>
+                  <p className="text-xs font-bold text-rose-500 mb-6 uppercase tracking-widest">
+                    {currentHour < 10 
+                      ? 'Opens at 10:00 AM' 
+                      : currentHour >= 14 
+                        ? 'Window closed at 2:00 PM' 
+                        : 'Window: 10:00 AM - 2:00 PM'}
+                  </p>
+                  <MarkAttendanceButton disabled={!isWithinWindow} />
                 </div>
               )}
             </CardContent>

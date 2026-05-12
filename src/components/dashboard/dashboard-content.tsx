@@ -67,10 +67,10 @@ export default function DashboardContent({
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           <StatCard
-            title="Current Streak"
-            value={profile?.current_streak || 0}
-            subtitle={`Longest: ${profile?.longest_streak || 0}`}
-            icon={Flame}
+            title="Quizzes Completed"
+            value={quizzesCount || 0}
+            subtitle="Testing your knowledge"
+            icon={Binary}
             accentColor="#7182C7"
           />
           <StatCard

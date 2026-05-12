@@ -9,7 +9,19 @@ export async function POST() {
 
     if (!user) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
 
-    const todayStr = new Date().toISOString().split('T')[0];
+    const now = new Date();
+    const todayStr = now.toISOString().split('T')[0];
+
+    // Check timing window: 10:00 AM to 2:00 PM (14:00)
+    // Using local hours for now, but in production this should ideally consider the target timezone
+    const hour = now.getHours();
+    const isWithinWindow = hour >= 10 && hour < 14;
+
+    if (!isWithinWindow) {
+      return NextResponse.json({ 
+        message: 'Attendance can only be marked between 10:00 AM and 2:00 PM.' 
+      }, { status: 403 });
+    }
 
     // Check if already marked today
     const { data: existing } = await supabase

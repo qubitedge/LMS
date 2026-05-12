@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { CalendarCheck, PlayCircle, Upload, BarChart2 } from 'lucide-react';
+import { CalendarCheck, PlayCircle, Trophy, User } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 
@@ -68,17 +68,17 @@ export default function QuickActions({
                 bg: 'bg-white'
               },
               { 
-                href: "/tasks", 
-                label: 'Submit Task', 
-                icon: Upload,
+                href: "/leaderboard", 
+                label: 'Leaderboard', 
+                icon: Trophy,
                 color: '#2238A4',
                 active: false,
                 bg: 'bg-white'
               },
               { 
-                href: "/progress", 
-                label: 'View Progress', 
-                icon: BarChart2,
+                href: "/profile", 
+                label: 'My Profile', 
+                icon: User,
                 color: '#4A5DB5',
                 active: false,
                 bg: 'bg-white'

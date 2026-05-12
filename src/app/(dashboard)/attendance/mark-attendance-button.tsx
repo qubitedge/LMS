@@ -6,11 +6,12 @@ import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
-export default function MarkAttendanceButton() {
+export default function MarkAttendanceButton({ disabled }: { disabled?: boolean }) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleMarkAttendance = async () => {
+    if (disabled) return;
     setIsLoading(true);
     try {
       const res = await fetch('/api/attendance/mark', {
@@ -35,8 +36,11 @@ export default function MarkAttendanceButton() {
   return (
     <Button 
       onClick={handleMarkAttendance} 
-      disabled={isLoading}
-      className="w-full max-w-[240px] h-14 rounded-2xl text-md font-black bg-[#4A5DB5] hover:bg-[#2238A4] text-white shadow-xl shadow-blue-500/20 transition-all hover:scale-[1.02] active:scale-95"
+      disabled={isLoading || disabled}
+      className={`w-full max-w-[240px] h-14 rounded-2xl text-md font-black shadow-xl transition-all 
+        ${disabled 
+          ? 'bg-slate-100 text-slate-400 cursor-not-allowed shadow-none border border-slate-200' 
+          : 'bg-[#4A5DB5] hover:bg-[#2238A4] text-white shadow-blue-500/20 hover:scale-[1.02] active:scale-95'}`}
     >
       {isLoading ? (
         <>
@@ -44,7 +48,7 @@ export default function MarkAttendanceButton() {
           Verifying...
         </>
       ) : (
-        'Mark Attendance'
+        disabled ? 'Window Closed' : 'Mark Attendance'
       )}
     </Button>
   );

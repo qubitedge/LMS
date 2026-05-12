@@ -4,6 +4,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { format, parseISO } from 'date-fns';
 import UserCreateDialog from '@/components/admin/user-create-dialog';
 import UserActions from '@/components/admin/user-actions';
+import BulkUserUpload from '@/components/admin/bulk-user-upload';
+import UserListExport from '@/components/admin/user-list-export';
 import { Users, Mail, Shield, CheckCircle2, XCircle } from 'lucide-react';
 import Link from 'next/link';
 
@@ -28,7 +30,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
       <div className="bg-mesh opacity-20" />
       
       <div className="relative z-10">
-        <div className="flex justify-between items-start mb-10">
+        <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center mb-10 gap-6">
           <div>
             <h1 className="text-5xl font-black mb-3 tracking-tight" style={{ fontFamily: 'Playfair Display', color: '#1A1A2E' }}>
               {role === 'admin' ? 'Admin Management' : 'Intern Management'}
@@ -39,7 +41,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                 : 'Oversee talent acquisition and monitor individual performance.'}
             </p>
           </div>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-4 w-full xl:w-auto">
             <div className="bg-white/50 backdrop-blur-md p-1.5 rounded-2xl border border-white/40 shadow-sm flex">
               <Link 
                 href="/admin/users?role=intern"
@@ -54,7 +56,11 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                 Admins
               </Link>
             </div>
-            <UserCreateDialog />
+            <div className="flex gap-4">
+              <UserListExport users={users || []} role={role} />
+              <BulkUserUpload />
+              <UserCreateDialog />
+            </div>
           </div>
         </div>
 
@@ -67,7 +73,6 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                     <TableHead className="font-black text-[#1A1A2E] px-8 py-6">User Profile</TableHead>
                     <TableHead className="font-black text-[#1A1A2E]">Category</TableHead>
                     <TableHead className="font-black text-[#1A1A2E] text-center">Status</TableHead>
-                    <TableHead className="font-black text-[#1A1A2E] text-center">Current Streak</TableHead>
                     <TableHead className="font-black text-[#1A1A2E] text-right">Joined Date</TableHead>
                     <TableHead className="font-black text-[#1A1A2E] text-right px-8">Actions</TableHead>
                   </TableRow>
@@ -75,7 +80,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                 <TableBody>
                   {!users || users.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center py-20">
+                      <TableCell colSpan={5} className="text-center py-20">
                         <div className="flex flex-col items-center gap-4 text-[#7182C7]">
                           <Users size={48} className="opacity-20" />
                           <p className="font-bold">No {role}s found.</p>
@@ -113,11 +118,6 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                               <XCircle size={12} /> Disabled
                             </span>
                           )}
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <div className="inline-flex items-center gap-2 px-3 py-1 bg-orange-50 text-orange-600 rounded-xl border border-orange-100">
-                            <span className="text-sm font-black">🔥 {user.current_streak}</span>
-                          </div>
                         </TableCell>
                         <TableCell className="text-right text-xs font-bold text-[#7182C7]">
                           {format(parseISO(user.created_at), 'MMMM d, yyyy')}

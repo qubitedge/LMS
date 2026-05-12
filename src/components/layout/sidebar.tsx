@@ -14,9 +14,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 const internNav = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/progress', label: 'My Learning', icon: TrendingUp },
-  { href: '/programmes', label: 'Programmes', icon: BookOpen },
+  // { href: '/programmes', label: 'Programmes', icon: BookOpen },
   { href: '/attendance', label: 'Attendance', icon: CalendarCheck },
-  { href: '/tasks', label: 'Tasks', icon: ClipboardList },
+  // { href: '/tasks', label: 'Tasks', icon: ClipboardList },
   { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
   { href: '/profile', label: 'Profile', icon: User },
 ];
@@ -26,7 +26,7 @@ const adminNav = [
   { href: '/admin/users', label: 'Users', icon: User },
   { href: '/admin/curriculum', label: 'Events', icon: CalendarCheck },
   { href: '/admin/quizzes', label: 'Quizzes', icon: TrendingUp },
-  { href: '/admin/submissions', label: 'Submissions', icon: ClipboardList },
+  // { href: '/admin/submissions', label: 'Submissions', icon: ClipboardList },
   { href: '/admin/attendance', label: 'Attendance', icon: CalendarCheck },
   { href: '/admin/announcements', label: 'Announcements', icon: Trophy },
   { href: '/admin/leaderboard', label: 'Leaderboard', icon: Trophy },
@@ -168,15 +168,7 @@ export default function Sidebar({ user, completedDays }: SidebarProps) {
 
             {/* Micro Stats */}
             {!isAdmin && (
-              <div className="flex items-center justify-between gap-2 mb-6 p-4 rounded-2xl bg-[#E9EEF9]/50 border border-white shadow-inner">
-                <div className="text-center flex-1">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-[#7182C7] mb-1">Streak</p>
-                  <p className="text-sm font-black text-[#1A1A2E] flex items-center justify-center gap-1">
-                    <span className="text-orange-500">🔥</span>
-                    {user?.current_streak || 0}
-                  </p>
-                </div>
-                <div className="w-[1px] h-6 bg-slate-200" />
+              <div className="flex items-center justify-center mb-6 p-4 rounded-2xl bg-[#E9EEF9]/50 border border-white shadow-inner">
                 <div className="text-center flex-1">
                   <p className="text-[10px] font-black uppercase tracking-widest text-[#7182C7] mb-1">Present</p>
                   <p className="text-sm font-black text-[#1A1A2E] flex items-center justify-center gap-1">
@@ -202,26 +194,27 @@ export default function Sidebar({ user, completedDays }: SidebarProps) {
       </aside>
 
       {/* Mobile Bottom Nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t z-50 flex justify-around py-4 px-4 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] border-slate-100">
-        {internNav.slice(0, 5).map((item) => {
-          const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href));
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t z-50 flex justify-around py-2 px-2 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] border-slate-100">
+        {navItems.slice(0, 5).map((item) => {
+          const isActive = pathname === item.href || 
+            (item.href !== '/dashboard' && item.href !== '/admin' && pathname.startsWith(item.href));
           return (
             <Link key={item.href} href={item.href} className="relative flex-1 flex justify-center">
               {isActive && (
                 <motion.div 
                   layoutId="mobile-nav"
-                  className="absolute inset-0 bg-[#4A5DB5]/10 rounded-2xl" 
+                  className="absolute inset-0 bg-[#4A5DB5]/10 rounded-xl" 
                 />
               )}
-              <div className={`relative z-10 flex flex-col items-center gap-1.5 py-2 px-4 transition-all duration-300
+              <div className={`relative z-10 flex flex-col items-center gap-1 py-1.5 px-1 transition-all duration-300
                 ${isActive ? 'text-[#2238A4]' : 'text-[#7182C7]'}`}>
                 <motion.div 
                   whileTap={{ scale: 0.8 }}
                   className={`transition-all duration-500 ${isActive ? 'drop-shadow-sm scale-110' : ''}`}
                 >
-                  <item.icon size={22} />
+                  <item.icon size={20} />
                 </motion.div>
-                <span className="text-[9px] font-black uppercase tracking-tighter">{item.label}</span>
+                <span className="text-[8px] font-black uppercase tracking-tighter text-center">{item.label}</span>
               </div>
             </Link>
           );

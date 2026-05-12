@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Trophy, Medal, Flame, Star, CheckCircle2, 
+  Trophy, Medal, Star, CheckCircle2, 
   Search, Filter, ChevronRight, Crown,
   User, ArrowUp, ArrowDown, Minus
 } from 'lucide-react';
@@ -20,8 +20,6 @@ interface LeaderboardEntry {
   avatar_url: string | null;
   domain: string | null;
   score: number;
-  current_streak: number;
-  tasks_completed: number;
 }
 
 interface LeaderboardContentProps {
@@ -167,8 +165,7 @@ export default function LeaderboardContent({ entries, currentUserId }: Leaderboa
                   <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-[#A0ACDC]">Rank</th>
                   <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-[#A0ACDC]">Performer</th>
                   <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-[#A0ACDC] hidden md:table-cell">Expertise</th>
-                  <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-[#A0ACDC]">EXP ⭐</th>
-                  <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-[#A0ACDC] hidden sm:table-cell">Streak</th>
+                  <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-[#A0ACDC]">Quiz Marks 📝</th>
                   <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-[#A0ACDC]"></th>
                 </tr>
               </thead>
@@ -222,12 +219,6 @@ export default function LeaderboardContent({ entries, currentUserId }: Leaderboa
                           <div className="w-24 h-1.5 bg-slate-100 rounded-full overflow-hidden">
                              <div className="h-full bg-[#4A5DB5]" style={{ width: `${Math.min(100, (entry.score / (entries[0]?.score || 1)) * 100)}%` }} />
                           </div>
-                        </div>
-                      </td>
-                      <td className="px-8 py-6 hidden sm:table-cell">
-                        <div className="flex items-center gap-2">
-                          <Flame size={18} className={entry.current_streak > 0 ? 'text-orange-500' : 'text-slate-300'} />
-                          <span className="font-black text-[#1A1A2E]">{entry.current_streak}</span>
                         </div>
                       </td>
                       <td className="px-8 py-6 text-right">
@@ -314,10 +305,9 @@ function PodiumCard({ entry, type, isCurrentUser }: { entry: LeaderboardEntry; t
               <p className="text-xl font-black text-[#2238A4]">{entry.score.toLocaleString()}</p>
            </div>
            <div className="text-right">
-              <p className="text-[10px] font-black uppercase tracking-widest text-[#A0ACDC] mb-1">Streak</p>
-              <p className="text-xl font-black text-orange-500 flex items-center justify-end gap-1">
-                <Flame size={18} />
-                {entry.current_streak}
+              <p className="text-[10px] font-black uppercase tracking-widest text-[#A0ACDC] mb-1">Domain</p>
+              <p className="text-[10px] font-black text-[#1A1A2E] truncate">
+                {entry.domain || 'Intern'}
               </p>
            </div>
         </div>

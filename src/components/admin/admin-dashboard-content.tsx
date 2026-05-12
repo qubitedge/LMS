@@ -108,7 +108,7 @@ export default function AdminDashboardContent({
                 </div>
               </Link>
 
-              <Link href="/admin/submissions" className="group block p-6 rounded-[2rem] bg-white border border-slate-100 hover:border-[#4A5DB5]/30 hover:shadow-xl transition-all duration-300">
+              {/* <Link href="/admin/submissions" className="group block p-6 rounded-[2rem] bg-white border border-slate-100 hover:border-[#4A5DB5]/30 hover:shadow-xl transition-all duration-300">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-[#E9EEF9] flex items-center justify-center text-[#4A5DB5] group-hover:bg-[#4A5DB5] group-hover:text-white transition-colors">
@@ -140,7 +140,7 @@ export default function AdminDashboardContent({
                     <CheckCircle2 size={24} />
                   </div>
                 </div>
-              </Link>
+              </Link> */}
             </CardContent>
           </Card>
 
