@@ -18,6 +18,7 @@ const internNav = [
   { href: '/attendance', label: 'Attendance', icon: CalendarCheck },
   // { href: '/tasks', label: 'Tasks', icon: ClipboardList },
   { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
+  { href: '/certifications', label: 'My Certifications', icon: BookOpen },
   { href: '/profile', label: 'Profile', icon: User },
 ];
 

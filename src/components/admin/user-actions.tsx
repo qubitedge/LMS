@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Trash2, Edit3, MoreVertical, Loader2, User, Mail, Shield, Lock, CheckCircle2 } from 'lucide-react';
+import { Trash2, Edit3, MoreVertical, Loader2, User, Mail, Shield, Lock, CheckCircle2, FileText, Eye, EyeOff } from 'lucide-react';
 import { 
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, 
   DropdownMenuTrigger, DropdownMenuSeparator 
@@ -17,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import UserDocumentsDialog from './user-documents-dialog';
 
 interface UserActionsProps {
   user: {
@@ -26,16 +27,20 @@ interface UserActionsProps {
     domain?: string;
     role: string;
     is_active: boolean;
+    offer_letter_url?: string;
+    certificate_url?: string;
   };
 }
 
 export default function UserActions({ user }: UserActionsProps) {
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showDocsDialog, setShowDocsDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isTogglingStatus, setIsTogglingStatus] = useState(false);
   const [isPromoting, setIsPromoting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [editData, setEditData] = useState({
     full_name: user.full_name,
     email: user.email,
@@ -179,6 +184,16 @@ export default function UserActions({ user }: UserActionsProps) {
             Edit Profile
           </DropdownMenuItem>
 
+          {user.role !== 'admin' && (
+            <DropdownMenuItem 
+              className="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-slate-50 text-[#1A1A2E] font-bold transition-colors"
+              onClick={() => setShowDocsDialog(true)}
+            >
+              <FileText size={16} className="text-emerald-500" />
+              Manage Documents
+            </DropdownMenuItem>
+          )}
+
           {user.role !== 'admin' ? (
             <DropdownMenuItem 
               className="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-slate-50 text-[#1A1A2E] font-bold transition-colors"
@@ -270,12 +285,19 @@ export default function UserActions({ user }: UserActionsProps) {
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A0ACDC]" size={18} />
                   <Input 
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     placeholder="New password (min 6 chars)"
                     value={editData.password}
                     onChange={(e) => setEditData({...editData, password: e.target.value})}
-                    className="h-14 rounded-2xl border-slate-200 bg-slate-50/50 pl-12 font-bold focus:bg-white transition-all"
+                    className="h-14 rounded-2xl border-slate-200 bg-slate-50/50 pl-12 pr-12 font-bold focus:bg-white transition-all"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#A0ACDC] hover:text-[#4A5DB5] transition-colors"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
                 </div>
               </div>
             </div>
@@ -329,6 +351,12 @@ export default function UserActions({ user }: UserActionsProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <UserDocumentsDialog 
+        user={user} 
+        open={showDocsDialog} 
+        onOpenChange={setShowDocsDialog} 
+      />
     </>
   );
 }

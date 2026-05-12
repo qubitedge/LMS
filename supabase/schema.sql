@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS profiles (
   longest_streak INT DEFAULT 0,
   last_active_date DATE,
   is_active BOOLEAN DEFAULT TRUE,
+  offer_letter_url TEXT,
+  certificate_url TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -316,6 +318,24 @@ WITH CHECK (bucket_id = 'submissions');
 CREATE POLICY "submissions_bucket_select"
 ON storage.objects FOR SELECT TO authenticated
 USING (bucket_id = 'submissions');
+
+-- =====================
+-- DOCUMENTS BUCKET
+-- =====================
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('documents', 'documents', true)
+ON CONFLICT DO NOTHING;
+
+DROP POLICY IF EXISTS "documents_bucket_admin_all" ON storage.objects;
+DROP POLICY IF EXISTS "documents_bucket_public_read" ON storage.objects;
+
+CREATE POLICY "documents_bucket_admin_all"
+ON storage.objects FOR ALL TO authenticated
+USING (bucket_id = 'documents' AND is_admin());
+
+CREATE POLICY "documents_bucket_public_read"
+ON storage.objects FOR SELECT TO authenticated
+USING (bucket_id = 'documents');
 
 -- =====================
 -- SEED DATA
