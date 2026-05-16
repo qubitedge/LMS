@@ -6,24 +6,30 @@ import UserCreateDialog from '@/components/admin/user-create-dialog';
 import UserActions from '@/components/admin/user-actions';
 import BulkUserUpload from '@/components/admin/bulk-user-upload';
 import UserListExport from '@/components/admin/user-list-export';
-import { Users, Mail, Shield, CheckCircle2, XCircle, FileText, Award } from 'lucide-react';
+import UserSearch from '@/components/admin/user-search';
+import { Users, Mail, Shield, CheckCircle2, XCircle, FileText, Award, Search } from 'lucide-react';
 import Link from 'next/link';
 
 export const revalidate = 0;
 
 interface PageProps {
-  searchParams: Promise<{ role?: string }>;
+  searchParams: Promise<{ role?: string; q?: string }>;
 }
 
 export default async function AdminUsersPage({ searchParams }: PageProps) {
-  const { role = 'intern' } = await searchParams;
+  const { role = 'intern', q = '' } = await searchParams;
   const supabase = await createClient();
 
-  const { data: users } = await supabase
+  let query = supabase
     .from('profiles')
     .select('*')
-    .eq('role', role)
-    .order('created_at', { ascending: false });
+    .eq('role', role);
+
+  if (q) {
+    query = query.or(`full_name.ilike.%${q}%,email.ilike.%${q}%`);
+  }
+
+  const { data: users } = await query.order('created_at', { ascending: false });
 
   return (
     <div className="relative pb-10">
@@ -64,6 +70,15 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
           </div>
         </div>
 
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+          <UserSearch />
+          {q && (
+            <p className="text-sm font-bold text-[#7182C7]">
+              Showing results for "<span className="text-[#4A5DB5]">{q}</span>"
+            </p>
+          )}
+        </div>
+
         <Card className="rounded-[2.5rem] bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl overflow-hidden">
           <CardContent className="p-0">
             <div className="overflow-x-auto">
@@ -83,8 +98,10 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                     <TableRow>
                       <TableCell colSpan={role === 'intern' ? 6 : 5} className="text-center py-20">
                         <div className="flex flex-col items-center gap-4 text-[#7182C7]">
-                          <Users size={48} className="opacity-20" />
-                          <p className="font-bold">No {role}s found.</p>
+                          {q ? <Search size={48} className="opacity-20" /> : <Users size={48} className="opacity-20" />}
+                          <p className="font-bold">
+                            {q ? `No ${role}s found matching "${q}"` : `No ${role}s found.`}
+                          </p>
                         </div>
                       </TableCell>
                     </TableRow>
