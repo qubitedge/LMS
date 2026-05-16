@@ -21,6 +21,7 @@ interface DayEditDialogProps {
     tutor_name: string | null;
     video_url: string | null;
     resource_link: string | null;
+    quiz_link: string | null;
     sub_topics?: string | null;
   };
   children?: React.ReactElement;
@@ -36,6 +37,7 @@ export default function DayEditDialog({ weekId, day, children }: DayEditDialogPr
     tutor_name: day?.tutor_name || '',
     video_url: day?.video_url || '',
     resource_link: day?.resource_link || '',
+    quiz_link: day?.quiz_link || '',
     sub_topics: day?.sub_topics || '',
   });
 
@@ -212,17 +214,33 @@ export default function DayEditDialog({ weekId, day, children }: DayEditDialogPr
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black text-[#7182C7] uppercase tracking-widest px-2">External Resource Link</Label>
-                <div className="relative">
-                  <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A0ACDC]" size={18} />
-                  <Input 
-                    name="resource_link"
-                    value={formData.resource_link} 
-                    onChange={handleChange} 
-                    placeholder="https://github.com/..."
-                    className="h-14 rounded-2xl border-slate-200 bg-slate-50/50 pl-12 font-bold focus:bg-white transition-all"
-                  />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black text-[#7182C7] uppercase tracking-widest px-2">External Resource Link</Label>
+                  <div className="relative">
+                    <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A0ACDC]" size={18} />
+                    <Input 
+                      name="resource_link"
+                      value={formData.resource_link} 
+                      onChange={handleChange} 
+                      placeholder="https://github.com/..."
+                      className="h-14 rounded-2xl border-slate-200 bg-slate-50/50 pl-12 font-bold focus:bg-white transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black text-[#7182C7] uppercase tracking-widest px-2">Quiz Link (Google Form)</Label>
+                  <div className="relative">
+                    <ClipboardList className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A0ACDC]" size={18} />
+                    <Input 
+                      name="quiz_link"
+                      value={formData.quiz_link} 
+                      onChange={handleChange} 
+                      placeholder="https://forms.gle/..."
+                      className="h-14 rounded-2xl border-slate-200 bg-slate-50/50 pl-12 font-bold focus:bg-white transition-all"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

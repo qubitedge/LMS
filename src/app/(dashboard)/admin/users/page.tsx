@@ -6,7 +6,7 @@ import UserCreateDialog from '@/components/admin/user-create-dialog';
 import UserActions from '@/components/admin/user-actions';
 import BulkUserUpload from '@/components/admin/bulk-user-upload';
 import UserListExport from '@/components/admin/user-list-export';
-import { Users, Mail, Shield, CheckCircle2, XCircle } from 'lucide-react';
+import { Users, Mail, Shield, CheckCircle2, XCircle, FileText, Award } from 'lucide-react';
 import Link from 'next/link';
 
 export const revalidate = 0;
@@ -73,6 +73,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                     <TableHead className="font-black text-[#1A1A2E] px-8 py-6">User Profile</TableHead>
                     <TableHead className="font-black text-[#1A1A2E]">Category</TableHead>
                     <TableHead className="font-black text-[#1A1A2E] text-center">Status</TableHead>
+                    {role === 'intern' && <TableHead className="font-black text-[#1A1A2E] text-center">Certifications</TableHead>}
                     <TableHead className="font-black text-[#1A1A2E] text-right">Joined Date</TableHead>
                     <TableHead className="font-black text-[#1A1A2E] text-right px-8">Actions</TableHead>
                   </TableRow>
@@ -80,7 +81,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                 <TableBody>
                   {!users || users.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center py-20">
+                      <TableCell colSpan={role === 'intern' ? 6 : 5} className="text-center py-20">
                         <div className="flex flex-col items-center gap-4 text-[#7182C7]">
                           <Users size={48} className="opacity-20" />
                           <p className="font-bold">No {role}s found.</p>
@@ -119,6 +120,24 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                             </span>
                           )}
                         </TableCell>
+                        {role === 'intern' && (
+                          <TableCell>
+                            <div className="flex items-center justify-center gap-3">
+                              <div 
+                                title={user.offer_letter_url ? "Offer Letter Issued" : "Offer Letter Pending"} 
+                                className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all border ${user.offer_letter_url ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-slate-50 text-slate-300 border-slate-100'}`}
+                              >
+                                <FileText size={16} />
+                              </div>
+                              <div 
+                                title={user.certificate_url ? "Certificate Issued" : "Certificate Pending"} 
+                                className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all border ${user.certificate_url ? 'bg-amber-50 text-amber-600 border-amber-100' : 'bg-slate-50 text-slate-300 border-slate-100'}`}
+                              >
+                                <Award size={16} />
+                              </div>
+                            </div>
+                          </TableCell>
+                        )}
                         <TableCell className="text-right text-xs font-bold text-[#7182C7]">
                           {format(parseISO(user.created_at), 'MMMM d, yyyy')}
                         </TableCell>

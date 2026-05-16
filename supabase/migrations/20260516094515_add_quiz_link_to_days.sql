@@ -1,0 +1,1 @@
+ALTER TABLE days ADD COLUMN quiz_link TEXT;

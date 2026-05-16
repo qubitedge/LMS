@@ -5,7 +5,7 @@ import DayEditDialog from '@/components/admin/day-edit-dialog';
 import QuizPlayer from '@/components/quiz/quiz-player';
 import ScoreCard from '@/components/quiz/score-card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, BookOpen, ExternalLink, User, PlayCircle, Edit3 } from 'lucide-react';
+import { ArrowLeft, BookOpen, ExternalLink, User, PlayCircle, Edit3, ClipboardList } from 'lucide-react';
 import Link from 'next/link';
 import { format, parseISO } from 'date-fns';
 
@@ -67,130 +67,186 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
   }
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 pb-10">
-      <Link href="/progress" className="inline-flex items-center text-sm font-medium hover:underline mb-6" style={{ color: '#7A7268' }}>
-        <ArrowLeft size={16} className="mr-1" /> Back to Curriculum
-      </Link>
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20">
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
+        <div>
+          <Link href="/progress" className="inline-flex items-center text-sm font-black uppercase tracking-widest text-[#7182C7] hover:text-[#4A5DB5] mb-4 transition-colors">
+            <ArrowLeft size={16} className="mr-2" /> Back to Curriculum
+          </Link>
+          <h1 className="text-5xl font-black text-[#1A1A2E] tracking-tighter italic">
+            {day.topic}
+          </h1>
+          <p className="text-[#7182C7] font-bold mt-2">
+            Module {day.weeks?.week_number}: {day.weeks?.title} • Day {day.day_number}
+          </p>
+        </div>
 
-      <div className="mb-10">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-          <div className="flex items-center gap-3">
-            <span className="text-xs font-black font-mono px-3 py-1 rounded-lg uppercase shadow-sm" style={{ background: '#4A5DB5', color: '#FFFFFF' }}>
-              Day {day.day_number}
-            </span>
-            <span className="text-sm font-bold text-[#7182C7]">
-              {format(parseISO(day.date), 'MMMM d, yyyy')}
-            </span>
+        <div className="flex items-center gap-4">
+          {isAdmin && (
+            <DayEditDialog day={day}>
+              <Button variant="outline" className="h-14 px-6 rounded-2xl border-[#4A5DB5]/20 text-[#4A5DB5] font-black uppercase text-xs tracking-widest hover:bg-[#4A5DB5] hover:text-white transition-all shadow-lg shadow-blue-900/5">
+                <Edit3 size={18} className="mr-2" /> Edit Module
+              </Button>
+            </DayEditDialog>
+          )}
+          <div className="px-6 py-3 bg-white rounded-2xl border border-blue-50 shadow-xl shadow-blue-900/5 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#7182C7] to-[#4A5DB5] flex items-center justify-center text-white shadow-lg">
+              <User size={20} />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-[#A0ACDC] uppercase tracking-widest">Instructor</p>
+              <p className="text-sm font-black text-[#1A1A2E]">{day.tutor_name || 'TBA'}</p>
+            </div>
           </div>
-          <div className="flex items-center gap-3">
-            {isAdmin && (
-              <DayEditDialog day={day}>
-                <Button variant="outline" size="sm" className="rounded-xl border-blue-100 text-[#4A5DB5] font-black uppercase text-[10px] tracking-widest hover:bg-blue-50">
-                  <Edit3 size={14} className="mr-2" /> Edit Module
-                </Button>
-              </DayEditDialog>
-            )}
-            <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-2xl border border-blue-50 shadow-sm">
-              <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-[#4A5DB5]">
-                <User size={16} />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Box 1: Watch recorded video with PPT and Deck */}
+        <div className="lg:col-span-2 space-y-8">
+          <div className="bg-white rounded-[3rem] p-10 shadow-2xl shadow-blue-900/10 border border-white flex flex-col h-full group">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-red-50 text-red-500 flex items-center justify-center shadow-lg shadow-red-200 group-hover:scale-110 transition-transform">
+                  <PlayCircle size={32} />
+                </div>
+                <h3 className="text-2xl font-black text-[#1A1A2E] italic">Watch Recording</h3>
               </div>
-              <span className="text-xs font-black text-[#1A1A2E]">{day.tutor_name || 'TBA'}</span>
+              <span className="text-[10px] font-black text-red-500 uppercase tracking-[0.2em] bg-red-50 px-4 py-2 rounded-full">Session Video</span>
+            </div>
+
+            <div className="relative aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-slate-50 mb-8 bg-slate-100 flex items-center justify-center">
+              {day.video_url ? (
+                day.video_url.includes('youtube.com') || day.video_url.includes('youtu.be') ? (
+                  <iframe
+                    className="absolute inset-0 w-full h-full"
+                    src={`https://www.youtube.com/embed/${day.video_url.split('v=')[1]?.split('&')[0] || day.video_url.split('/').pop()}`}
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                ) : (
+                  <div className="text-center p-10">
+                    <p className="font-bold text-[#7182C7] mb-6">Recording available on external platform</p>
+                    <a href={day.video_url} target="_blank" rel="noopener noreferrer">
+                      <Button className="h-16 px-10 rounded-2xl bg-red-500 hover:bg-red-600 text-white font-black text-lg shadow-xl shadow-red-500/20">
+                        Open Recording <ExternalLink size={20} className="ml-2" />
+                      </Button>
+                    </a>
+                  </div>
+                )
+              ) : (
+                <div className="text-center p-10">
+                  <PlayCircle size={64} className="mx-auto text-slate-300 mb-4" />
+                  <p className="font-bold text-slate-400 italic">Recording will be uploaded soon</p>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-auto">
+              <h4 className="text-[10px] font-black text-[#A0ACDC] uppercase tracking-[0.2em] mb-4">Study Materials</h4>
+              <div className="flex flex-wrap gap-4">
+                {day.resource_link ? (
+                  <a href={day.resource_link} target="_blank" rel="noopener noreferrer" className="flex-1">
+                    <div className="flex items-center gap-4 p-6 rounded-3xl bg-[#F0F4FF] border border-[#4A5DB5]/10 hover:bg-[#4A5DB5] hover:text-white transition-all group/btn">
+                      <div className="w-12 h-12 rounded-2xl bg-white text-[#4A5DB5] flex items-center justify-center shadow-lg group-hover/btn:scale-110 transition-transform">
+                        <BookOpen size={24} />
+                      </div>
+                      <div>
+                        <p className="font-black italic">PPT & Class Deck</p>
+                        <p className="text-[10px] font-bold opacity-60 uppercase tracking-widest">Download PDF / Slides</p>
+                      </div>
+                    </div>
+                  </a>
+                ) : (
+                  <div className="flex-1 flex items-center gap-4 p-6 rounded-3xl bg-slate-50 border border-slate-100 opacity-50 cursor-not-allowed">
+                    <div className="w-12 h-12 rounded-2xl bg-white text-slate-400 flex items-center justify-center shadow-sm">
+                      <BookOpen size={24} />
+                    </div>
+                    <div>
+                      <p className="font-black italic">PPT & Class Deck</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest">Not Available Yet</p>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
 
-        <h1 className="text-4xl md:text-5xl font-black mb-6 tracking-tight" style={{ fontFamily: 'Playfair Display', color: '#1A1A2E' }}>
-          {day.topic}
-        </h1>
-        
-        <p className="text-lg font-medium leading-relaxed max-w-3xl text-[#7182C7] mb-8">
-          {day.description}
-        </p>
-
-        {day.sub_topics && (
-          <div className="space-y-3 mb-10">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#A0ACDC]">In this module</p>
-            <div className="flex flex-wrap gap-2">
-              {day.sub_topics.split(';').map((topic: string, i: number) => (
-                <span key={i} className="px-4 py-2 bg-white border border-blue-50 rounded-xl text-xs font-bold text-[#4A5DB5] shadow-sm">
-                  {topic.trim()}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className="flex flex-wrap gap-4 mb-12">
-        {day.video_url && (
-          <div className="w-full mb-8">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#A0ACDC] mb-4">Lecture Recording</p>
-            {day.video_url.includes('youtube.com') || day.video_url.includes('youtu.be') ? (
-              <div className="relative aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-white">
-                <iframe
-                  className="absolute inset-0 w-full h-full"
-                  src={`https://www.youtube.com/embed/${day.video_url.split('v=')[1]?.split('&')[0] || day.video_url.split('/').pop()}`}
-                  title="YouTube video player"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
+        <div className="space-y-8">
+          {/* Box 2: Description of class */}
+          <div className="bg-white rounded-[3rem] p-10 shadow-2xl shadow-blue-900/10 border border-white group">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="w-14 h-14 rounded-2xl bg-blue-50 text-[#4A5DB5] flex items-center justify-center shadow-lg shadow-blue-200 group-hover:scale-110 transition-transform">
+                <BookOpen size={32} />
               </div>
-            ) : (
-              <a href={day.video_url} target="_blank" rel="noopener noreferrer" className="flex-1">
-                <div className="flex items-center gap-4 px-6 py-4 rounded-[1.5rem] border transition-all hover:bg-blue-50/50 hover:border-[#4A5DB5]/30 group" style={{ borderColor: 'rgba(74,93,181,0.2)', background: 'white' }}>
-                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-[#4A5DB5] text-white shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
-                    <PlayCircle size={22} />
-                  </div>
-                  <div>
-                    <p className="text-sm font-black text-[#1A1A2E]">Session Recording</p>
-                    <p className="text-[10px] font-bold text-[#4A5DB5]">Watch Video</p>
+              <h3 className="text-2xl font-black text-[#1A1A2E] italic">Class Insights</h3>
+            </div>
+            
+            <div className="space-y-6">
+              <div>
+                <h4 className="text-[10px] font-black text-[#A0ACDC] uppercase tracking-[0.2em] mb-3">Overview</h4>
+                <p className="text-md font-bold leading-relaxed text-[#7182C7] italic">
+                  {day.description || 'This session covers the fundamental principles and practical applications of the topic.'}
+                </p>
+              </div>
+
+              {day.sub_topics && (
+                <div>
+                  <h4 className="text-[10px] font-black text-[#A0ACDC] uppercase tracking-[0.2em] mb-4">Core Topics</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {day.sub_topics.split('-').map((topic: string, i: number) => (
+                      <span key={i} className="px-4 py-2 bg-slate-50 border border-slate-100 rounded-xl text-[11px] font-black text-[#4A5DB5] uppercase tracking-tighter">
+                        {topic.trim()}
+                      </span>
+                    ))}
                   </div>
                 </div>
-              </a>
-            )}
+              )}
+            </div>
           </div>
-        )}
 
-        <div className="w-full">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#A0ACDC] mb-4">Module Insights</p>
-          <div className="bg-white rounded-[2.5rem] p-10 border border-blue-50 shadow-sm leading-relaxed text-[#5A68A3] font-medium whitespace-pre-wrap">
-            {day.description}
+          {/* Box 3: Quiz Box */}
+          <div className="bg-[#1A1A2E] rounded-[3rem] p-10 shadow-2xl shadow-blue-900/20 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-10 opacity-10 text-white">
+              <ClipboardList size={120} />
+            </div>
+            
+            <div className="relative z-10">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-14 h-14 rounded-2xl bg-white/10 text-white flex items-center justify-center backdrop-blur-xl border border-white/20 shadow-lg group-hover:scale-110 transition-transform">
+                  <ClipboardList size={32} />
+                </div>
+                <h3 className="text-2xl font-black text-white italic">Knowledge Check</h3>
+              </div>
+
+              <p className="text-white/60 font-bold mb-10 text-sm leading-relaxed">
+                Complete the daily assessment to validate your understanding and earn progress badges.
+              </p>
+
+              {day.quiz_link ? (
+                <a href={day.quiz_link} target="_blank" rel="noopener noreferrer" className="block">
+                  <Button className="w-full h-20 rounded-[2rem] bg-gradient-to-r from-[#4A5DB5] to-[#7182C7] hover:scale-[1.02] active:scale-95 transition-all text-white font-black text-xl shadow-2xl shadow-blue-500/40">
+                    GET QUIZ <ExternalLink size={24} className="ml-3" />
+                  </Button>
+                </a>
+              ) : (
+                <div className="text-center py-6 px-4 rounded-[2rem] border-2 border-dashed border-white/20">
+                  <p className="text-white/40 font-black italic uppercase tracking-widest text-sm">
+                    Quiz will be activated soon
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Decorative background element */}
+            <div className="absolute -bottom-20 -right-20 w-60 h-60 bg-[#4A5DB5]/20 blur-[100px] rounded-full" />
           </div>
         </div>
-
-        {day.resource_link && (
-          <a href={day.resource_link} target="_blank" rel="noopener noreferrer" className="mt-6">
-            <div className="flex items-center gap-4 px-8 py-5 rounded-[2rem] border transition-all hover:bg-blue-50/50 hover:border-[#40C4D0]/30 group" style={{ borderColor: 'rgba(64,196,208,0.2)', background: 'white' }}>
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-[#40C4D0] text-white shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform">
-                <BookOpen size={22} />
-              </div>
-              <div>
-                <p className="text-sm font-black text-[#1A1A2E]">Download Resources</p>
-                <p className="text-[10px] font-bold text-[#40C4D0]">PDFs, Slides & Code</p>
-              </div>
-            </div>
-          </a>
-        )}
-      </div>
-
-      <div className="border-t pt-10" style={{ borderColor: 'rgba(201,168,130,0.3)' }}>
-        {!quiz ? (
-          <div className="text-center py-10 bg-[#FAFAFA] rounded-2xl border" style={{ borderColor: 'rgba(201,168,130,0.3)' }}>
-            <h3 className="text-lg font-bold mb-2" style={{ color: '#2C2C2C' }}>No Quiz Today</h3>
-            <p className="text-sm" style={{ color: '#7A7268' }}>There is no quiz assigned for this day's curriculum.</p>
-          </div>
-        ) : status === 'missed' && !hasAttempted ? (
-          <div className="text-center py-10 bg-[#D95F5F]/5 rounded-2xl border border-[#D95F5F]/20">
-            <h3 className="text-lg font-bold mb-2 text-[#D95F5F]">Quiz Expired</h3>
-            <p className="text-sm" style={{ color: '#7A7268' }}>This quiz was only available on {format(parseISO(day.date), 'MMM d')}.</p>
-          </div>
-        ) : hasAttempted ? (
-          <ScoreCard score={scoreObj.score} maxScore={quiz.max_score} />
-        ) : (
-          <QuizPlayer quizId={quiz.id} questions={quiz.questions} />
-        )}
       </div>
     </div>
+
   );
 }

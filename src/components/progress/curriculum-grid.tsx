@@ -198,7 +198,7 @@ export default function CurriculumGrid({
                               x: 10,
                               transition: { type: "spring", stiffness: 400, damping: 25 }
                             } : {}}
-                            onClick={() => (!isLocked || isAdmin) && setSelectedDay(day)}
+                            onClick={() => (!isLocked || isAdmin) && (window.location.href = `/progress/${day.id}`)}
                             className={`relative group rounded-2xl p-4 transition-all duration-300 cursor-pointer overflow-hidden border flex items-center gap-5
                               ${(isLocked && !isAdmin) ? 'opacity-60 bg-slate-50 border-slate-200 cursor-not-allowed' : 'bg-white shadow-sm border-white hover:shadow-md hover:border-blue-100'}
                               ${isActive ? 'ring-2 ring-[#4A5DB5]/10 border-[#4A5DB5]/20' : ''}
@@ -228,7 +228,7 @@ export default function CurriculumGrid({
                                 )}
                               </div>
                               <h3 className="font-bold text-lg text-[#1A1A2E] truncate group-hover:text-[#2238A4] transition-colors">
-                                {day.topic}
+                                {day.sub_topics || day.topic}
                               </h3>
                             </div>
 
