@@ -54,8 +54,21 @@ export function getDayStatusLabel(
 }
 
 /**
- * Server-side validation: checks if a quiz can be attempted today.
+ * Server-side validation: checks if a quiz can be attempted today and within the time window.
  */
 export function canAttemptQuiz(dayDate: string): boolean {
-  return isToday(parseISO(dayDate));
+  return isToday(parseISO(dayDate)) && isWithinQuizWindow();
+}
+
+/**
+ * Checks if current time is within the allowed quiz window (10:00 AM - 2:00 PM IST).
+ */
+export function isWithinQuizWindow(): boolean {
+  const now = new Date();
+  // Get current time in India Standard Time
+  const istDate = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+  const hours = istDate.getHours();
+  
+  // 10 AM (10) to 2 PM (14)
+  return hours >= 10 && hours < 14;
 }

@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 import { calculateStreak } from '@/lib/utils/streak';
-import { canAttemptQuiz } from '@/lib/utils/dayLock';
+import { canAttemptQuiz, isWithinQuizWindow } from '@/lib/utils/dayLock';
+import { parseISO, isToday } from 'date-fns';
 
 export async function POST(req: Request) {
   try {
@@ -21,11 +22,26 @@ export async function POST(req: Request) {
 
     if (quizError || !quiz) return NextResponse.json({ message: 'Quiz not found' }, { status: 404 });
 
-    // 2. Validate Date Lock (Server-side enforcement)
+    // 2. Fetch user profile for role check
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role, current_streak, longest_streak, last_active_date')
+      .eq('id', user.id)
+      .single();
+
+    const isAdmin = profile?.role === 'admin';
+
+    // 3. Validate Date Lock (Server-side enforcement)
     const daysData = quiz.days as any;
     const dayDate = Array.isArray(daysData) ? daysData[0]?.date : daysData?.date;
-    if (!dayDate || !canAttemptQuiz(dayDate)) {
-      return NextResponse.json({ message: 'This quiz is not available for attempt today.' }, { status: 403 });
+
+    if (!isAdmin) {
+      if (!dayDate || !isToday(parseISO(dayDate))) {
+        return NextResponse.json({ message: 'This quiz is not available for attempt today.' }, { status: 403 });
+      }
+      if (!isWithinQuizWindow()) {
+        return NextResponse.json({ message: 'Quiz window is closed. Available between 10:00 AM - 02:00 PM IST.' }, { status: 403 });
+      }
     }
 
     // 3. Check for existing attempt
@@ -52,13 +68,7 @@ export async function POST(req: Request) {
 
     if (insertError) throw insertError;
 
-    // 5. Update Streak
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('current_streak, longest_streak, last_active_date')
-      .eq('id', user.id)
-      .single();
-
+    // 6. Update Streak
     if (profile) {
       const { newStreak, newLongest } = calculateStreak(
         profile.current_streak,

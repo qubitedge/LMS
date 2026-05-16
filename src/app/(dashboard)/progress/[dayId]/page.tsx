@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound, redirect } from 'next/navigation';
-import { getDayStatus } from '@/lib/utils/dayLock';
+import { getDayStatus, isWithinQuizWindow } from '@/lib/utils/dayLock';
 import DayEditDialog from '@/components/admin/day-edit-dialog';
 import QuizPlayer from '@/components/quiz/quiz-player';
 import ScoreCard from '@/components/quiz/score-card';
@@ -227,11 +227,22 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
               </p>
 
               {day.quiz_link ? (
-                <a href={day.quiz_link} target="_blank" rel="noopener noreferrer" className="block">
-                  <Button className="w-full h-20 rounded-[2rem] bg-gradient-to-r from-[#4A5DB5] to-[#7182C7] hover:scale-[1.02] active:scale-95 transition-all text-white font-black text-xl shadow-2xl shadow-blue-500/40">
-                    GET QUIZ <ExternalLink size={24} className="ml-3" />
-                  </Button>
-                </a>
+                (isWithinQuizWindow() || isAdmin) ? (
+                  <a href={day.quiz_link} target="_blank" rel="noopener noreferrer" className="block">
+                    <Button className="w-full h-20 rounded-[2rem] bg-gradient-to-r from-[#4A5DB5] to-[#7182C7] hover:scale-[1.02] active:scale-95 transition-all text-white font-black text-xl shadow-2xl shadow-blue-500/40">
+                      GET QUIZ <ExternalLink size={24} className="ml-3" />
+                    </Button>
+                  </a>
+                ) : (
+                  <div className="text-center py-8 px-6 rounded-[2rem] border-2 border-red-500/20 bg-red-500/5 backdrop-blur-sm">
+                    <p className="text-red-400 font-black italic uppercase tracking-widest text-sm mb-2">
+                      Quiz Window Closed
+                    </p>
+                    <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">
+                      Available daily between 10:00 AM - 02:00 PM IST
+                    </p>
+                  </div>
+                )
               ) : (
                 <div className="text-center py-6 px-4 rounded-[2rem] border-2 border-dashed border-white/20">
                   <p className="text-white/40 font-black italic uppercase tracking-widest text-sm">
