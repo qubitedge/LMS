@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 import { calculateStreak } from '@/lib/utils/streak';
+import { uploadToGoogleDrive } from '@/lib/googleDrive';
 
 export async function POST(req: Request) {
   try {
@@ -9,7 +10,82 @@ export async function POST(req: Request) {
 
     if (!user) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
 
-    const { taskId, format, content, filePath } = await req.json();
+    const contentType = req.headers.get('content-type') || '';
+    
+    let taskId = '';
+    let format = '';
+    let content = '';
+    let filePath = null;
+
+    if (contentType.includes('multipart/form-data')) {
+      const formData = await req.formData();
+      taskId = formData.get('taskId') as string;
+      format = formData.get('format') as string;
+      
+      const file = formData.get('file') as File;
+      const studentName = (formData.get('studentName') as string || '').trim();
+
+      if (file && (format === 'pdf' || format === 'zip')) {
+        // Retrieve full profile details to use their name
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name')
+          .eq('id', user.id)
+          .single();
+
+        const nameToUse = studentName || profile?.full_name || user.email || 'Student';
+        const fileExt = file.name.split('.').pop();
+        // Create an easily identifiable filename for Google Drive
+        const googleDriveFileName = `${nameToUse.replace(/[^a-zA-Z0-9]/g, '_')}_Task_${taskId}_${Date.now()}.${fileExt}`;
+
+        try {
+          const fileBuffer = Buffer.from(await file.arrayBuffer());
+          const uploadResult = await uploadToGoogleDrive(
+            fileBuffer,
+            googleDriveFileName,
+            file.type || 'application/octet-stream'
+          );
+          
+          filePath = uploadResult.webViewLink || uploadResult.webContentLink;
+          content = file.name; // Keep the original filename in text content
+        } catch (driveError: any) {
+          console.error('Google Drive upload failed, falling back to Supabase Storage:', driveError);
+          
+          // Fallback to Supabase Storage
+          const fileName = `${user.id}/${taskId}_${Date.now()}.${fileExt}`;
+          const fileBuffer = Buffer.from(await file.arrayBuffer());
+          
+          const { data, error: uploadError } = await supabase.storage
+            .from('submissions')
+            .upload(fileName, fileBuffer, {
+              contentType: file.type || 'application/octet-stream',
+              upsert: true
+            });
+
+          if (uploadError) throw uploadError;
+          
+          const { data: { publicUrl } } = supabase.storage
+            .from('submissions')
+            .getPublicUrl(fileName);
+            
+          filePath = publicUrl;
+          content = file.name;
+        }
+      } else {
+        content = formData.get('content') as string || '';
+      }
+    } else {
+      // JSON fallback (for standard JSON submissions from other parts of the site)
+      const body = await req.json();
+      taskId = body.taskId;
+      format = body.format;
+      content = body.content;
+      filePath = body.filePath;
+    }
+
+    if (!taskId) {
+      return NextResponse.json({ message: 'Task ID is required' }, { status: 400 });
+    }
 
     // Check existing submission (if any, it will update status to pending again)
     const { data: existing } = await supabase
@@ -20,7 +96,7 @@ export async function POST(req: Request) {
       .maybeSingle();
 
     if (existing) {
-      await supabase
+      const { error: updateError } = await supabase
         .from('submissions')
         .update({
           format,
@@ -30,8 +106,10 @@ export async function POST(req: Request) {
           submitted_at: new Date().toISOString(),
         })
         .eq('id', existing.id);
+
+      if (updateError) throw updateError;
     } else {
-      await supabase
+      const { error: insertError } = await supabase
         .from('submissions')
         .insert({
           task_id: taskId,
@@ -41,6 +119,8 @@ export async function POST(req: Request) {
           file_path: filePath,
           status: 'pending',
         });
+
+      if (insertError) throw insertError;
     }
 
     // Update streak
@@ -72,6 +152,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true });
     
   } catch (error: any) {
+    console.error('Error handling submission:', error);
     return NextResponse.json({ message: error.message || 'Internal Server Error' }, { status: 500 });
   }
 }

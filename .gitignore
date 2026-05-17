@@ -42,3 +42,12 @@ next-env.d.ts
 
 # gemini
 .gemini/
+
+# Google service account credentials
+/learnflow-*.json
+
+# Temporary scratch scripts and exports
+/scratch/
+*.xlsx
+
+

@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { UploadCloud, Code, FileText, Loader2, FileArchive } from 'lucide-react';
+import { UploadCloud, Code, FileText, Loader2, FileArchive, User } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
@@ -23,10 +23,41 @@ export default function SubmissionForm({ taskId, acceptedFormats }: SubmissionFo
   );
   const [file, setFile] = useState<File | null>(null);
   const [content, setContent] = useState('');
+  const [studentName, setStudentName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const router = useRouter();
   const supabase = createClient();
+
+  useEffect(() => {
+    const fetchProfileName = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('full_name')
+            .eq('id', user.id)
+            .single();
+          
+          if (profile?.full_name) {
+            setStudentName(profile.full_name);
+          } else if (user.email) {
+            // Fallback to name parsed from email
+            const parsedName = user.email.split('@')[0]
+              .split('.')
+              .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+              .join(' ');
+            setStudentName(parsedName);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching user profile name:', err);
+      }
+    };
+
+    fetchProfileName();
+  }, [supabase]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -39,56 +70,49 @@ export default function SubmissionForm({ taskId, acceptedFormats }: SubmissionFo
     setIsSubmitting(true);
 
     try {
-      let finalContent = content;
-      let filePath = null;
+      let res;
 
       // Handle file upload
-      if ((activeTab === 'pdf' || activeTab === 'zip') && file) {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) throw new Error('Not authenticated');
+      if ((activeTab === 'pdf' || activeTab === 'zip')) {
+        if (!file) throw new Error('Please upload a file');
+        if (!studentName.trim()) throw new Error('Please enter your name');
 
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${user.id}/${taskId}_${Date.now()}.${fileExt}`;
+        const formData = new FormData();
+        formData.append('taskId', taskId);
+        formData.append('format', activeTab);
+        formData.append('file', file);
+        formData.append('studentName', studentName.trim());
 
-        const { data, error: uploadError } = await supabase.storage
-          .from('submissions')
-          .upload(fileName, file);
+        res = await fetch('/api/tasks/submit', {
+          method: 'POST',
+          body: formData, // Send as multipart/form-data
+        });
+      } else {
+        if (!content.trim()) throw new Error('Please provide submission content');
 
-        if (uploadError) throw uploadError;
-        
-        // Get public URL
-        const { data: { publicUrl } } = supabase.storage
-          .from('submissions')
-          .getPublicUrl(fileName);
-          
-        filePath = publicUrl;
-        finalContent = file.name;
-      } else if (!content) {
-        throw new Error('Please provide submission content');
+        res = await fetch('/api/tasks/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            taskId,
+            format: activeTab,
+            content: content.trim(),
+          }),
+        });
       }
 
-      // Call API to save record and update streak
-      const res = await fetch('/api/tasks/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          taskId,
-          format: activeTab,
-          content: finalContent,
-          filePath,
-        }),
-      });
-
       if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message || 'Submission failed');
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Submission failed');
       }
 
       toast.success('Task submitted successfully!');
+      setFile(null);
+      setContent('');
       router.refresh();
 
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error.message || 'An error occurred during submission.');
     } finally {
       setIsSubmitting(false);
     }
@@ -141,7 +165,21 @@ export default function SubmissionForm({ taskId, acceptedFormats }: SubmissionFo
             </div>
           </TabsContent>
 
-          <TabsContent value="pdf" className="m-0">
+          <TabsContent value="pdf" className="m-0 space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="student-name-pdf" className="text-sm font-bold flex items-center gap-2" style={{ color: '#2C2C2C' }}>
+                <User size={16} className="text-[#40C4D0]" /> Your Full Name (for Google Drive record)
+              </Label>
+              <Input
+                id="student-name-pdf"
+                placeholder="Enter your name"
+                value={studentName}
+                onChange={(e) => setStudentName(e.target.value)}
+                className="rounded-xl border-[1.5px] h-12"
+                style={{ borderColor: 'rgba(201,168,130,0.4)', background: '#FAFAFA' }}
+              />
+            </div>
+            
             <div className="border-2 border-dashed rounded-xl p-8 text-center transition-colors hover:bg-gray-50 relative"
               style={{ borderColor: '#40C4D0' }}>
               <Input
@@ -158,7 +196,21 @@ export default function SubmissionForm({ taskId, acceptedFormats }: SubmissionFo
             </div>
           </TabsContent>
 
-          <TabsContent value="zip" className="m-0">
+          <TabsContent value="zip" className="m-0 space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="student-name-zip" className="text-sm font-bold flex items-center gap-2" style={{ color: '#2C2C2C' }}>
+                <User size={16} className="text-[#40C4D0]" /> Your Full Name (for Google Drive record)
+              </Label>
+              <Input
+                id="student-name-zip"
+                placeholder="Enter your name"
+                value={studentName}
+                onChange={(e) => setStudentName(e.target.value)}
+                className="rounded-xl border-[1.5px] h-12"
+                style={{ borderColor: 'rgba(201,168,130,0.4)', background: '#FAFAFA' }}
+              />
+            </div>
+
             <div className="border-2 border-dashed rounded-xl p-8 text-center transition-colors hover:bg-gray-50 relative"
               style={{ borderColor: '#40C4D0' }}>
               <Input
@@ -179,11 +231,11 @@ export default function SubmissionForm({ taskId, acceptedFormats }: SubmissionFo
 
       <Button 
         type="submit" 
-        disabled={isSubmitting || (['pdf', 'zip'].includes(activeTab) && !file) || (['github', 'text'].includes(activeTab) && !content)}
+        disabled={isSubmitting || (['pdf', 'zip'].includes(activeTab) && (!file || !studentName.trim())) || (['github', 'text'].includes(activeTab) && !content.trim())}
         className="btn-primary w-full h-12 text-md"
       >
         {isSubmitting ? (
-          <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...</>
+          <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting to Drive...</>
         ) : (
           'Submit Task'
         )}

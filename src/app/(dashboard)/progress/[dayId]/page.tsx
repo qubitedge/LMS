@@ -5,10 +5,13 @@ import DayEditDialog from '@/components/admin/day-edit-dialog';
 import QuizPlayer from '@/components/quiz/quiz-player';
 import ScoreCard from '@/components/quiz/score-card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, BookOpen, ExternalLink, User, PlayCircle, Edit3, ClipboardList } from 'lucide-react';
+import { ArrowLeft, BookOpen, ExternalLink, User, PlayCircle, Edit3, ClipboardList, FileText } from 'lucide-react';
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogHeader } from '@/components/ui/dialog';
 import Link from 'next/link';
 import { format, parseISO } from 'date-fns';
+import { createAdminClient } from '@/lib/supabase/admin';
+import SubmissionForm from '@/components/tasks/submission-form';
+import { Badge } from '@/components/ui/badge';
 
 export default async function DayDetailPage({ params }: { params: { dayId: string } }) {
   // Await params first to resolve the Promise
@@ -53,6 +56,45 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
   const hasAttempted = !!scoreObj;
   const status = getDayStatus(day.date, hasAttempted);
   const isAdmin = profile?.role === 'admin';
+
+  // Fetch Task for this day
+  let { data: task } = await supabase
+    .from('tasks')
+    .select('*')
+    .eq('day_id', dayId)
+    .maybeSingle();
+
+  // If day has a task link but no task row in DB, create one automatically using admin client!
+  if (!task && day.task_link) {
+    const adminSupabase = createAdminClient();
+    const { data: newTask, error: createError } = await adminSupabase
+      .from('tasks')
+      .insert({
+        day_id: dayId,
+        title: `Task for Day ${day.day_number}: ${day.topic}`,
+        description: `Complete the task assigned for Day ${day.day_number}. Download the task sheet using the link provided above.`,
+        due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days from now
+        accepted_formats: ['pdf', 'zip', 'github', 'text']
+      })
+      .select()
+      .single();
+
+    if (!createError && newTask) {
+      task = newTask;
+    }
+  }
+
+  // Fetch submission for this task
+  let submission = null;
+  if (task) {
+    const { data } = await supabase
+      .from('submissions')
+      .select('*')
+      .eq('task_id', task.id)
+      .eq('user_id', user.id)
+      .maybeSingle();
+    submission = data;
+  }
 
   // Security: block access if locked (Admins bypass)
   if (status === 'locked' && !isAdmin) {
@@ -223,6 +265,77 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
               </div>
             </div>
           </div>
+
+          {task && (
+            <div className="bg-white rounded-[3rem] p-10 shadow-2xl shadow-blue-900/10 border border-white">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-100">
+                <div>
+                  <h3 className="text-3xl font-black text-[#1A1A2E] italic">Submit Your Task</h3>
+                  <p className="text-sm font-bold text-[#7182C7] mt-1">
+                    {submission 
+                      ? `Successfully submitted on ${format(parseISO(submission.submitted_at), 'MMM d, yyyy h:mm a')}`
+                      : 'Upload your completed task here. Your files are securely stored on Google Drive.'
+                    }
+                  </p>
+                </div>
+                {submission && (
+                  <Badge className={
+                    submission.status === 'approved' ? 'bg-emerald-500 text-white font-black text-xs uppercase px-4 py-2 rounded-full border-none shadow-lg shadow-emerald-100' : 
+                    submission.status === 'rejected' ? 'bg-rose-500 text-white font-black text-xs uppercase px-4 py-2 rounded-full border-none shadow-lg shadow-rose-100' : 
+                    'bg-amber-500 text-white font-black text-xs uppercase px-4 py-2 rounded-full border-none shadow-lg shadow-amber-100'
+                  }>
+                    {submission.status.toUpperCase()}
+                  </Badge>
+                )}
+              </div>
+
+              {submission ? (
+                <div className="space-y-6">
+                  <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100">
+                    <div className="flex items-center gap-3 mb-4">
+                      <FileText size={20} className="text-[#4A5DB5]" />
+                      <span className="font-black text-sm text-[#1A1A2E] uppercase tracking-wider">Format: {submission.format.toUpperCase()}</span>
+                    </div>
+                    
+                    {submission.format === 'github' ? (
+                      <a href={submission.content} target="_blank" rel="noreferrer" className="inline-flex items-center text-md text-[#4A5DB5] hover:underline font-bold break-all">
+                        {submission.content} <ExternalLink size={16} className="ml-1.5" />
+                      </a>
+                    ) : submission.format === 'text' ? (
+                      <div className="p-4 rounded-xl bg-white border text-sm text-[#1A1A2E] whitespace-pre-wrap font-medium">
+                        {submission.content}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                        <span className="text-sm font-bold text-[#7182C7] italic break-all">{submission.content}</span>
+                        <a href={submission.file_path || '#'} target="_blank" rel="noreferrer">
+                          <Button className="h-14 px-8 rounded-2xl bg-[#4A5DB5] hover:bg-[#2238A4] text-white font-black shadow-lg shadow-blue-500/20">
+                            Open in Google Drive <ExternalLink size={16} className="ml-2" />
+                          </Button>
+                        </a>
+                      </div>
+                    )}
+                  </div>
+
+                  {submission.feedback && (
+                    <div className="p-6 rounded-2xl bg-amber-50/50 border border-amber-100">
+                      <h4 className="text-xs font-black text-amber-700 uppercase tracking-widest mb-2">Faculty Feedback</h4>
+                      <p className="text-sm text-amber-900 font-bold italic">{submission.feedback}</p>
+                    </div>
+                  )}
+
+                  {submission.status === 'rejected' && (
+                    <div className="mt-8 pt-8 border-t border-dashed border-slate-200">
+                      <h4 className="text-xl font-black italic mb-6 text-[#1A1A2E]">Resubmit Your Solution</h4>
+                      <SubmissionForm taskId={task.id} acceptedFormats={task.accepted_formats} />
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <SubmissionForm taskId={task.id} acceptedFormats={task.accepted_formats} />
+              )}
+            </div>
+          )}
         </div>
 
         <div className="space-y-8">
