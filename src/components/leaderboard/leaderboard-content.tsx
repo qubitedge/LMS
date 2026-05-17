@@ -19,6 +19,7 @@ interface LeaderboardEntry {
   full_name: string;
   avatar_url: string | null;
   domain: string | null;
+  role?: string;
   score: number;
 }
 
@@ -203,7 +204,7 @@ export default function LeaderboardContent({ entries, currentUserId }: Leaderboa
                           </div>
                           <div>
                             <p className="font-black text-[#1A1A2E] text-md group-hover:text-[#2238A4] transition-colors">{entry.full_name}</p>
-                            <p className="text-[10px] font-bold text-[#7182C7] md:hidden">{entry.domain}</p>
+                            <p className="text-[10px] font-bold text-[#7182C7] md:hidden">{entry.domain || (entry.role === 'admin' ? 'Administrator' : 'Intern')}</p>
                             {entry.user_id === currentUserId && (
                               <Badge className="bg-blue-500 text-white text-[8px] h-4 mt-1">You</Badge>
                             )}
@@ -211,7 +212,7 @@ export default function LeaderboardContent({ entries, currentUserId }: Leaderboa
                         </div>
                       </td>
                       <td className="px-8 py-6 hidden md:table-cell">
-                        <span className="text-sm font-bold text-[#7182C7]">{entry.domain || 'Intern'}</span>
+                        <span className="text-sm font-bold text-[#7182C7]">{entry.domain || (entry.role === 'admin' ? 'Administrator' : 'Intern')}</span>
                       </td>
                       <td className="px-8 py-6">
                         <div className="flex flex-col gap-1">
@@ -307,7 +308,7 @@ function PodiumCard({ entry, type, isCurrentUser }: { entry: LeaderboardEntry; t
            <div className="text-right">
               <p className="text-[10px] font-black uppercase tracking-widest text-[#A0ACDC] mb-1">Domain</p>
               <p className="text-[10px] font-black text-[#1A1A2E] truncate">
-                {entry.domain || 'Intern'}
+                {entry.domain || (entry.role === 'admin' ? 'Administrator' : 'Intern')}
               </p>
            </div>
         </div>
