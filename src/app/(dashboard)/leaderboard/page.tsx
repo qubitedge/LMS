@@ -14,7 +14,7 @@ export default async function LeaderboardPage() {
     { data: profiles },
     { data: scoresData }
   ] = await Promise.all([
-    supabase.from('profiles').select('id, full_name, avatar_url, domain, role').eq('role', 'intern'),
+    supabase.from('profiles').select('id, full_name, avatar_url, domain, role'),
     supabase.from('scores').select('user_id, score'),
   ]);
 
