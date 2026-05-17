@@ -14,19 +14,28 @@ export async function uploadToGoogleDrive(
   const privateKey = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY || process.env.GOOGLE_PRIVATE_KEY;
   const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
 
-  if (!clientEmail || !privateKey) {
-    throw new Error('Google Drive service account credentials are not configured in environment variables.');
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
+
+  let auth: any;
+
+  if (clientId && clientSecret && refreshToken) {
+    // Authenticate with Google OAuth 2.0 (Best for personal @gmail.com accounts, bypasses quota limit)
+    const oauth2Client = new google.auth.OAuth2(clientId, clientSecret);
+    oauth2Client.setCredentials({ refresh_token: refreshToken });
+    auth = oauth2Client;
+  } else if (clientEmail && privateKey) {
+    // Authenticate with Google Service Account (Best for Workspace / Shared Drives)
+    const formattedPrivateKey = privateKey.replace(/\\n/g, '\n');
+    auth = new google.auth.JWT({
+      email: clientEmail,
+      key: formattedPrivateKey,
+      scopes: ['https://www.googleapis.com/auth/drive']
+    });
+  } else {
+    throw new Error('Google Drive credentials (either OAuth2 Client ID/Secret/Refresh Token or Service Account Email/Private Key) are not configured in environment variables.');
   }
-
-  // Format the private key to handle newlines correctly
-  const formattedPrivateKey = privateKey.replace(/\\n/g, '\n');
-
-  // Authenticate with Google API
-  const auth = new google.auth.JWT({
-    email: clientEmail,
-    key: formattedPrivateKey,
-    scopes: ['https://www.googleapis.com/auth/drive']
-  });
 
   const drive = google.drive({ version: 'v3', auth });
 

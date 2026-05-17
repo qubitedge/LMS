@@ -302,23 +302,33 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
                         <DialogTitle className="text-white font-black italic tracking-wider">{day.topic} - Class Deck</DialogTitle>
                       </DialogHeader>
                       <div className="flex-1 w-full bg-[#1A1A2E] relative">
-                        {day.resource_link.includes('docs.google.com/presentation') ? (
-                          <iframe 
-                            src={day.resource_link.replace(/\/edit.*$/, '/embed?start=false&loop=false&delayms=3000')} 
-                            className="absolute inset-0 w-full h-full border-none"
-                            allowFullScreen
-                          ></iframe>
-                        ) : (
-                          <div className="flex items-center justify-center h-full flex-col gap-6">
-                            <BookOpen size={64} className="text-white/20" />
-                            <p className="text-white/60 font-bold">This resource cannot be embedded directly.</p>
-                            <a href={day.resource_link} target="_blank" rel="noopener noreferrer">
-                              <Button className="h-14 px-8 rounded-2xl bg-[#4A5DB5] hover:bg-[#2238A4] text-white font-black">
-                                Open in New Tab <ExternalLink size={18} className="ml-2" />
-                              </Button>
-                            </a>
-                          </div>
-                        )}
+                        {(() => {
+                          const isGoogleLink = day.resource_link.includes('docs.google.com') || day.resource_link.includes('drive.google.com');
+                          const idMatch = day.resource_link.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                          const fileId = idMatch ? idMatch[1] : null;
+                          
+                          if (isGoogleLink && fileId) {
+                            return (
+                              <iframe 
+                                src={`https://drive.google.com/file/d/${fileId}/preview`} 
+                                className="absolute inset-0 w-full h-full border-none bg-white"
+                                allowFullScreen
+                              ></iframe>
+                            );
+                          }
+                          
+                          return (
+                            <div className="flex items-center justify-center h-full flex-col gap-6">
+                              <BookOpen size={64} className="text-white/20" />
+                              <p className="text-white/60 font-bold">This resource cannot be embedded directly.</p>
+                              <a href={day.resource_link} target="_blank" rel="noopener noreferrer">
+                                <Button className="h-14 px-8 rounded-2xl bg-[#4A5DB5] hover:bg-[#2238A4] text-white font-black">
+                                  Open in New Tab <ExternalLink size={18} className="ml-2" />
+                                </Button>
+                              </a>
+                            </div>
+                          );
+                        })()}
                       </div>
                     </DialogContent>
                   </Dialog>
