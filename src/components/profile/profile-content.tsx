@@ -94,8 +94,9 @@ export default function ProfileContent({ initialProfile, stats }: ProfileContent
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await fetch('/auth/signout', { method: 'POST' });
     router.push('/login');
+    router.refresh();
   };
 
   // Progress calculations

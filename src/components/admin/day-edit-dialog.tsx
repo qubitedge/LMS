@@ -22,6 +22,7 @@ interface DayEditDialogProps {
     video_url: string | null;
     resource_link: string | null;
     quiz_link: string | null;
+    task_link: string | null;
     sub_topics?: string | null;
   };
   children?: React.ReactElement;
@@ -38,6 +39,7 @@ export default function DayEditDialog({ weekId, day, children }: DayEditDialogPr
     video_url: day?.video_url || '',
     resource_link: day?.resource_link || '',
     quiz_link: day?.quiz_link || '',
+    task_link: day?.task_link || '',
     sub_topics: day?.sub_topics || '',
   });
 
@@ -241,6 +243,20 @@ export default function DayEditDialog({ weekId, day, children }: DayEditDialogPr
                       className="h-14 rounded-2xl border-slate-200 bg-slate-50/50 pl-12 font-bold focus:bg-white transition-all"
                     />
                   </div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black text-[#7182C7] uppercase tracking-widest px-2">Task Link (Excel/Google Drive)</Label>
+                <div className="relative">
+                  <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A0ACDC]" size={18} />
+                  <Input 
+                    name="task_link"
+                    value={formData.task_link} 
+                    onChange={handleChange} 
+                    placeholder="https://docs.google.com/spreadsheets/..."
+                    className="h-14 rounded-2xl border-slate-200 bg-slate-50/50 pl-12 font-bold focus:bg-white transition-all"
+                  />
                 </div>
               </div>
             </div>

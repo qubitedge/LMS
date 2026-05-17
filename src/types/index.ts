@@ -40,6 +40,7 @@ export interface Day {
   video_url: string | null;
   sub_topics: string | null;
   quiz_link: string | null;
+  task_link: string | null;
 }
 
 export interface Quiz {

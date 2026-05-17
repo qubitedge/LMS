@@ -145,6 +145,25 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
               )}
             </div>
 
+            {day.task_link && (
+              <div className="mb-8 p-6 rounded-[2rem] bg-[#F4F9F6] border border-[#34C759]/20 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-lg shadow-[#34C759]/5 group">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-2xl bg-white text-[#34C759] flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                    <ClipboardList size={28} />
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-black italic text-[#1A1A2E]">Today's Task</h4>
+                    <p className="text-[10px] font-bold text-[#34C759] uppercase tracking-widest mt-1">Complete the assigned activity</p>
+                  </div>
+                </div>
+                <a href={day.task_link} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+                  <Button className="w-full sm:w-auto h-14 px-8 rounded-2xl bg-[#34C759] hover:bg-[#2DB24F] text-white font-black shadow-xl shadow-[#34C759]/20 hover:scale-[1.02] active:scale-95 transition-all">
+                    View & Download Task <ExternalLink size={18} className="ml-2" />
+                  </Button>
+                </a>
+              </div>
+            )}
+
             <div className="mt-auto">
               <h4 className="text-[10px] font-black text-[#A0ACDC] uppercase tracking-[0.2em] mb-4">Study Materials</h4>
               <div className="flex flex-wrap gap-4">

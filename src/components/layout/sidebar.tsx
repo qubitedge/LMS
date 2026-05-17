@@ -47,9 +47,9 @@ export default function Sidebar({ user, completedDays }: SidebarProps) {
   const activeColor = '#2238A4';
 
   const handleLogout = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
+    await fetch('/auth/signout', { method: 'POST' });
     router.push('/login');
+    router.refresh();
   };
 
   return (

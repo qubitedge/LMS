@@ -1,0 +1,1 @@
+ALTER TABLE days ADD COLUMN task_link TEXT;
