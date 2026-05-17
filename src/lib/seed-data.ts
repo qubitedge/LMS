@@ -13,8 +13,8 @@ export const WEEKS = [
   { week_number: 6, title: 'Capstone Project Work', domain: 'Capstone' },
 ];
 
-export const DAYS_TOPICS: { day: number; topic: string; description: string }[] = [
-  { day: 1, topic: 'Introduction to Python', description: 'Setting up Python environment, basic syntax, and first program.' },
+export const DAYS_TOPICS: { day: number; topic: string; description: string; resource_link?: string }[] = [
+  { day: 1, topic: 'Data Foundations', description: 'In-depth session on Data Foundations: What is Data - Data Lifecycle - Basic Functions', resource_link: 'https://docs.google.com/presentation/d/1Kxky8zVZ0tuE-aIazOr2pSerVpxF7gBz/edit?usp=drive_link&ouid=110452534344800716911&rtpof=true&sd=true' },
   { day: 2, topic: 'Variables & Data Types', description: 'Understanding integers, floats, strings, booleans, and type casting.' },
   { day: 3, topic: 'Control Flow', description: 'If-else statements, loops (for, while), and conditional expressions.' },
   { day: 4, topic: 'Functions & Modules', description: 'Defining functions, parameters, return values, importing modules.' },
@@ -48,16 +48,18 @@ export const DAYS_TOPICS: { day: number; topic: string; description: string }[] 
 
 export const QUIZ_QUESTIONS: Record<number, QuizQuestion[]> = {
   1: [
-    { question: 'What is the correct file extension for Python files?', options: ['.py', '.python', '.pt', '.pyt'], correct_index: 0 },
-    { question: 'Which function is used to display output in Python?', options: ['echo()', 'console.log()', 'print()', 'display()'], correct_index: 2 },
-    { question: 'Who created Python?', options: ['James Gosling', 'Guido van Rossum', 'Dennis Ritchie', 'Bjarne Stroustrup'], correct_index: 1 },
-    { question: 'What symbol is used for single-line comments in Python?', options: ['//', '/*', '#', '--'], correct_index: 2 },
-    { question: 'Which of the following is NOT a valid Python identifier?', options: ['_var', 'var1', '1var', 'Var'], correct_index: 2 },
-    { question: 'What is Python primarily known as?', options: ['Compiled language', 'Interpreted language', 'Assembly language', 'Markup language'], correct_index: 1 },
-    { question: 'Which command installs packages in Python?', options: ['npm install', 'pip install', 'apt-get', 'brew install'], correct_index: 1 },
-    { question: 'What does PEP stand for?', options: ['Python Enhancement Proposal', 'Python Execution Protocol', 'Program Extension Pack', 'Python Entry Point'], correct_index: 0 },
-    { question: 'Which Python version introduced f-strings?', options: ['2.7', '3.0', '3.6', '3.10'], correct_index: 2 },
-    { question: 'What is the output of print(type(42))?', options: ['<class \'float\'>', '<class \'int\'>', '<class \'str\'>', '<class \'num\'>'], correct_index: 1 },
+    { question: 'When do you use a .csv file?', options: ['For reports from data', 'For data analysis', 'For large scale data transfers', 'For data visualization'], correct_index: 1 },
+    { question: 'What is Data?', options: ['A saved file', 'A set of images', 'Raw information', 'None'], correct_index: 2 },
+    { question: 'Benefits of Excel?', options: ['Can show tables and reports', 'Can include diagrams', 'Reports can be editable', 'All of the above'], correct_index: 3 },
+    { question: 'What is the primary role of data in an organization?', options: ['To generate reports automatically', 'To serve as the source of truth for decisions and actions', 'To replace human judgment entirely', 'To reduce the number of employees needed'], correct_index: 1 },
+    { question: 'Which of the following is NOT listed as a method of data collection?', options: ['Surveys', 'Observations', 'Brainstorming', 'Machine learning models'], correct_index: 3 },
+    { question: 'What does the \'progression of data\' refer to?', options: ['Data growing in file size over time', 'Raw data being refined according to end user requirements', 'Moving data from paper to digital formats', 'Archiving old data to free up storage'], correct_index: 1 },
+    { question: 'Which file format is described as the most preferred for data that includes text figures and numbers?', options: ['.pdf', '.csv', '.txt', '.xlsx'], correct_index: 3 },
+    { question: 'What is the maximum number of rows supported per sheet in Excel?', options: ['500000', '1000000', '1048576', '2097152'], correct_index: 2 },
+    { question: 'What is a key difference between .xls and .xlsx?', options: ['.xls is newer and has better performance', '.xlsx is an older format compatible only with Word 97-2003', '.xlsx is lighter more compatible with modern platforms and has better security', '.xls supports more rows than .xlsx'], correct_index: 2 },
+    { question: 'Why is .csv NOT recommended for analytical work?', options: ['It has a row limit of 100000', 'It does not support multiple sheets in a workbook', 'It cannot store numbers', 'It requires special software to open'], correct_index: 1 },
+    { question: 'What is the main advantage of .pdf as a file format?', options: ['It supports macros and formulas', 'It allows easy editing on all platforms', 'It keeps content looking the same on all platforms without format changes', 'It can hold unlimited data'], correct_index: 2 },
+    { question: 'Which of the following best describes the difference between .doc and .docx?', options: ['.doc is newer and has a smaller file size', '.docx is compatible with Word 97-2003 only', '.docx is an updated format that is lighter cross-platform compatible and more secure', '.doc and .docx are identical formats'], correct_index: 2 }
   ],
   2: [
     { question: 'Which is NOT a Python data type?', options: ['int', 'float', 'char', 'str'], correct_index: 2 },
