@@ -274,6 +274,21 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
                     </p>
                   </div>
                 )
+              ) : quiz ? (
+                hasAttempted ? (
+                  <ScoreCard score={scoreObj} />
+                ) : (isWithinQuizWindow() || isAdmin) ? (
+                  <QuizPlayer quiz={quiz} />
+                ) : (
+                  <div className="text-center py-8 px-6 rounded-[2rem] border-2 border-red-500/20 bg-red-500/5 backdrop-blur-sm">
+                    <p className="text-red-400 font-black italic uppercase tracking-widest text-sm mb-2">
+                      Quiz Window Closed
+                    </p>
+                    <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">
+                      Available daily between 10:00 AM - 02:00 PM IST
+                    </p>
+                  </div>
+                )
               ) : (
                 <div className="text-center py-6 px-4 rounded-[2rem] border-2 border-dashed border-white/20">
                   <p className="text-white/40 font-black italic uppercase tracking-widest text-sm">

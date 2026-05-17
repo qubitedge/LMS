@@ -14,8 +14,9 @@ export default async function AttendancePage() {
   if (!user) return null;
 
   const now = new Date();
-  const todayStr = now.toISOString().split('T')[0];
-  const currentHour = now.getHours();
+  // Get date and hour in IST
+  const todayStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
+  const currentHour = parseInt(new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', hour12: false }).format(now), 10);
   const isWithinWindow = currentHour >= 10 && currentHour < 14;
 
   const { data: attendanceHistory } = await supabase
