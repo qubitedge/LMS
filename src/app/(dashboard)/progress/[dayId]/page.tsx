@@ -6,6 +6,7 @@ import QuizPlayer from '@/components/quiz/quiz-player';
 import ScoreCard from '@/components/quiz/score-card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, BookOpen, ExternalLink, User, PlayCircle, Edit3, ClipboardList } from 'lucide-react';
+import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogHeader } from '@/components/ui/dialog';
 import Link from 'next/link';
 import { format, parseISO } from 'date-fns';
 
@@ -148,17 +149,47 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
               <h4 className="text-[10px] font-black text-[#A0ACDC] uppercase tracking-[0.2em] mb-4">Study Materials</h4>
               <div className="flex flex-wrap gap-4">
                 {day.resource_link ? (
-                  <a href={day.resource_link} target="_blank" rel="noopener noreferrer" className="flex-1">
-                    <div className="flex items-center gap-4 p-6 rounded-3xl bg-[#F0F4FF] border border-[#4A5DB5]/10 hover:bg-[#4A5DB5] hover:text-white transition-all group/btn">
-                      <div className="w-12 h-12 rounded-2xl bg-white text-[#4A5DB5] flex items-center justify-center shadow-lg group-hover/btn:scale-110 transition-transform">
-                        <BookOpen size={24} />
+                  <Dialog>
+                    <DialogTrigger 
+                      render={
+                        <button className="flex-1 text-left w-full">
+                          <div className="flex items-center gap-4 p-6 rounded-3xl bg-[#F0F4FF] border border-[#4A5DB5]/10 hover:bg-[#4A5DB5] hover:text-white transition-all group/btn">
+                            <div className="w-12 h-12 rounded-2xl bg-white text-[#4A5DB5] flex items-center justify-center shadow-lg group-hover/btn:scale-110 transition-transform">
+                              <BookOpen size={24} />
+                            </div>
+                            <div>
+                              <p className="font-black italic">PPT & Class Deck</p>
+                              <p className="text-[10px] font-bold opacity-60 uppercase tracking-widest">View Presentation</p>
+                            </div>
+                          </div>
+                        </button>
+                      }
+                    />
+                    <DialogContent className="max-w-6xl w-[90vw] h-[85vh] p-0 overflow-hidden flex flex-col bg-[#1A1A2E] rounded-[2rem] border-none shadow-2xl">
+                      <DialogHeader className="px-6 py-4 bg-[#1A1A2E] border-b border-white/10 flex justify-between items-center z-10">
+                        <DialogTitle className="text-white font-black italic tracking-wider">{day.topic} - Class Deck</DialogTitle>
+                      </DialogHeader>
+                      <div className="flex-1 w-full bg-[#1A1A2E] relative">
+                        {day.resource_link.includes('docs.google.com/presentation') ? (
+                          <iframe 
+                            src={day.resource_link.replace(/\/edit.*$/, '/embed?start=false&loop=false&delayms=3000')} 
+                            className="absolute inset-0 w-full h-full border-none"
+                            allowFullScreen
+                          ></iframe>
+                        ) : (
+                          <div className="flex items-center justify-center h-full flex-col gap-6">
+                            <BookOpen size={64} className="text-white/20" />
+                            <p className="text-white/60 font-bold">This resource cannot be embedded directly.</p>
+                            <a href={day.resource_link} target="_blank" rel="noopener noreferrer">
+                              <Button className="h-14 px-8 rounded-2xl bg-[#4A5DB5] hover:bg-[#2238A4] text-white font-black">
+                                Open in New Tab <ExternalLink size={18} className="ml-2" />
+                              </Button>
+                            </a>
+                          </div>
+                        )}
                       </div>
-                      <div>
-                        <p className="font-black italic">PPT & Class Deck</p>
-                        <p className="text-[10px] font-bold opacity-60 uppercase tracking-widest">Download PDF / Slides</p>
-                      </div>
-                    </div>
-                  </a>
+                    </DialogContent>
+                  </Dialog>
                 ) : (
                   <div className="flex-1 flex items-center gap-4 p-6 rounded-3xl bg-slate-50 border border-slate-100 opacity-50 cursor-not-allowed">
                     <div className="w-12 h-12 rounded-2xl bg-white text-slate-400 flex items-center justify-center shadow-sm">
