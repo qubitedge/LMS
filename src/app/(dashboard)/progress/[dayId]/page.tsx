@@ -278,7 +278,7 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
                 hasAttempted ? (
                   <ScoreCard score={scoreObj.score} maxScore={quiz.max_score} />
                 ) : (isWithinQuizWindow() || isAdmin) ? (
-                  <QuizPlayer quiz={quiz} />
+                  <QuizPlayer quizId={quiz.id} questions={quiz.questions} />
                 ) : (
                   <div className="text-center py-8 px-6 rounded-[2rem] border-2 border-red-500/20 bg-red-500/5 backdrop-blur-sm">
                     <p className="text-red-400 font-black italic uppercase tracking-widest text-sm mb-2">
