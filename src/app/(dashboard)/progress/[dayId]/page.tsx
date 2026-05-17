@@ -165,7 +165,7 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
                         </button>
                       }
                     />
-                    <DialogContent className="max-w-6xl w-[90vw] h-[85vh] p-0 overflow-hidden flex flex-col bg-[#1A1A2E] rounded-[2rem] border-none shadow-2xl">
+                    <DialogContent className="sm:max-w-[90vw] md:max-w-6xl w-[90vw] h-[85vh] p-0 overflow-hidden flex flex-col bg-[#1A1A2E] rounded-[2rem] border-none shadow-2xl">
                       <DialogHeader className="px-6 py-4 bg-[#1A1A2E] border-b border-white/10 flex justify-between items-center z-10">
                         <DialogTitle className="text-white font-black italic tracking-wider">{day.topic} - Class Deck</DialogTitle>
                       </DialogHeader>
@@ -277,7 +277,7 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
               ) : (
                 <div className="text-center py-6 px-4 rounded-[2rem] border-2 border-dashed border-white/20">
                   <p className="text-white/40 font-black italic uppercase tracking-widest text-sm">
-                    Quiz will be activated soon
+                    Quiz will be updated soon
                   </p>
                 </div>
               )}
