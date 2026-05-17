@@ -44,10 +44,11 @@ export async function updateSession(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Allow auth pages for unauthenticated users
-  const isAuthPage = pathname === '/login' || 
+  const isAuthPage = (pathname === '/login' || 
                     pathname === '/forgot-password' || 
                     pathname === '/reset-password' ||
-                    pathname.startsWith('/auth/');
+                    pathname.startsWith('/auth/')) && 
+                    pathname !== '/auth/signout';
 
   if (!user && !isAuthPage) {
     const url = request.nextUrl.clone();
