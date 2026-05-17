@@ -276,7 +276,7 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
                 )
               ) : quiz ? (
                 hasAttempted ? (
-                  <ScoreCard score={scoreObj} />
+                  <ScoreCard score={scoreObj.score} maxScore={quiz.max_score} />
                 ) : (isWithinQuizWindow() || isAdmin) ? (
                   <QuizPlayer quiz={quiz} />
                 ) : (
