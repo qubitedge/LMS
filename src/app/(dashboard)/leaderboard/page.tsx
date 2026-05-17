@@ -27,6 +27,7 @@ export default async function LeaderboardPage() {
 
   // Calculate final leaderboard data
   const leaderboardEntries = (profiles || [])
+    .filter(p => p.role !== 'admin' && p.domain?.toLowerCase() !== 'paid intern')
     .map(p => {
       const totalQuizScore = scoreTotalMap.get(p.id) || 0;
       
@@ -35,6 +36,7 @@ export default async function LeaderboardPage() {
         full_name: p.full_name,
         avatar_url: p.avatar_url,
         domain: p.domain,
+        role: p.role,
         score: totalQuizScore, // Rank only by quiz marks
       };
     });

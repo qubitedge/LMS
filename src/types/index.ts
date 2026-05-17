@@ -39,6 +39,7 @@ export interface Day {
   tutor_name: string | null;
   video_url: string | null;
   sub_topics: string | null;
+  quiz_link: string | null;
 }
 
 export interface Quiz {
