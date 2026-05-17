@@ -49,6 +49,7 @@ export async function uploadToGoogleDrive(
     requestBody: fileMetadata,
     media: media,
     fields: 'id, webViewLink, webContentLink',
+    supportsAllDrives: true,
   });
 
   const fileId = response.data.id;
@@ -65,6 +66,7 @@ export async function uploadToGoogleDrive(
         role: 'reader',
         type: 'anyone',
       },
+      supportsAllDrives: true,
     });
   } catch (permError) {
     console.error('Warning: Failed to set Google Drive file permissions to public view. The file was uploaded, but may require manual access authorization.', permError);
@@ -74,6 +76,7 @@ export async function uploadToGoogleDrive(
   const fileInfo = await drive.files.get({
     fileId: fileId,
     fields: 'webViewLink, webContentLink',
+    supportsAllDrives: true,
   });
 
   return {
