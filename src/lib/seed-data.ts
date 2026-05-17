@@ -15,8 +15,8 @@ export const WEEKS = [
 
 export const DAYS_TOPICS: { day: number; topic: string; description: string; resource_link?: string }[] = [
   { day: 1, topic: 'Data Foundations', description: 'In-depth session on Data Foundations: What is Data - Data Lifecycle - Basic Functions', resource_link: 'https://docs.google.com/presentation/d/1Kxky8zVZ0tuE-aIazOr2pSerVpxF7gBz/edit?usp=drive_link&ouid=110452534344800716911&rtpof=true&sd=true' },
-  { day: 2, topic: 'Variables & Data Types', description: 'Understanding integers, floats, strings, booleans, and type casting.' },
-  { day: 3, topic: 'Control Flow', description: 'If-else statements, loops (for, while), and conditional expressions.' },
+  { day: 2, topic: 'Variables & Data Types', description: 'Understanding integers, floats, strings, booleans, and type casting.', resource_link: 'https://docs.google.com/presentation/d/1MiYCQX8vS8en9Lbndh5isLl71ilHzybS/edit?usp=drive_link&ouid=110452534344800716911&rtpof=true&sd=true' },
+  { day: 3, topic: 'Control Flow', description: 'If-else statements, loops (for, while), and conditional expressions.', resource_link: 'https://docs.google.com/presentation/d/1iisDejlYzKKc_DMJnv1UBGY-5k9r4lDK/edit?usp=drive_link&ouid=110452534344800716911&rtpof=true&sd=true' },
   { day: 4, topic: 'Functions & Modules', description: 'Defining functions, parameters, return values, importing modules.' },
   { day: 5, topic: 'Data Structures', description: 'Lists, tuples, dictionaries, sets and their operations.' },
   { day: 6, topic: 'Introduction to SQL', description: 'Relational databases, SQL syntax, SELECT basics.' },
@@ -62,16 +62,18 @@ export const QUIZ_QUESTIONS: Record<number, QuizQuestion[]> = {
     { question: 'Which of the following best describes the difference between .doc and .docx?', options: ['.doc is newer and has a smaller file size', '.docx is compatible with Word 97-2003 only', '.docx is an updated format that is lighter cross-platform compatible and more secure', '.doc and .docx are identical formats'], correct_index: 2 }
   ],
   2: [
-    { question: 'Which is NOT a Python data type?', options: ['int', 'float', 'char', 'str'], correct_index: 2 },
-    { question: 'What does int("42") return?', options: ['42', '"42"', 'Error', '4.2'], correct_index: 0 },
-    { question: 'Which is a mutable data type?', options: ['tuple', 'string', 'list', 'frozenset'], correct_index: 2 },
-    { question: 'What is the result of 10 / 3 in Python 3?', options: ['3', '3.33', '3.3333333333333335', 'Error'], correct_index: 2 },
-    { question: 'How do you create a multi-line string?', options: ['Using \\n', 'Triple quotes', 'Semicolons', 'Backslash'], correct_index: 1 },
-    { question: 'What is the default value of a boolean variable?', options: ['True', 'False', 'None', '0'], correct_index: 1 },
-    { question: 'Which operator performs floor division?', options: ['/', '//', '%', '**'], correct_index: 1 },
-    { question: 'What does str(100) return?', options: ['100', '"100"', '1.0', 'Error'], correct_index: 1 },
-    { question: 'What is type(3.14)?', options: ['int', 'double', 'float', 'decimal'], correct_index: 2 },
-    { question: 'Which is immutable?', options: ['list', 'dict', 'set', 'tuple'], correct_index: 3 },
+    { question: 'What is the key difference between COUNT and COUNTA in Excel?', options: ['COUNT adds numbers; COUNTA adds text values', 'COUNT only counts numeric cells; COUNTA counts all non-empty cells regardless of type', 'COUNT works on rows only; COUNTA works on columns only', 'COUNT and COUNTA are identical – they do the same thing'], correct_index: 1 },
+    { question: '=AVERAGE(F2:F23) is equivalent to which of the following formulas?', options: ['=SUM(F2:F23)/COUNT(F2:F23)', '=SUM(F2:F23)/22', '=COUNT(F2:F23)/22', '=SUM(F2+F23)/2'], correct_index: 0 },
+    { question: 'Which pair of functions would you use to find the highest and lowest scores in a dataset?', options: ['UPPER and LOWER', 'COUNT and COUNTA', 'MAX and MIN', 'SUM and AVERAGE'], correct_index: 2 },
+    { question: 'A student\'s name is stored as \'aRaV sInGh\'. Which function would convert it to \'Aarav Singh\'?', options: ['=UPPER(A1)', '=LOWER(A1)', '=PROPER(A1)', '=TRIM(A1)'], correct_index: 2 },
+    { question: 'You enter a formula in cell B2 as =A1 and then copy it down to B3. What type of reference is A1 and what will B3 display?', options: ['A relative reference; B3 will show the value from A2', 'An absolute reference; B3 will show the value from A1', 'A mixed reference; B3 will show the value from A2', 'A mixed reference; B3 will show the value from A1'], correct_index: 0 },
+    { question: 'You write =A1 in B2 with no dollar signs and copy it down to B3 B4 and B5. How will the reference change?', options: ['It is an absolute reference and will stay A1 in all rows', 'It is a relative reference and will adjust to A2 A3 A4', 'It is a mixed reference and will change only the column not the row', 'It is a mixed reference and will change to A$2 A$3 A$4'], correct_index: 1 },
+    { question: 'What will =EDATE("01-Jan-2024" 3) return?', options: ['01-Jan-2027', '03-Jan-2024', '01-Apr-2024', '01-Mar-2024'], correct_index: 2 },
+    { question: 'How is =NOW() different from =TODAY() in Excel?', options: ['NOW() returns only the time; TODAY() returns only the date', 'NOW() returns date + current time; TODAY() returns only the date', 'Both return the same result', 'NOW() is used for past dates and TODAY() for future dates'], correct_index: 1 },
+    { question: 'What is the correct syntax of the CONCAT function in Excel?', options: ['=CONCAT(text1 text2 ...)', '=CONCAT(cell separator)', '=CONCAT(range delimiter)', '=CONCAT(string position length)'], correct_index: 0 },
+    { question: 'Which of the following can visually identify duplicate values in a column using Conditional Formatting?', options: ['Data Bars', 'Highlight Duplicate option', 'Icon Sets', 'Color Scales'], correct_index: 1 },
+    { question: 'How can you prevent any user from entering data into a protected Excel sheet?', options: ['By applying Conditional Formatting rules', 'By using the TRIM function on all cells', 'By protecting the sheet using the sheet protection feature', 'By converting the range into a table'], correct_index: 2 },
+    { question: 'Which of the following is an advantage of using the \'Format as Table\' option in Excel?', options: ['It locks the sheet so no edits can be made', 'It automatically applies filters to headers and adjusts the table when rows or columns are added', 'It converts all text data into numbers', 'It merges all cells in the selected range'], correct_index: 1 }
   ],
   3: [
     { question: 'Which keyword starts a conditional statement?', options: ['for', 'while', 'if', 'switch'], correct_index: 2 },
