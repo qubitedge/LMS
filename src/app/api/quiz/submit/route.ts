@@ -36,6 +36,20 @@ export async function POST(req: Request) {
     const dayDate = Array.isArray(daysData) ? daysData[0]?.date : daysData?.date;
 
     if (!isAdmin) {
+      // Check if this day is unlocked by the admin
+      const { data: setting } = await supabase
+        .from('site_settings')
+        .select('value')
+        .eq('key', 'unlocked_days')
+        .maybeSingle();
+
+      const unlockedDays = setting?.value || [];
+      const isUnlocked = unlockedDays.includes(quiz.day_id);
+
+      if (!isUnlocked) {
+        return NextResponse.json({ message: 'This day is currently locked by the administrator.' }, { status: 403 });
+      }
+
       if (!dayDate || !isToday(parseISO(dayDate))) {
         return NextResponse.json({ message: 'This quiz is not available for attempt today.' }, { status: 403 });
       }

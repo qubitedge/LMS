@@ -1,11 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { 
   BookOpen, Calendar, Video, Link as LinkIcon, Shield, 
-  CalendarCheck, TrendingUp, User 
+  CalendarCheck, TrendingUp, User, Lock, Unlock, Loader2 
 } from 'lucide-react';
 import DayEditDialog from '@/components/admin/day-edit-dialog';
 import EventEditDialog from '@/components/admin/event-edit-dialog';
@@ -13,9 +14,40 @@ import ModuleEditDialog from '@/components/admin/module-edit-dialog';
 
 interface EventsManagementClientProps {
   events: any[] | null;
+  initialUnlockedDays?: string[];
 }
 
-export default function EventsManagementClient({ events }: EventsManagementClientProps) {
+export default function EventsManagementClient({ events, initialUnlockedDays = [] }: EventsManagementClientProps) {
+  const [unlockedDays, setUnlockedDays] = useState<string[]>(initialUnlockedDays);
+  const [togglingDays, setTogglingDays] = useState<Record<string, boolean>>({});
+
+  const handleToggleLock = async (dayId: string) => {
+    const isCurrentlyUnlocked = unlockedDays.includes(dayId);
+    setTogglingDays(prev => ({ ...prev, [dayId]: true }));
+    
+    let updated;
+    if (isCurrentlyUnlocked) {
+      updated = unlockedDays.filter(id => id !== dayId);
+    } else {
+      updated = [...unlockedDays, dayId];
+    }
+    
+    try {
+      const res = await fetch('/api/admin/toggle-day-lock', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ unlockedDays: updated })
+      });
+      
+      if (res.ok) {
+        setUnlockedDays(updated);
+      }
+    } catch (err) {
+      console.error('Failed to toggle lock status:', err);
+    } finally {
+      setTogglingDays(prev => ({ ...prev, [dayId]: false }));
+    }
+  };
   return (
     <div className="relative pb-10 min-h-screen">
       <div className="bg-mesh opacity-20" />
@@ -179,7 +211,27 @@ export default function EventsManagementClient({ events }: EventsManagementClien
                                   </div>
                                 </TableCell>
                                 <TableCell className="text-right px-10">
-                                  <DayEditDialog day={day} />
+                                  <div className="flex items-center justify-end gap-3">
+                                    <button
+                                      disabled={togglingDays[day.id]}
+                                      onClick={() => handleToggleLock(day.id)}
+                                      className={`h-10 px-4 rounded-xl font-black text-xs transition-all flex items-center gap-2 shadow-sm active:scale-95 duration-200 border ${
+                                        unlockedDays.includes(day.id)
+                                          ? 'bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 hover:shadow-rose-100 hover:shadow-md'
+                                          : 'bg-slate-50 text-slate-400 border-slate-200 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200 hover:shadow-emerald-100 hover:shadow-md'
+                                      }`}
+                                    >
+                                      {togglingDays[day.id] ? (
+                                        <Loader2 size={14} className="animate-spin" />
+                                      ) : unlockedDays.includes(day.id) ? (
+                                        <Unlock size={14} />
+                                      ) : (
+                                        <Lock size={14} />
+                                      )}
+                                      {unlockedDays.includes(day.id) ? 'Unlocked' : 'Locked'}
+                                    </button>
+                                    <DayEditDialog day={day} />
+                                  </div>
                                 </TableCell>
                               </TableRow>
                             ))}

@@ -53,9 +53,23 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
     .eq('id', user.id)
     .single();
 
+  // Fetch the unlocked days site setting
+  const { data: setting } = await supabase
+    .from('site_settings')
+    .select('value')
+    .eq('key', 'unlocked_days')
+    .maybeSingle();
+
+  const unlockedDays = setting?.value || [];
+  const isUnlocked = unlockedDays.includes(dayId);
+  const isAdmin = profile?.role === 'admin';
+
+  if (!isAdmin && !isUnlocked) {
+    redirect('/progress');
+  }
+
   const hasAttempted = !!scoreObj;
   const status = getDayStatus(day.date, hasAttempted);
-  const isAdmin = profile?.role === 'admin';
 
   // Fetch Task for this day
   let { data: task } = await supabase

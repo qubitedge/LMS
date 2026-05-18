@@ -87,6 +87,42 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: 'Task ID is required' }, { status: 400 });
     }
 
+    // Fetch task and its associated day ID
+    const { data: task, error: taskErr } = await supabase
+      .from('tasks')
+      .select('id, day_id')
+      .eq('id', taskId)
+      .single();
+
+    if (taskErr || !task) {
+      return NextResponse.json({ message: 'Task not found' }, { status: 404 });
+    }
+
+    // Fetch user profile for role check
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    const isAdmin = profile?.role === 'admin';
+
+    if (!isAdmin) {
+      // Check if this day is unlocked by the admin
+      const { data: setting } = await supabase
+        .from('site_settings')
+        .select('value')
+        .eq('key', 'unlocked_days')
+        .maybeSingle();
+
+      const unlockedDays = setting?.value || [];
+      const isUnlocked = unlockedDays.includes(task.day_id);
+
+      if (!isUnlocked) {
+        return NextResponse.json({ message: 'This task is currently locked by the administrator.' }, { status: 403 });
+      }
+    }
+
     // Check existing submission (if any, it will update status to pending again)
     const { data: existing } = await supabase
       .from('submissions')

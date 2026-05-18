@@ -12,5 +12,14 @@ export default async function AdminCurriculumPage() {
     .select('*, weeks(*, days(*))')
     .order('created_at', { ascending: false });
 
-  return <EventsManagementClient events={events} />;
+  // Fetch the unlocked days site setting
+  const { data: setting } = await supabase
+    .from('site_settings')
+    .select('value')
+    .eq('key', 'unlocked_days')
+    .maybeSingle();
+
+  const initialUnlockedDays = setting?.value || [];
+
+  return <EventsManagementClient events={events} initialUnlockedDays={initialUnlockedDays} />;
 }

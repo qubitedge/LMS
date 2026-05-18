@@ -35,6 +35,15 @@ export default async function ProgressPage() {
     .eq('is_active', true)
     .order('created_at', { ascending: true });
 
+  // Fetch the unlocked days site setting
+  const { data: setting } = await supabase
+    .from('site_settings')
+    .select('value')
+    .eq('key', 'unlocked_days')
+    .maybeSingle();
+
+  const unlockedDays = setting?.value || [];
+
   // Filter out invisible weeks and specific workshops for interns
   const events = (eventsData || [])
     .filter(event => {
@@ -53,7 +62,9 @@ export default async function ProgressPage() {
           const quizId = day.quizzes?.[0]?.id;
           const hasAttempted = !!(quizId && scoresMap.has(quizId));
           const score = quizId ? scoresMap.get(quizId) : undefined;
-          const status = getDayStatus(day.date, hasAttempted);
+          
+          const isUnlocked = unlockedDays.includes(day.id);
+          const status = (isAdmin || isUnlocked) ? getDayStatus(day.date, hasAttempted) : 'locked';
 
           return {
             ...day,
