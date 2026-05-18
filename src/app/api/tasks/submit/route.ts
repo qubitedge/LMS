@@ -99,13 +99,13 @@ export async function POST(req: Request) {
     }
 
     // Fetch user profile for role check
-    const { data: profile } = await supabase
+    const { data: roleProfile } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single();
 
-    const isAdmin = profile?.role === 'admin';
+    const isAdmin = roleProfile?.role === 'admin';
 
     if (!isAdmin) {
       // Check if this day is unlocked by the admin
