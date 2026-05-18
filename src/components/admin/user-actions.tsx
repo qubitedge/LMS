@@ -29,6 +29,7 @@ interface UserActionsProps {
     is_active: boolean;
     offer_letter_url?: string;
     certificate_url?: string;
+    address?: string;
   };
 }
 
@@ -46,6 +47,7 @@ export default function UserActions({ user }: UserActionsProps) {
     email: user.email,
     domain: user.domain || 'Intern',
     password: '',
+    address: user.address || '',
   });
 
   const router = useRouter();
@@ -260,6 +262,18 @@ export default function UserActions({ user }: UserActionsProps) {
                   <Input 
                     value={editData.email}
                     onChange={(e) => setEditData({...editData, email: e.target.value})}
+                    className="h-14 rounded-2xl border-slate-200 bg-slate-50/50 pl-12 font-bold focus:bg-white transition-all"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black text-[#7182C7] uppercase tracking-widest px-2">College Name</Label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A0ACDC] font-black text-sm">🎓</span>
+                  <Input 
+                    placeholder="e.g. Chaitanya Engineering College"
+                    value={editData.address}
+                    onChange={(e) => setEditData({...editData, address: e.target.value})}
                     className="h-14 rounded-2xl border-slate-200 bg-slate-50/50 pl-12 font-bold focus:bg-white transition-all"
                   />
                 </div>

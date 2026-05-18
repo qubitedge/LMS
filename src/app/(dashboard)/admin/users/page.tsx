@@ -13,11 +13,11 @@ import Link from 'next/link';
 export const revalidate = 0;
 
 interface PageProps {
-  searchParams: Promise<{ role?: string; q?: string }>;
+  searchParams: Promise<{ role?: string; q?: string; sortBy?: string; sortOrder?: string }>;
 }
 
 export default async function AdminUsersPage({ searchParams }: PageProps) {
-  const { role = 'intern', q = '' } = await searchParams;
+  const { role = 'intern', q = '', sortBy = 'created_at', sortOrder = 'desc' } = await searchParams;
   const supabase = await createClient();
 
   let query = supabase
@@ -26,10 +26,21 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
     .eq('role', role);
 
   if (q) {
-    query = query.or(`full_name.ilike.%${q}%,email.ilike.%${q}%`);
+    query = query.or(`full_name.ilike.%${q}%,email.ilike.%${q}%,address.ilike.%${q}%`);
   }
 
-  const { data: users } = await query.order('created_at', { ascending: false });
+  const ascending = sortOrder === 'asc';
+  const { data: users } = await query.order(sortBy, { ascending });
+
+  const getSortLink = (column: string) => {
+    const nextOrder = sortBy === column && sortOrder === 'desc' ? 'asc' : 'desc';
+    const params = new URLSearchParams();
+    params.set('role', role);
+    if (q) params.set('q', q);
+    params.set('sortBy', column);
+    params.set('sortOrder', nextOrder);
+    return `/admin/users?${params.toString()}`;
+  };
 
   return (
     <div className="relative pb-10">
@@ -85,18 +96,31 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
               <Table>
                 <TableHeader className="bg-[#E9EEF9]/50">
                   <TableRow className="border-b-blue-100/50">
-                    <TableHead className="font-black text-[#1A1A2E] px-8 py-6">User Profile</TableHead>
+                    <TableHead className="font-black text-[#1A1A2E] px-8 py-6">
+                      <Link href={getSortLink('full_name')} className="flex items-center gap-1 hover:text-[#4A5DB5] transition-colors">
+                        User Profile {sortBy === 'full_name' ? (sortOrder === 'asc' ? '▲' : '▼') : ''}
+                      </Link>
+                    </TableHead>
+                    <TableHead className="font-black text-[#1A1A2E]">
+                      <Link href={getSortLink('address')} className="flex items-center gap-1 hover:text-[#4A5DB5] transition-colors">
+                        College {sortBy === 'address' ? (sortOrder === 'asc' ? '▲' : '▼') : ''}
+                      </Link>
+                    </TableHead>
                     <TableHead className="font-black text-[#1A1A2E]">Category</TableHead>
                     <TableHead className="font-black text-[#1A1A2E] text-center">Status</TableHead>
                     {role === 'intern' && <TableHead className="font-black text-[#1A1A2E] text-center">Certifications</TableHead>}
-                    <TableHead className="font-black text-[#1A1A2E] text-right">Joined Date</TableHead>
+                    <TableHead className="font-black text-[#1A1A2E] text-right">
+                      <Link href={getSortLink('created_at')} className="flex items-center gap-1 justify-end hover:text-[#4A5DB5] transition-colors">
+                        Joined Date {sortBy === 'created_at' ? (sortOrder === 'asc' ? '▲' : '▼') : ''}
+                      </Link>
+                    </TableHead>
                     <TableHead className="font-black text-[#1A1A2E] text-right px-8">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {!users || users.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={role === 'intern' ? 6 : 5} className="text-center py-20">
+                      <TableCell colSpan={role === 'intern' ? 7 : 6} className="text-center py-20">
                         <div className="flex flex-col items-center gap-4 text-[#7182C7]">
                           {q ? <Search size={48} className="opacity-20" /> : <Users size={48} className="opacity-20" />}
                           <p className="font-bold">
@@ -120,6 +144,9 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                               </p>
                             </div>
                           </div>
+                        </TableCell>
+                        <TableCell className="font-bold text-[#1A1A2E]">
+                          {user.address || <span className="text-slate-300 italic font-normal">Not Specified</span>}
                         </TableCell>
                         <TableCell>
                           <span className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider shadow-lg ${user.role === 'admin' ? 'bg-amber-500 text-white shadow-amber-500/20' : 'bg-[#4A5DB5] text-white shadow-blue-500/20'}`}>

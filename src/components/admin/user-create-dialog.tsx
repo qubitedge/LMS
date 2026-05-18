@@ -20,6 +20,7 @@ export default function UserCreateDialog() {
     domain: '',
     password: '',
     role: 'intern',
+    address: '',
   });
 
   const router = useRouter();
@@ -46,7 +47,7 @@ export default function UserCreateDialog() {
 
       toast.success(formData.role === 'admin' ? 'Administrator account created!' : 'Intern account created!');
       setOpen(false);
-      setFormData({ full_name: '', email: '', domain: '', password: '', role: 'intern' });
+      setFormData({ full_name: '', email: '', domain: '', password: '', role: 'intern', address: '' });
       router.refresh();
       
     } catch (error: any) {
@@ -125,6 +126,20 @@ export default function UserCreateDialog() {
                     onChange={handleChange} 
                     required
                     placeholder="alex@example.com"
+                    className="h-14 rounded-2xl border-slate-200 bg-slate-50/50 pl-12 font-bold focus:bg-white transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black text-[#7182C7] uppercase tracking-widest px-2">College Name</Label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A0ACDC] font-black text-sm">🎓</span>
+                  <Input 
+                    name="address"
+                    value={formData.address} 
+                    onChange={handleChange} 
+                    placeholder="e.g. Chaitanya Engineering College"
                     className="h-14 rounded-2xl border-slate-200 bg-slate-50/50 pl-12 font-bold focus:bg-white transition-all"
                   />
                 </div>

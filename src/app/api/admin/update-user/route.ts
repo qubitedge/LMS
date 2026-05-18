@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
   try {
     const adminAuthClient = createAdminClient();
-    const { id, email, password, full_name, domain, role, is_active } = await req.json();
+    const { id, email, password, full_name, domain, role, is_active, address } = await req.json();
 
     if (!id) {
       return NextResponse.json({ message: 'User ID is required' }, { status: 400 });
@@ -27,6 +27,7 @@ export async function POST(req: Request) {
     if (domain) profileUpdate.domain = domain;
     if (role) profileUpdate.role = role;
     if (typeof is_active === 'boolean') profileUpdate.is_active = is_active;
+    if (typeof address === 'string') profileUpdate.address = address;
 
     if (Object.keys(profileUpdate).length > 0) {
       const { error: profileError } = await adminAuthClient

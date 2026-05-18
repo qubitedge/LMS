@@ -31,13 +31,14 @@ export default function BulkUserUpload() {
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
         // Map Excel columns to expected API format
-        // Expected columns: Name, Email, Password, Domain, Role
+        // Expected columns: Name, Email, Password, Domain, Role, College
         const users = jsonData.map((row: any) => ({
           name: row.Name || row.name || row['Full Name'],
           email: row.Email || row.email || row['Email Address'],
           password: row.Password || row.password || row['Temp Password'] || 'LMS123@temp',
           domain: row.Domain || row.domain || row['Type of Intern'] || row['Intern Type'],
-          role: row.Role || row.role || 'intern'
+          role: row.Role || row.role || 'intern',
+          address: row.College || row.college || row['College Name'] || null
         }));
 
         const res = await fetch('/api/admin/users/bulk-upload', {

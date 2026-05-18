@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     };
 
     for (const userData of users) {
-      const { name, email, password, domain, role = 'intern' } = userData;
+      const { name, email, password, domain, role = 'intern', address } = userData;
 
       if (!email || !password || !name) {
         results.errors.push({ email, error: 'Missing required fields' });
@@ -58,6 +58,7 @@ export async function POST(req: Request) {
           email,
           role,
           domain,
+          address,
         });
 
       if (profileError) {

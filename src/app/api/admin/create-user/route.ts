@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     // So we'll trust the middleware / admin guard for now, but in a real app,
     // explicitly verify the caller's JWT role here as well.
     
-    const { email, password, full_name, domain, role = 'intern' } = await req.json();
+    const { email, password, full_name, domain, role = 'intern', address } = await req.json();
 
     if (!email || !password || !full_name) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
@@ -35,6 +35,7 @@ export async function POST(req: Request) {
           email,
           domain,
           role,
+          address,
         });
 
       if (profileError) {
