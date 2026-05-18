@@ -68,7 +68,9 @@ export function isWithinQuizWindow(): boolean {
   // Get current time in India Standard Time
   const istDate = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
   const hours = istDate.getHours();
+  const minutes = istDate.getMinutes();
+  const totalMinutes = hours * 60 + minutes;
   
-  // 10 AM (10) to 2 PM (14)
-  return hours >= 10 && hours < 14;
+  // 9:30 AM (570) to 2 PM (840)
+  return totalMinutes >= 570 && totalMinutes < 840;
 }

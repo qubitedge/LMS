@@ -16,8 +16,10 @@ export default async function AttendancePage() {
   const now = new Date();
   // Get date and hour in IST
   const todayStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
-  const currentHour = parseInt(new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', hour12: false }).format(now), 10);
-  const isWithinWindow = currentHour >= 10 && currentHour < 14;
+  const istHour = parseInt(new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', hour12: false }).format(now), 10);
+  const istMinute = parseInt(new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', minute: 'numeric' }).format(now), 10);
+  const totalMinutes = istHour * 60 + istMinute;
+  const isWithinWindow = totalMinutes >= 570 && totalMinutes < 840;
 
   const { data: attendanceHistory } = await supabase
     .from('attendance')
@@ -34,7 +36,7 @@ export default async function AttendancePage() {
           Attendance
         </h1>
         <p className="text-lg font-bold text-[#7182C7]">
-          Mark your daily presence between <span className="text-[#2238A4]">10:00 AM</span> and <span className="text-[#2238A4]">2:00 PM</span>.
+          Mark your daily presence between <span className="text-[#2238A4]">9:30 AM</span> and <span className="text-[#2238A4]">2:00 PM</span>.
         </p>
       </div>
 
@@ -61,14 +63,14 @@ export default async function AttendancePage() {
                     <Clock size={48} className="text-[#F59E0B]" />
                   </div>
                   <h3 className="text-2xl font-black text-[#F59E0B] mb-2 uppercase tracking-tight">
-                    {currentHour < 10 ? 'Not Started' : currentHour >= 14 ? 'Too Late!' : 'Pending'}
+                    {totalMinutes < 570 ? 'Not Started' : totalMinutes >= 840 ? 'Too Late!' : 'Pending'}
                   </h3>
                   <p className="text-xs font-bold text-rose-500 mb-6 uppercase tracking-widest">
-                    {currentHour < 10 
-                      ? 'Opens at 10:00 AM' 
-                      : currentHour >= 14 
+                    {totalMinutes < 570 
+                      ? 'Opens at 9:30 AM' 
+                      : totalMinutes >= 840 
                         ? 'Window closed at 2:00 PM' 
-                        : 'Window: 10:00 AM - 2:00 PM'}
+                        : 'Window: 9:30 AM - 2:00 PM'}
                   </p>
                   <MarkAttendanceButton disabled={!isWithinWindow} />
                 </div>

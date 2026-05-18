@@ -40,7 +40,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: 'This quiz is not available for attempt today.' }, { status: 403 });
       }
       if (!isWithinQuizWindow()) {
-        return NextResponse.json({ message: 'Quiz window is closed. Available between 10:00 AM - 02:00 PM IST.' }, { status: 403 });
+        return NextResponse.json({ message: 'Quiz window is closed. Available between 9:30 AM - 02:00 PM IST.' }, { status: 403 });
       }
     }
 

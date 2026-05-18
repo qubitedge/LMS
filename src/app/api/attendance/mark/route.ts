@@ -12,14 +12,16 @@ export async function POST() {
     const now = new Date();
     const todayStr = now.toISOString().split('T')[0];
 
-    // Check timing window: 10:00 AM to 2:00 PM (14:00)
-    // Using local hours for now, but in production this should ideally consider the target timezone
-    const hour = now.getHours();
-    const isWithinWindow = hour >= 10 && hour < 14;
+    // Check timing window in Asia/Kolkata (9:30 AM to 2:00 PM IST)
+    const istDate = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+    const hour = istDate.getHours();
+    const minute = istDate.getMinutes();
+    const totalMinutes = hour * 60 + minute;
+    const isWithinWindow = totalMinutes >= 570 && totalMinutes < 840;
 
     if (!isWithinWindow) {
       return NextResponse.json({ 
-        message: 'Attendance can only be marked between 10:00 AM and 2:00 PM.' 
+        message: 'Attendance can only be marked between 9:30 AM and 2:00 PM IST.' 
       }, { status: 403 });
     }
 
