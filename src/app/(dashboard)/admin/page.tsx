@@ -11,7 +11,7 @@ export default async function AdminDashboardPage() {
     { count: pendingCount },
     { data: settings }
   ] = await Promise.all([
-    supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'intern'),
+    supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'intern').eq('is_active', true),
     supabase.from('submissions').select('*', { count: 'exact', head: true }),
     supabase.from('submissions').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
     supabase.from('site_settings').select('*'),
