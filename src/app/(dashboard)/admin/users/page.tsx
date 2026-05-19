@@ -96,22 +96,36 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
               <Table>
                 <TableHeader className="bg-[#E9EEF9]/50">
                   <TableRow className="border-b-blue-100/50">
-                    <TableHead className="font-black text-[#1A1A2E] px-8 py-6">
+                    <TableHead className="font-black text-[#1A1A2E] px-6 py-6 w-14 text-center">#</TableHead>
+                    <TableHead className="font-black text-[#1A1A2E] px-4 py-6">
                       <Link href={getSortLink('full_name')} className="flex items-center gap-1 hover:text-[#4A5DB5] transition-colors">
-                        User Profile {sortBy === 'full_name' ? (sortOrder === 'asc' ? '▲' : '▼') : ''}
+                        User Profile {sortBy === 'full_name' ? (sortOrder === 'asc' ? '▲' : '▼') : '⇅'}
+                      </Link>
+                    </TableHead>
+                    <TableHead className="font-black text-[#1A1A2E]">
+                      <Link href={getSortLink('email')} className="flex items-center gap-1 hover:text-[#4A5DB5] transition-colors">
+                        Email {sortBy === 'email' ? (sortOrder === 'asc' ? '▲' : '▼') : '⇅'}
                       </Link>
                     </TableHead>
                     <TableHead className="font-black text-[#1A1A2E]">
                       <Link href={getSortLink('address')} className="flex items-center gap-1 hover:text-[#4A5DB5] transition-colors">
-                        College {sortBy === 'address' ? (sortOrder === 'asc' ? '▲' : '▼') : ''}
+                        College {sortBy === 'address' ? (sortOrder === 'asc' ? '▲' : '▼') : '⇅'}
                       </Link>
                     </TableHead>
-                    <TableHead className="font-black text-[#1A1A2E]">Category</TableHead>
-                    <TableHead className="font-black text-[#1A1A2E] text-center">Status</TableHead>
+                    <TableHead className="font-black text-[#1A1A2E]">
+                      <Link href={getSortLink('domain')} className="flex items-center gap-1 hover:text-[#4A5DB5] transition-colors">
+                        Branch {sortBy === 'domain' ? (sortOrder === 'asc' ? '▲' : '▼') : '⇅'}
+                      </Link>
+                    </TableHead>
+                    <TableHead className="font-black text-[#1A1A2E] text-center">
+                      <Link href={getSortLink('is_active')} className="flex items-center gap-1 justify-center hover:text-[#4A5DB5] transition-colors">
+                        Status {sortBy === 'is_active' ? (sortOrder === 'asc' ? '▲' : '▼') : '⇅'}
+                      </Link>
+                    </TableHead>
                     {role === 'intern' && <TableHead className="font-black text-[#1A1A2E] text-center">Certifications</TableHead>}
                     <TableHead className="font-black text-[#1A1A2E] text-right">
                       <Link href={getSortLink('created_at')} className="flex items-center gap-1 justify-end hover:text-[#4A5DB5] transition-colors">
-                        Joined Date {sortBy === 'created_at' ? (sortOrder === 'asc' ? '▲' : '▼') : ''}
+                        Joined {sortBy === 'created_at' ? (sortOrder === 'asc' ? '▲' : '▼') : '⇅'}
                       </Link>
                     </TableHead>
                     <TableHead className="font-black text-[#1A1A2E] text-right px-8">Actions</TableHead>
@@ -120,7 +134,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                 <TableBody>
                   {!users || users.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={role === 'intern' ? 7 : 6} className="text-center py-20">
+                      <TableCell colSpan={role === 'intern' ? 10 : 9} className="text-center py-20">
                         <div className="flex flex-col items-center gap-4 text-[#7182C7]">
                           {q ? <Search size={48} className="opacity-20" /> : <Users size={48} className="opacity-20" />}
                           <p className="font-bold">
@@ -130,27 +144,26 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    users.map((user) => (
+                    users.map((user, idx) => (
                       <TableRow key={user.id} className="hover:bg-blue-50/30 transition-colors border-b-blue-50/50">
-                        <TableCell className="px-8 py-6">
-                          <div className="flex items-center gap-4">
-                            <div className={`w-12 h-12 rounded-2xl bg-white border flex items-center justify-center font-black shadow-sm ${user.role === 'admin' ? 'text-amber-500 border-amber-100' : 'text-[#4A5DB5] border-blue-100'}`}>
-                              {user.role === 'admin' ? <Shield size={20} /> : (user.full_name?.charAt(0) || 'U')}
+                        <TableCell className="px-6 py-4 text-center">
+                          <span className="text-xs font-black text-[#A0ACDC] bg-[#E9EEF9] rounded-lg px-2 py-1">{idx + 1}</span>
+                        </TableCell>
+                        <TableCell className="px-4 py-4">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-10 h-10 rounded-xl bg-white border flex items-center justify-center font-black shadow-sm text-sm ${user.role === 'admin' ? 'text-amber-500 border-amber-100' : 'text-[#4A5DB5] border-blue-100'}`}>
+                              {user.role === 'admin' ? <Shield size={18} /> : (user.full_name?.charAt(0) || 'U')}
                             </div>
-                            <div>
-                              <p className="font-black text-[#1A1A2E]">{user.full_name}</p>
-                              <p className="text-xs text-[#7182C7] flex items-center gap-1">
-                                <Mail size={12} /> {user.email}
-                              </p>
-                            </div>
+                            <p className="font-black text-[#1A1A2E] text-sm">{user.full_name}</p>
                           </div>
                         </TableCell>
-                        <TableCell className="font-bold text-[#1A1A2E]">
-                          {user.address || <span className="text-slate-300 italic font-normal">Not Specified</span>}
+                        <TableCell className="text-xs text-[#7182C7] font-medium">{user.email}</TableCell>
+                        <TableCell className="font-bold text-[#1A1A2E] text-sm">
+                          {user.address || <span className="text-slate-300 italic font-normal">—</span>}
                         </TableCell>
                         <TableCell>
-                          <span className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider shadow-lg ${user.role === 'admin' ? 'bg-amber-500 text-white shadow-amber-500/20' : 'bg-[#4A5DB5] text-white shadow-blue-500/20'}`}>
-                            {user.role === 'admin' ? 'Administrator' : (user.domain || 'Intern')}
+                          <span className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider shadow-sm ${user.role === 'admin' ? 'bg-amber-500 text-white' : 'bg-[#E9EEF9] text-[#4A5DB5]'}`}>
+                            {user.role === 'admin' ? 'Administrator' : (user.domain || '—')}
                           </span>
                         </TableCell>
                         <TableCell className="text-center">
