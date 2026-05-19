@@ -226,6 +226,11 @@ export default function CurriculumGrid({
                                 {isActive && (
                                   <Badge className="bg-[#4A5DB5] text-white text-[9px] px-2 py-0 h-4 uppercase font-black">Active Now</Badge>
                                 )}
+                                {day.day_number === 2 && isLocked && !isAdmin && (
+                                  <Badge className="bg-amber-100 text-amber-700 text-[9px] px-2 py-0 h-4 uppercase font-black border-none hover:bg-amber-200 transition-colors">
+                                    Will be opened at 12:00 PM
+                                  </Badge>
+                                )}
                               </div>
                               <h3 className="font-bold text-lg text-[#1A1A2E] truncate group-hover:text-[#2238A4] transition-colors">
                                 {day.sub_topics || day.topic}
