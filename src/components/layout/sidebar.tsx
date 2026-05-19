@@ -195,7 +195,7 @@ export default function Sidebar({ user, completedDays }: SidebarProps) {
       </aside>
 
       {/* Mobile Bottom Nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t z-50 flex justify-around py-2 px-2 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] border-slate-100">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t z-50 flex justify-around pt-2 pb-[calc(env(safe-area-inset-bottom)+0.5rem)] px-2 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] border-slate-100">
         {navItems.slice(0, 5).map((item) => {
           const isActive = pathname === item.href || 
             (item.href !== '/dashboard' && item.href !== '/admin' && pathname.startsWith(item.href));

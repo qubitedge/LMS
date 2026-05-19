@@ -32,7 +32,7 @@ export default async function DashboardLayout({
     .eq('user_id', user.id);
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-[100dvh] overflow-hidden w-full relative">
       {/* Sidebar - Desktop & Bottom Nav - Mobile */}
       <Sidebar user={profile} completedDays={completedDays || 0} />
 
@@ -40,8 +40,8 @@ export default async function DashboardLayout({
       <Topbar user={profile} />
 
       {/* Main Content Area */}
-      <main className="flex-1 w-full md:pl-80 pt-[60px] md:pt-0 pb-[60px] md:pb-0">
-        <div className="w-full p-4 md:p-10">
+      <main className="flex-1 w-full h-full overflow-y-auto overflow-x-hidden md:pl-80 pt-[60px] md:pt-0 pb-[80px] md:pb-0">
+        <div className="w-full p-4 md:p-10 min-h-full">
           {children}
         </div>
       </main>
