@@ -96,7 +96,6 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
               <Table>
                 <TableHeader className="bg-[#E9EEF9]/50">
                   <TableRow className="border-b-blue-100/50">
-                    <TableHead className="font-black text-[#1A1A2E] px-6 py-6 w-14 text-center">#</TableHead>
                     <TableHead className="font-black text-[#1A1A2E] px-4 py-6">
                       <Link href={getSortLink('full_name')} className="flex items-center gap-1 hover:text-[#4A5DB5] transition-colors">
                         User Profile {sortBy === 'full_name' ? (sortOrder === 'asc' ? '▲' : '▼') : '⇅'}
@@ -134,7 +133,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                 <TableBody>
                   {!users || users.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={role === 'intern' ? 10 : 9} className="text-center py-20">
+                      <TableCell colSpan={role === 'intern' ? 9 : 8} className="text-center py-20">
                         <div className="flex flex-col items-center gap-4 text-[#7182C7]">
                           {q ? <Search size={48} className="opacity-20" /> : <Users size={48} className="opacity-20" />}
                           <p className="font-bold">
@@ -144,11 +143,8 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    users.map((user, idx) => (
+                    users.map((user) => (
                       <TableRow key={user.id} className="hover:bg-blue-50/30 transition-colors border-b-blue-50/50">
-                        <TableCell className="px-6 py-4 text-center">
-                          <span className="text-xs font-black text-[#A0ACDC] bg-[#E9EEF9] rounded-lg px-2 py-1">{idx + 1}</span>
-                        </TableCell>
                         <TableCell className="px-4 py-4">
                           <div className="flex items-center gap-3">
                             <div className={`w-10 h-10 rounded-xl bg-white border flex items-center justify-center font-black shadow-sm text-sm ${user.role === 'admin' ? 'text-amber-500 border-amber-100' : 'text-[#4A5DB5] border-blue-100'}`}>
