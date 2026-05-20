@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 import { WEEKS, DAYS_TOPICS, QUIZ_QUESTIONS, INTERNSHIP_START_DATE, TASKS_DATA } from '../src/lib/seed-data';
 import { addDays, parseISO, format } from 'date-fns';
 
-dotenv.config({ path: '.env.local' });
+dotenv.config({ path: '.env' });
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -65,7 +65,9 @@ async function seed() {
         topic: d.topic,
         description: d.description,
         tutor_name: getTutorName(date),
-        video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' // Example URL
+        resource_link: d.resource_link || null,
+        video_url: d.video_url || 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        task_link: d.task_link || null
       };
     });
 

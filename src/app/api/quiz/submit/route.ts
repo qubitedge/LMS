@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     // 1. Fetch Quiz & Day Info
     const { data: quiz, error: quizError } = await supabase
       .from('quizzes')
-      .select('id, day_id, days(date)')
+      .select('id, day_id, days(date, day_number, weeks(week_number))')
       .eq('id', quizId)
       .single();
 
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: 'This quiz is not available for attempt today.' }, { status: 403 });
       }
       if (!isWithinQuizWindow()) {
-        return NextResponse.json({ message: 'Quiz window is closed. Available between 9:30 AM - 02:00 PM IST.' }, { status: 403 });
+        return NextResponse.json({ message: 'Quiz window is closed. Available between 12:00 PM - 02:00 PM IST.' }, { status: 403 });
       }
     }
 

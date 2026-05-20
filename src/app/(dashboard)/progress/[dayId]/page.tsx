@@ -202,21 +202,33 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
             </div>
 
             {day.task_link && (
-              <div className="mb-8 p-6 rounded-[2rem] bg-[#F4F9F6] border border-[#34C759]/20 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-lg shadow-[#34C759]/5 group">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-white text-[#34C759] flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
-                    <ClipboardList size={28} />
+              <div className="mb-8 p-6 rounded-[2rem] bg-[#F4F9F6] border border-[#34C759]/20 flex flex-col items-stretch gap-6 shadow-lg shadow-[#34C759]/5 group">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl bg-white text-[#34C759] flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                      <ClipboardList size={28} />
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-black italic text-[#1A1A2E]">Today's Task</h4>
+                      <p className="text-[10px] font-bold text-[#34C759] uppercase tracking-widest mt-1">Complete the assigned activity</p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="text-lg font-black italic text-[#1A1A2E]">Today's Task</h4>
-                    <p className="text-[10px] font-bold text-[#34C759] uppercase tracking-widest mt-1">Complete the assigned activity</p>
+                  <div className="flex flex-wrap gap-4 w-full md:w-auto">
+                    {day.task_link.split(',').map((link: string, idx: number) => {
+                      const cleanLink = link.trim();
+                      if (!cleanLink) return null;
+                      const isMultiple = day.task_link.includes(',');
+                      const buttonText = isMultiple ? `View & Download Task ${idx + 1}` : 'View & Download Task';
+                      return (
+                        <a key={idx} href={cleanLink} target="_blank" rel="noopener noreferrer" className="flex-1 md:flex-initial">
+                          <Button className="w-full h-14 px-8 rounded-2xl bg-[#34C759] hover:bg-[#2DB24F] text-white font-black shadow-xl shadow-[#34C759]/20 hover:scale-[1.02] active:scale-95 transition-all">
+                            {buttonText} <ExternalLink size={18} className="ml-2" />
+                          </Button>
+                        </a>
+                      );
+                    })}
                   </div>
                 </div>
-                <a href={day.task_link} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
-                  <Button className="w-full sm:w-auto h-14 px-8 rounded-2xl bg-[#34C759] hover:bg-[#2DB24F] text-white font-black shadow-xl shadow-[#34C759]/20 hover:scale-[1.02] active:scale-95 transition-all">
-                    View & Download Task <ExternalLink size={18} className="ml-2" />
-                  </Button>
-                </a>
               </div>
             )}
 
@@ -427,7 +439,7 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
                       Quiz Window Closed
                     </p>
                     <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">
-                      Available daily between 9:30 AM - 02:00 PM IST
+                      Available daily between 12:00 PM - 02:00 PM IST
                     </p>
                   </div>
                 )
@@ -442,7 +454,7 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
                       Quiz Window Closed
                     </p>
                     <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">
-                      Available daily between 9:30 AM - 02:00 PM IST
+                      Available daily between 12:00 PM - 02:00 PM IST
                     </p>
                   </div>
                 )

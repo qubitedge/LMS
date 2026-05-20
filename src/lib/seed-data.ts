@@ -13,17 +13,45 @@ export const WEEKS = [
   { week_number: 6, title: 'Capstone Project Work', domain: 'Capstone' },
 ];
 
-export const DAYS_TOPICS: { day: number; topic: string; description: string; resource_link?: string }[] = [
-  { day: 1, topic: 'Data Foundations', description: 'In-depth session on Data Foundations: What is Data - Data Lifecycle - Basic Functions', resource_link: 'https://docs.google.com/presentation/d/1Kxky8zVZ0tuE-aIazOr2pSerVpxF7gBz/edit?usp=drive_link&ouid=110452534344800716911&rtpof=true&sd=true' },
-  { day: 2, topic: 'Variables & Data Types', description: 'Understanding integers, floats, strings, booleans, and type casting.', resource_link: 'https://docs.google.com/presentation/d/1MiYCQX8vS8en9Lbndh5isLl71ilHzybS/edit?usp=drive_link&ouid=110452534344800716911&rtpof=true&sd=true' },
-  { day: 3, topic: 'Control Flow', description: 'If-else statements, loops (for, while), and conditional expressions.', resource_link: 'https://docs.google.com/presentation/d/1iisDejlYzKKc_DMJnv1UBGY-5k9r4lDK/edit?usp=drive_link&ouid=110452534344800716911&rtpof=true&sd=true' },
+export const DAYS_TOPICS: { 
+  day: number; 
+  topic: string; 
+  description: string; 
+  resource_link?: string;
+  video_url?: string;
+  task_link?: string;
+}[] = [
+  { 
+    day: 1, 
+    topic: 'Data Foundations', 
+    description: 'In-depth session on Data Foundations: What is Data - Data Lifecycle - Basic Functions', 
+    resource_link: 'https://docs.google.com/presentation/d/1Kxky8zVZ0tuE-aIazOr2pSerVpxF7gBz/edit?usp=drive_link&ouid=110452534344800716911&rtpof=true&sd=true',
+    video_url: 'https://youtu.be/XPiQyTASjfY',
+    task_link: 'https://docs.google.com/spreadsheets/d/1uVSo3-wf4PSd0hnCzSlLhg-57G3U1vt7/edit?usp=drive_link&ouid=110452534344800716911&rtpof=true&sd=true'
+  },
+  { 
+    day: 2, 
+    topic: 'Variables & Data Types', 
+    description: 'Understanding integers, floats, strings, booleans, and type casting.', 
+    resource_link: 'https://docs.google.com/presentation/d/1MiYCQX8vS8en9Lbndh5isLl71ilHzybS/edit?usp=drive_link&ouid=110452534344800716911&rtpof=true&sd=true',
+    video_url: 'https://youtu.be/T2juh0nb_ag',
+    task_link: 'https://docs.google.com/spreadsheets/d/1QkUg5YCWGeJWFMgT3wE6iCmJywPdWU9d/edit?usp=sharing&ouid=110452534344800716911&rtpof=true&sd=true'
+  },
+  { 
+    day: 3, 
+    topic: 'Control Flow', 
+    description: 'If-else statements, loops (for, while), and conditional expressions.', 
+    resource_link: 'https://docs.google.com/presentation/d/1iisDejlYzKKc_DMJnv1UBGY-5k9r4lDK/edit?usp=drive_link&ouid=110452534344800716911&rtpof=true&sd=true',
+    video_url: 'https://youtu.be/LyyHmzXNFIo/',
+    task_link: 'https://docs.google.com/spreadsheets/d/1oCj3GuQ5wAlvwHwgeA1CJlrDZHCqplRP/edit?usp=drive_link&ouid=110452534344800716911&rtpof=true&sd=true,https://docs.google.com/spreadsheets/d/1gKfb1p9VgW1pZxUg4Py6phRdsvjnGt1_/edit?usp=drive_link&ouid=110452534344800716911&rtpof=true&sd=true'
+  },
   { day: 4, topic: 'Functions & Modules', description: 'Defining functions, parameters, return values, importing modules.' },
   { day: 5, topic: 'Data Structures', description: 'Lists, tuples, dictionaries, sets and their operations.' },
-  { day: 6, topic: 'Introduction to SQL', description: 'Relational databases, SQL syntax, SELECT basics.' },
-  { day: 7, topic: 'Filtering & Sorting', description: 'WHERE clause, ORDER BY, LIMIT, LIKE, and comparison operators.' },
-  { day: 8, topic: 'Joins & Relationships', description: 'INNER JOIN, LEFT JOIN, RIGHT JOIN, table relationships.' },
-  { day: 9, topic: 'Aggregation & Grouping', description: 'COUNT, SUM, AVG, MIN, MAX, GROUP BY, HAVING.' },
-  { day: 10, topic: 'Advanced SQL', description: 'Subqueries, views, indexes, and transactions.' },
+  { day: 6, topic: 'SQL Basics', description: 'Introduction to relational databases, SQL syntax, and SELECT query filtering.' },
+  { day: 7, topic: 'String Functions', description: 'Learn SQL string manipulation functions like TRIM, LOWER, CONCAT, RIGHT, and LENGTH.' },
+  { day: 8, topic: 'Aggregation', description: 'Using SQL grouping and aggregation functions like COUNT, SUM, AVG, and HAVING.' },
+  { day: 9, topic: 'Joins', description: 'Mastering table relations using INNER JOIN, LEFT JOIN, and RIGHT JOIN.' },
+  { day: 10, topic: 'Advanced SQL', description: 'Understanding subqueries, conditional CASE WHEN expressions, and RANK or ROW_NUMBER window functions.' },
   { day: 11, topic: 'Cloud Computing Overview', description: 'IaaS, PaaS, SaaS models and major cloud providers.' },
   { day: 12, topic: 'AWS Fundamentals', description: 'EC2, S3, IAM — core AWS services overview.' },
   { day: 13, topic: 'Serverless & Functions', description: 'AWS Lambda, Azure Functions, event-driven architecture.' },
@@ -112,17 +140,40 @@ export const QUIZ_QUESTIONS: Record<number, QuizQuestion[]> = {
     { question: 'What does sorted() return?', options: ['None', 'New sorted list', 'Same list sorted', 'Iterator'], correct_index: 1 },
   ],
   6: [
-    { question: 'What does SQL stand for?', options: ['Structured Query Language', 'Simple Query Logic', 'Standard Query Language', 'Sequential Query List'], correct_index: 0 },
-    { question: 'Which command retrieves data?', options: ['GET', 'FETCH', 'SELECT', 'RETRIEVE'], correct_index: 2 },
-    { question: 'Which clause filters rows?', options: ['FILTER', 'WHERE', 'HAVING', 'LIMIT'], correct_index: 1 },
-    { question: 'What is a PRIMARY KEY?', options: ['Any column', 'Unique identifier', 'Foreign reference', 'Index'], correct_index: 1 },
-    { question: 'Which creates a table?', options: ['MAKE TABLE', 'NEW TABLE', 'CREATE TABLE', 'ADD TABLE'], correct_index: 2 },
-    { question: 'Which deletes all rows?', options: ['DELETE', 'DROP', 'TRUNCATE', 'REMOVE'], correct_index: 2 },
-    { question: 'What is NULL?', options: ['Zero', 'Empty string', 'Unknown value', 'False'], correct_index: 2 },
-    { question: 'INSERT INTO adds what?', options: ['Column', 'Table', 'Row', 'Database'], correct_index: 2 },
-    { question: 'Which keyword removes duplicates?', options: ['UNIQUE', 'DISTINCT', 'DIFFERENT', 'SINGLE'], correct_index: 1 },
-    { question: 'What does * mean in SELECT *?', options: ['Multiply', 'All columns', 'First column', 'Count'], correct_index: 1 },
+    { question: 'What does SQL stand for?', options: ['Structured Query Language', 'Simple Query Language', 'Sequential Query Language', 'System Query Logic'], correct_index: 0 },
+    { question: 'What is a table in a database?', options: ['A graph', 'A collection of rows and columns', 'A query', 'A dashboard'], correct_index: 1 },
+    { question: 'Which keyword is used to fetch data?', options: ['GET', 'SELECT', 'SHOW', 'FETCH'], correct_index: 1 },
+    { question: 'What does SELECT * FROM users; do?', options: ['Deletes data', 'Shows all rows and columns', 'Updates data', 'Creates table'], correct_index: 1 },
+    { question: 'Which clause is used to filter rows?', options: ['GROUP BY', 'WHERE', 'ORDER BY', 'LIMIT'], correct_index: 1 }
   ],
+  7: [
+    { question: 'What does TRIM() do?', options: ['Converts text to uppercase', 'Removes spaces', 'Counts characters', 'Joins columns'], correct_index: 1 },
+    { question: 'What will SELECT LOWER(\'SQL\') return?', options: ['SQL', 'sql', 'Sql', 'Error'], correct_index: 1 },
+    { question: 'Which function combines text?', options: ['JOIN()', 'CONCAT()', 'MERGE()', 'ADD()'], correct_index: 1 },
+    { question: 'What does SELECT RIGHT(\'ANALYTICS\', 3) return?', options: ['ANA', 'LYT', 'ICS', 'TIC'], correct_index: 2 },
+    { question: 'LENGTH(\'DATA\') returns?', options: ['2', '3', '4', 'DATA'], correct_index: 2 }
+  ],
+  8: [
+    { question: 'What does GROUP BY do?', options: ['Filters data', 'Groups data for aggregation', 'Sorts data', 'Deletes duplicates'], correct_index: 1 },
+    { question: 'Which function calculates total revenue?', options: ['COUNT()', 'SUM()', 'AVG()', 'MAX()'], correct_index: 1 },
+    { question: 'What does COUNT(*) do?', options: ['Counts rows', 'Counts columns', 'Counts tables', 'Counts values > 0'], correct_index: 0 },
+    { question: 'Which clause filters aggregated results?', options: ['WHERE', 'HAVING', 'ORDER BY', 'LIMIT'], correct_index: 1 },
+    { question: 'What does SELECT city, AVG(amount) FROM orders GROUP BY city do?', options: ['Avg per city', 'Total orders', 'Count per city', 'Error'], correct_index: 0 }
+  ],
+  9: [
+    { question: 'Why do we use joins?', options: ['Delete data', 'Combine tables', 'Sort data', 'Filter rows'], correct_index: 1 },
+    { question: 'INNER JOIN returns:', options: ['All rows', 'Only matching rows', 'Only left table', 'Only right table'], correct_index: 1 },
+    { question: 'LEFT JOIN returns:', options: ['Only matching rows', 'All left + matching right', 'Only right', 'No rows'], correct_index: 1 },
+    { question: 'What does the INNER JOIN query on users and orders do?', options: ['Combines matching records', 'Deletes data', 'Filters data', 'Creates table'], correct_index: 0 },
+    { question: 'Which query finds users with no orders?', options: ['LEFT JOIN ... WHERE o.user_id IS NULL', 'SELECT * FROM users', 'SELECT * FROM orders', 'SELECT * FROM users INNER JOIN orders'], correct_index: 0 }
+  ],
+  10: [
+    { question: 'What is a subquery?', options: ['Query inside another query', 'A table', 'A column', 'A function'], correct_index: 0 },
+    { question: 'CASE WHEN is used for:', options: ['Sorting', 'Conditional logic', 'Joining', 'Filtering'], correct_index: 1 },
+    { question: 'ROW_NUMBER() does what?', options: ['Counts rows', 'Assigns unique row numbers', 'Groups data', 'Filters data'], correct_index: 1 },
+    { question: 'RANK() differs from ROW_NUMBER() because:', options: ['Same behavior', 'RANK allows ties', 'ROW_NUMBER allows ties', 'None'], correct_index: 1 },
+    { question: 'What does RANK() OVER (ORDER BY amount DESC) do?', options: ['Ranks rows by amount', 'Filters rows', 'Deletes rows', 'Groups data'], correct_index: 0 }
+  ]
 };
 
 export const TASKS_DATA: { day: number; title: string; description: string }[] = [

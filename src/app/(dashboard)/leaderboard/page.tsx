@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import LeaderboardContent from '@/components/leaderboard/leaderboard-content';
 
 export const revalidate = 0;
@@ -9,13 +10,16 @@ export default async function LeaderboardPage() {
 
   if (!user) return null;
 
+  // Use admin client to bypass scores RLS select policy for leaderboard calculation
+  const adminSupabase = createAdminClient();
+
   // Fetch only necessary data for calculation
   const [
     { data: profiles },
     { data: scoresData }
   ] = await Promise.all([
-    supabase.from('profiles').select('id, full_name, avatar_url, domain, role'),
-    supabase.from('scores').select('user_id, score'),
+    adminSupabase.from('profiles').select('id, full_name, avatar_url, domain, role'),
+    adminSupabase.from('scores').select('user_id, score'),
   ]);
 
   // Group scores

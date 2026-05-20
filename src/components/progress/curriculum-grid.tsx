@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { WeekWithDays, DayWithStatus } from '@/types';
-import { getDayStatusLabel } from '@/lib/utils/dayLock';
+import { getDayStatusLabel, isBeforeQuizWindow } from '@/lib/utils/dayLock';
 import { 
   Dialog, DialogContent, DialogHeader, DialogTitle, 
   DialogDescription, DialogFooter 
@@ -226,9 +226,9 @@ export default function CurriculumGrid({
                                 {isActive && (
                                   <Badge className="bg-[#4A5DB5] text-white text-[9px] px-2 py-0 h-4 uppercase font-black">Active Now</Badge>
                                 )}
-                                {day.day_number === 2 && isLocked && !isAdmin && (
+                                {isActive && isBeforeQuizWindow() && !isAdmin && (
                                   <Badge className="bg-amber-100 text-amber-700 text-[9px] px-2 py-0 h-4 uppercase font-black border-none hover:bg-amber-200 transition-colors">
-                                    Will be opened at 12:00 PM
+                                    Opens at 12:00 PM
                                   </Badge>
                                 )}
                               </div>
