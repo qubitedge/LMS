@@ -1,0 +1,107 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: db-validation.spec.ts >> Database Validation >> Check for orphan profiles (missing auth.users)
+- Location: tests\db-validation.spec.ts:64:7
+
+# Error details
+
+```
+Error: Found 252 profiles that do not have a corresponding auth user
+
+expect(received).toBe(expected) // Object.is equality
+
+Expected: 0
+Received: 252
+```
+
+# Test source
+
+```ts
+  1  | import { test, expect } from '@playwright/test';
+  2  | import { createClient } from '@supabase/supabase-js';
+  3  | import dotenv from 'dotenv';
+  4  | import path from 'path';
+  5  | 
+  6  | dotenv.config({ path: path.resolve(__dirname, '../.env') });
+  7  | 
+  8  | const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  9  | const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  10 | 
+  11 | const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+  12 | 
+  13 | test.describe('Database Validation', () => {
+  14 |   
+  15 |   test('Supabase connection should be valid', async () => {
+  16 |     const { data, error } = await supabase.from('profiles').select('id').limit(1);
+  17 |     expect(error).toBeNull();
+  18 |   });
+  19 | 
+  20 |   const tables = ['profiles', 'weeks', 'days', 'quizzes', 'scores', 'attendance', 'tasks', 'submissions', 'announcements'];
+  21 | 
+  22 |   tables.forEach(table => {
+  23 |     test(`Table "${table}" should exist and be accessible`, async () => {
+  24 |       const { error } = await supabase.from(table).select('id').limit(1);
+  25 |       expect(error, `Failed to access table ${table}: ${error?.message}`).toBeNull();
+  26 |     });
+  27 |   });
+  28 | 
+  29 |   test('Foreign key consistency: days -> weeks', async () => {
+  30 |     const { data: days, error: daysError } = await supabase.from('days').select('id, week_id');
+  31 |     const { data: weeks, error: weeksError } = await supabase.from('weeks').select('id');
+  32 |     
+  33 |     expect(daysError).toBeNull();
+  34 |     expect(weeksError).toBeNull();
+  35 | 
+  36 |     const weekIds = new Set(weeks?.map(w => w.id));
+  37 |     
+  38 |     const orphanDays = days?.filter(day => !day.week_id || !weekIds.has(day.week_id));
+  39 |     
+  40 |     expect(orphanDays?.length, `Found ${orphanDays?.length} days with missing or invalid week_id: ${JSON.stringify(orphanDays)}`).toBe(0);
+  41 |   });
+  42 | 
+  43 |   test('Foreign key consistency: quizzes -> days', async () => {
+  44 |     const { data: quizzes, error: qError } = await supabase.from('quizzes').select('id, day_id');
+  45 |     const { data: days, error: dError } = await supabase.from('days').select('id');
+  46 |     
+  47 |     expect(qError).toBeNull();
+  48 |     expect(dError).toBeNull();
+  49 | 
+  50 |     const dayIds = new Set(days?.map(d => d.id));
+  51 |     const orphanQuizzes = quizzes?.filter(q => !q.day_id || !dayIds.has(q.day_id));
+  52 |     
+  53 |     expect(orphanQuizzes?.length, `Found ${orphanQuizzes?.length} quizzes with missing or invalid day_id`).toBe(0);
+  54 |   });
+  55 | 
+  56 |   test('Constraint validation: profiles should have full_name and email', async () => {
+  57 |     const { data, error } = await supabase.from('profiles').select('*');
+  58 |     expect(error).toBeNull();
+  59 |     
+  60 |     const invalidProfiles = data?.filter(p => !p.full_name || !p.email);
+  61 |     expect(invalidProfiles?.length, `Found ${invalidProfiles?.length} profiles with missing required fields`).toBe(0);
+  62 |   });
+  63 | 
+  64 |   test('Check for orphan profiles (missing auth.users)', async () => {
+  65 |     // This is harder to check without direct access to auth schema via SQL, 
+  66 |     // but we can assume if we can select them from profiles, they are somewhat linked.
+  67 |     // However, if we want to be thorough, we'd need to list users from auth.
+  68 |     const { data: profiles, error: pError } = await supabase.from('profiles').select('id');
+  69 |     expect(pError).toBeNull();
+  70 | 
+  71 |     const { data: { users }, error: uError } = await supabase.auth.admin.listUsers();
+  72 |     expect(uError).toBeNull();
+  73 | 
+  74 |     const authUserIds = new Set(users.map(u => u.id));
+  75 |     const orphanProfiles = profiles?.filter(p => !authUserIds.has(p.id));
+  76 | 
+> 77 |     expect(orphanProfiles?.length, `Found ${orphanProfiles?.length} profiles that do not have a corresponding auth user`).toBe(0);
+     |                                                                                                                           ^ Error: Found 252 profiles that do not have a corresponding auth user
+  78 |   });
+  79 | });
+  80 | 
+```

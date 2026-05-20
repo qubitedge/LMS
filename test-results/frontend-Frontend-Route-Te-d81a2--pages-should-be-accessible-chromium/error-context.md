@@ -41,16 +41,19 @@ Received string:        "http://localhost:3000/login"
               - generic [ref=e23]: Password
               - link "Forgot Password?" [ref=e24] [cursor=pointer]:
                 - /url: /forgot-password
-            - textbox "Password" [ref=e25]:
-              - /placeholder: ••••••••
-          - button "Sign In" [ref=e26]
-        - paragraph [ref=e28]:
+            - generic [ref=e25]:
+              - textbox "Password" [ref=e26]:
+                - /placeholder: ••••••••
+              - button "Show password" [ref=e27]:
+                - img [ref=e28]
+          - button "Sign In" [ref=e31]
+        - paragraph [ref=e33]:
           - text: Don't have an account?
-          - link "Contact your administrator." [ref=e29] [cursor=pointer]:
+          - link "Contact your administrator." [ref=e34] [cursor=pointer]:
             - /url: mailto:likhithmanakala@gmail.com
   - region "Notifications alt+T"
-  - button "Open Next.js Dev Tools" [ref=e35] [cursor=pointer]:
-    - img [ref=e36]
+  - button "Open Next.js Dev Tools" [ref=e40] [cursor=pointer]:
+    - img [ref=e41]
 ```
 
 # Test source

@@ -13,6 +13,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import bgImage from '@/assets/wmremove-transformed.png';
+import SupportButton from '@/components/support-button';
 
 import { Suspense } from 'react';
 
@@ -190,12 +191,15 @@ function LoginContent() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={
-      <div className="flex items-center justify-center min-h-[620px]">
-        <Loader2 className="h-12 w-12 animate-spin text-[#4A5DB5]" />
-      </div>
-    }>
-      <LoginContent />
-    </Suspense>
+    <>
+      <Suspense fallback={
+        <div className="flex items-center justify-center min-h-[620px]">
+          <Loader2 className="h-12 w-12 animate-spin text-[#4A5DB5]" />
+        </div>
+      }>
+        <LoginContent />
+      </Suspense>
+      <SupportButton />
+    </>
   );
 }

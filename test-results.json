@@ -1,7 +1,7 @@
 {
   "config": {
-    "configFile": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\playwright.config.ts",
-    "rootDir": "C:/Users/Likhith Kumar/Downloads/LMS/LMS/tests",
+    "configFile": "C:\\Users\\user\\Downloads\\LMS\\playwright.config.ts",
+    "rootDir": "C:/Users/user/Downloads/LMS/tests",
     "forbidOnly": false,
     "fullyParallel": true,
     "globalSetup": null,
@@ -11,20 +11,20 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 8
+      "actualWorkers": 3
     },
     "preserveOutput": "always",
     "projects": [
       {
-        "outputDir": "C:/Users/Likhith Kumar/Downloads/LMS/LMS/test-results",
+        "outputDir": "C:/Users/user/Downloads/LMS/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 8
+          "actualWorkers": 3
         },
         "id": "chromium",
         "name": "chromium",
-        "testDir": "C:/Users/Likhith Kumar/Downloads/LMS/LMS/tests",
+        "testDir": "C:/Users/user/Downloads/LMS/tests",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -58,7 +58,7 @@
     "updateSnapshots": "missing",
     "updateSourceMethod": "patch",
     "version": "1.59.1",
-    "workers": 8,
+    "workers": 3,
     "webServer": {
       "command": "npm run dev",
       "url": "http://localhost:3000",
@@ -81,7 +81,7 @@
           "specs": [
             {
               "title": "POST /api/admin/create-user - should fail without auth/fields",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -94,48 +94,18 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 755,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m200\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n    at C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\api-endpoints.spec.ts:10:31",
-                        "location": {
-                          "file": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\api-endpoints.spec.ts",
-                          "column": 31,
-                          "line": 10
-                        },
-                        "snippet": "\u001b[0m \u001b[90m  8 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m  9 |\u001b[39m     \u001b[90m// According to the code, it returns 400 for missing fields\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 10 |\u001b[39m     expect(response\u001b[33m.\u001b[39mstatus())\u001b[33m.\u001b[39mtoBe(\u001b[35m400\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 11 |\u001b[39m     \u001b[36mconst\u001b[39m body \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m response\u001b[33m.\u001b[39mjson()\u001b[33m;\u001b[39m\n \u001b[90m 12 |\u001b[39m     expect(body\u001b[33m.\u001b[39mmessage)\u001b[33m.\u001b[39mtoBe(\u001b[32m'Missing required fields'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 13 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\api-endpoints.spec.ts",
-                            "column": 31,
-                            "line": 10
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n\n   8 |     });\n   9 |     // According to the code, it returns 400 for missing fields\n> 10 |     expect(response.status()).toBe(400);\n     |                               ^\n  11 |     const body = await response.json();\n  12 |     expect(body.message).toBe('Missing required fields');\n  13 |   });\n    at C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\api-endpoints.spec.ts:10:31"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 45,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:47.584Z",
+                      "startTime": "2026-05-20T05:26:29.576Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\test-results\\api-endpoints-API-Endpoint-cd425-ld-fail-without-auth-fields-chromium\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\api-endpoints.spec.ts",
-                        "column": 31,
-                        "line": 10
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "1283ac53084b38fceb2d-0395d352d423b1fbf44a",
@@ -145,7 +115,7 @@
             },
             {
               "title": "POST /api/attendance/mark - should fail for unauthorized",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -158,48 +128,18 @@
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
-                      "status": "failed",
-                      "duration": 773,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m200\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n    at C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\api-endpoints.spec.ts:17:31",
-                        "location": {
-                          "file": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\api-endpoints.spec.ts",
-                          "column": 31,
-                          "line": 17
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 15 |\u001b[39m   test(\u001b[32m'POST /api/attendance/mark - should fail for unauthorized'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ request }) \u001b[33m=>\u001b[39m {\n \u001b[90m 16 |\u001b[39m     \u001b[36mconst\u001b[39m response \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m request\u001b[33m.\u001b[39mpost(\u001b[32m'/api/attendance/mark'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 17 |\u001b[39m     expect(response\u001b[33m.\u001b[39mstatus())\u001b[33m.\u001b[39mtoBe(\u001b[35m401\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 18 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 19 |\u001b[39m\n \u001b[90m 20 |\u001b[39m   test(\u001b[32m'POST /api/quiz/submit - should fail for unauthorized'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ request }) \u001b[33m=>\u001b[39m {\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\api-endpoints.spec.ts",
-                            "column": 31,
-                            "line": 17
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n\n  15 |   test('POST /api/attendance/mark - should fail for unauthorized', async ({ request }) => {\n  16 |     const response = await request.post('/api/attendance/mark');\n> 17 |     expect(response.status()).toBe(401);\n     |                               ^\n  18 |   });\n  19 |\n  20 |   test('POST /api/quiz/submit - should fail for unauthorized', async ({ request }) => {\n    at C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\api-endpoints.spec.ts:17:31"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 52,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:47.549Z",
+                      "startTime": "2026-05-20T05:26:29.589Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\test-results\\api-endpoints-API-Endpoint-c197a-hould-fail-for-unauthorized-chromium\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\api-endpoints.spec.ts",
-                        "column": 31,
-                        "line": 17
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "1283ac53084b38fceb2d-cc1b1e43b5f243458a07",
@@ -209,7 +149,7 @@
             },
             {
               "title": "POST /api/quiz/submit - should fail for unauthorized",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -222,48 +162,18 @@
                     {
                       "workerIndex": 2,
                       "parallelIndex": 2,
-                      "status": "failed",
-                      "duration": 625,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m200\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n    at C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\api-endpoints.spec.ts:24:31",
-                        "location": {
-                          "file": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\api-endpoints.spec.ts",
-                          "column": 31,
-                          "line": 24
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 22 |\u001b[39m       data\u001b[33m:\u001b[39m { quizId\u001b[33m:\u001b[39m \u001b[32m'some-id'\u001b[39m\u001b[33m,\u001b[39m answers\u001b[33m:\u001b[39m {} }\n \u001b[90m 23 |\u001b[39m     })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 24 |\u001b[39m     expect(response\u001b[33m.\u001b[39mstatus())\u001b[33m.\u001b[39mtoBe(\u001b[35m401\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 25 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 26 |\u001b[39m\n \u001b[90m 27 |\u001b[39m   test(\u001b[32m'POST /api/tasks/submit - should fail for unauthorized'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ request }) \u001b[33m=>\u001b[39m {\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\api-endpoints.spec.ts",
-                            "column": 31,
-                            "line": 24
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n\n  22 |       data: { quizId: 'some-id', answers: {} }\n  23 |     });\n> 24 |     expect(response.status()).toBe(401);\n     |                               ^\n  25 |   });\n  26 |\n  27 |   test('POST /api/tasks/submit - should fail for unauthorized', async ({ request }) => {\n    at C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\api-endpoints.spec.ts:24:31"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 52,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:47.749Z",
+                      "startTime": "2026-05-20T05:26:29.556Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\test-results\\api-endpoints-API-Endpoint-a15c1-hould-fail-for-unauthorized-chromium\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\api-endpoints.spec.ts",
-                        "column": 31,
-                        "line": 24
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "1283ac53084b38fceb2d-5823d241654c63df4e34",
@@ -273,7 +183,7 @@
             },
             {
               "title": "POST /api/tasks/submit - should fail for unauthorized",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -284,50 +194,20 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
-                      "status": "failed",
-                      "duration": 576,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m200\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n    at C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\api-endpoints.spec.ts:31:31",
-                        "location": {
-                          "file": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\api-endpoints.spec.ts",
-                          "column": 31,
-                          "line": 31
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 29 |\u001b[39m       data\u001b[33m:\u001b[39m { taskId\u001b[33m:\u001b[39m \u001b[32m'some-id'\u001b[39m\u001b[33m,\u001b[39m format\u001b[33m:\u001b[39m \u001b[32m'text'\u001b[39m\u001b[33m,\u001b[39m content\u001b[33m:\u001b[39m \u001b[32m'test'\u001b[39m }\n \u001b[90m 30 |\u001b[39m     })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 31 |\u001b[39m     expect(response\u001b[33m.\u001b[39mstatus())\u001b[33m.\u001b[39mtoBe(\u001b[35m401\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 32 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 33 |\u001b[39m\n \u001b[90m 34 |\u001b[39m   \u001b[90m// To test success cases, we need a session. \u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\api-endpoints.spec.ts",
-                            "column": 31,
-                            "line": 31
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n\n  29 |       data: { taskId: 'some-id', format: 'text', content: 'test' }\n  30 |     });\n> 31 |     expect(response.status()).toBe(401);\n     |                               ^\n  32 |   });\n  33 |\n  34 |   // To test success cases, we need a session. \n    at C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\api-endpoints.spec.ts:31:31"
-                        }
-                      ],
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 30,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:47.804Z",
+                      "startTime": "2026-05-20T05:26:29.638Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\test-results\\api-endpoints-API-Endpoint-44a0b-hould-fail-for-unauthorized-chromium\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\api-endpoints.spec.ts",
-                        "column": 31,
-                        "line": 31
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "1283ac53084b38fceb2d-9f3f6e9270d83a756e33",
@@ -365,47 +245,31 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
-                      "parallelIndex": 4,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "failed",
-                      "duration": 8437,
+                      "duration": 1,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/Login/i\u001b[39m\nReceived string:  \u001b[31m\"qubitedge LMS | Internship Learning Management System\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 5000ms\u001b[22m\n\u001b[2m    8 × unexpected value \"qubitedge LMS | Internship Learning Management System\"\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/Login/i\u001b[39m\nReceived string:  \u001b[31m\"qubitedge LMS | Internship Learning Management System\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 5000ms\u001b[22m\n\u001b[2m    8 × unexpected value \"qubitedge LMS | Internship Learning Management System\"\u001b[22m\n\n    at C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\auth.spec.ts:6:24",
-                        "location": {
-                          "file": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\auth.spec.ts",
-                          "column": 24,
-                          "line": 6
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 4 |\u001b[39m   test(\u001b[32m'Login page should render correctly'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 5 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/login'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveTitle(\u001b[35m/Login/i\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m   |\u001b[39m                        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 7 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"email\"]'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 8 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'input[type=\"password\"]'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 9 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'button[type=\"submit\"]'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m"
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
                       },
                       "errors": [
                         {
-                          "location": {
-                            "file": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\auth.spec.ts",
-                            "column": 24,
-                            "line": 6
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/Login/i\u001b[39m\nReceived string:  \u001b[31m\"qubitedge LMS | Internship Learning Management System\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 5000ms\u001b[22m\n\u001b[2m    8 × unexpected value \"qubitedge LMS | Internship Learning Management System\"\u001b[22m\n\n\n  4 |   test('Login page should render correctly', async ({ page }) => {\n  5 |     await page.goto('/login');\n> 6 |     await expect(page).toHaveTitle(/Login/i);\n    |                        ^\n  7 |     await expect(page.locator('input[type=\"email\"]')).toBeVisible();\n  8 |     await expect(page.locator('input[type=\"password\"]')).toBeVisible();\n  9 |     await expect(page.locator('button[type=\"submit\"]')).toBeVisible();\n    at C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\auth.spec.ts:6:24"
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:47.606Z",
+                      "startTime": "2026-05-20T05:26:29.647Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "error-context",
                           "contentType": "text/markdown",
-                          "path": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\test-results\\auth-Authentication-Flow-Login-page-should-render-correctly-chromium\\error-context.md"
+                          "path": "C:\\Users\\user\\Downloads\\LMS\\test-results\\auth-Authentication-Flow-Login-page-should-render-correctly-chromium\\error-context.md"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\auth.spec.ts",
-                        "column": 24,
-                        "line": 6
-                      }
+                      ]
                     }
                   ],
                   "status": "unexpected"
@@ -418,7 +282,7 @@
             },
             {
               "title": "Invalid login should show error message",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -429,20 +293,34 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
-                      "parallelIndex": 5,
-                      "status": "passed",
-                      "duration": 9060,
-                      "errors": [],
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:47.638Z",
+                      "startTime": "2026-05-20T05:26:29.665Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\user\\Downloads\\LMS\\test-results\\auth-Authentication-Flow-I-14283-n-should-show-error-message-chromium\\error-context.md"
+                        }
+                      ]
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
               "id": "d748ac400d08b85935ef-63c504ad3498e31c3fdb",
@@ -480,15 +358,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
-                      "parallelIndex": 6,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 556,
+                      "duration": 462,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:48.007Z",
+                      "startTime": "2026-05-20T05:26:29.742Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -514,15 +392,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
-                      "parallelIndex": 7,
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 581,
+                      "duration": 205,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:47.968Z",
+                      "startTime": "2026-05-20T05:26:30.731Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -548,15 +426,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 8,
+                      "workerIndex": 3,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 365,
+                      "duration": 474,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:51.149Z",
+                      "startTime": "2026-05-20T05:26:30.709Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -599,15 +477,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 9,
-                      "parallelIndex": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 505,
+                      "duration": 78,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:50.898Z",
+                      "startTime": "2026-05-20T05:26:30.219Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -633,15 +511,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 10,
+                      "workerIndex": 2,
                       "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 397,
+                      "duration": 75,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:51.113Z",
+                      "startTime": "2026-05-20T05:26:30.307Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -667,15 +545,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 11,
-                      "parallelIndex": 3,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 353,
+                      "duration": 79,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:50.916Z",
+                      "startTime": "2026-05-20T05:26:30.395Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -701,15 +579,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
-                      "parallelIndex": 7,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 185,
+                      "duration": 84,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:48.642Z",
+                      "startTime": "2026-05-20T05:26:30.486Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -735,15 +613,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
-                      "parallelIndex": 6,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 170,
+                      "duration": 78,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:48.647Z",
+                      "startTime": "2026-05-20T05:26:30.582Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -769,15 +647,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
-                      "parallelIndex": 6,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 151,
+                      "duration": 81,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:48.880Z",
+                      "startTime": "2026-05-20T05:26:30.677Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -803,15 +681,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
-                      "parallelIndex": 7,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 151,
+                      "duration": 79,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:48.888Z",
+                      "startTime": "2026-05-20T05:26:30.769Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -837,15 +715,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
-                      "parallelIndex": 6,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 158,
+                      "duration": 125,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:49.073Z",
+                      "startTime": "2026-05-20T05:26:30.867Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -871,15 +749,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
-                      "parallelIndex": 7,
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 156,
+                      "duration": 79,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:49.085Z",
+                      "startTime": "2026-05-20T05:26:30.965Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -905,15 +783,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
-                      "parallelIndex": 6,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 128,
+                      "duration": 75,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:49.281Z",
+                      "startTime": "2026-05-20T05:26:31.002Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -939,15 +817,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
-                      "parallelIndex": 7,
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 317,
+                      "duration": 148,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:49.303Z",
+                      "startTime": "2026-05-20T05:26:31.059Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -973,15 +851,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
-                      "parallelIndex": 6,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 337,
+                      "duration": 152,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:49.484Z",
+                      "startTime": "2026-05-20T05:26:31.086Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1007,15 +885,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
-                      "parallelIndex": 7,
+                      "workerIndex": 3,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 151,
+                      "duration": 1788,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:49.687Z",
+                      "startTime": "2026-05-20T05:26:31.211Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1030,7 +908,7 @@
             },
             {
               "title": "Check for orphan profiles (missing auth.users)",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -1041,20 +919,50 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
-                      "parallelIndex": 6,
-                      "status": "passed",
-                      "duration": 342,
-                      "errors": [],
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 171,
+                      "error": {
+                        "message": "Error: Found 251 profiles that do not have a corresponding auth user\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m251\u001b[39m",
+                        "stack": "Error: Found 251 profiles that do not have a corresponding auth user\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m251\u001b[39m\n    at C:\\Users\\user\\Downloads\\LMS\\tests\\db-validation.spec.ts:77:123",
+                        "location": {
+                          "file": "C:\\Users\\user\\Downloads\\LMS\\tests\\db-validation.spec.ts",
+                          "column": 123,
+                          "line": 77
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 75 |\u001b[39m     \u001b[36mconst\u001b[39m orphanProfiles \u001b[33m=\u001b[39m profiles\u001b[33m?\u001b[39m\u001b[33m.\u001b[39mfilter(p \u001b[33m=>\u001b[39m \u001b[33m!\u001b[39mauthUserIds\u001b[33m.\u001b[39mhas(p\u001b[33m.\u001b[39mid))\u001b[33m;\u001b[39m\n \u001b[90m 76 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 77 |\u001b[39m     expect(orphanProfiles\u001b[33m?\u001b[39m\u001b[33m.\u001b[39mlength\u001b[33m,\u001b[39m \u001b[32m`Found ${orphanProfiles?.length} profiles that do not have a corresponding auth user`\u001b[39m)\u001b[33m.\u001b[39mtoBe(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                                                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 78 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 79 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 80 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\user\\Downloads\\LMS\\tests\\db-validation.spec.ts",
+                            "column": 123,
+                            "line": 77
+                          },
+                          "message": "Error: Found 251 profiles that do not have a corresponding auth user\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m251\u001b[39m\n\n  75 |     const orphanProfiles = profiles?.filter(p => !authUserIds.has(p.id));\n  76 |\n> 77 |     expect(orphanProfiles?.length, `Found ${orphanProfiles?.length} profiles that do not have a corresponding auth user`).toBe(0);\n     |                                                                                                                           ^\n  78 |   });\n  79 | });\n  80 |\n    at C:\\Users\\user\\Downloads\\LMS\\tests\\db-validation.spec.ts:77:123"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:49.867Z",
+                      "startTime": "2026-05-20T05:26:31.216Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\user\\Downloads\\LMS\\test-results\\db-validation-Database-Val-19a11-rofiles-missing-auth-users--chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\user\\Downloads\\LMS\\tests\\db-validation.spec.ts",
+                        "column": 123,
+                        "line": 77
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
               "id": "8aade11118623dabbbbc-a20265acb0fba190976d",
@@ -1081,7 +989,7 @@
           "specs": [
             {
               "title": "Unauthenticated user should be redirected from /dashboard to login",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -1092,20 +1000,34 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
-                      "parallelIndex": 7,
-                      "status": "passed",
-                      "duration": 4214,
-                      "errors": [],
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 0,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:49.886Z",
+                      "startTime": "2026-05-20T05:26:31.249Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\user\\Downloads\\LMS\\test-results\\frontend-Frontend-Route-Te-9e9d0-ted-from-dashboard-to-login-chromium\\error-context.md"
+                        }
+                      ]
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
               "id": "60aee255112e33b2be9f-5628fe6a44052faf857c",
@@ -1115,7 +1037,55 @@
             },
             {
               "title": "Unauthenticated user should be redirected from /progress to login",
-              "ok": true,
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 2,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-20T05:26:32.239Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\user\\Downloads\\LMS\\test-results\\frontend-Frontend-Route-Te-78557-cted-from-progress-to-login-chromium\\error-context.md"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "60aee255112e33b2be9f-a868de0525266b4190ed",
+              "file": "frontend.spec.ts",
+              "line": 7,
+              "column": 9
+            },
+            {
+              "title": "Unauthenticated user should be redirected from /leaderboard to login",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -1127,53 +1097,33 @@
                   "results": [
                     {
                       "workerIndex": 6,
-                      "parallelIndex": 6,
-                      "status": "passed",
-                      "duration": 3988,
-                      "errors": [],
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 3,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:50.251Z",
+                      "startTime": "2026-05-20T05:26:32.400Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\user\\Downloads\\LMS\\test-results\\frontend-Frontend-Route-Te-d77b1-d-from-leaderboard-to-login-chromium\\error-context.md"
+                        }
+                      ]
                     }
                   ],
-                  "status": "expected"
-                }
-              ],
-              "id": "60aee255112e33b2be9f-a868de0525266b4190ed",
-              "file": "frontend.spec.ts",
-              "line": 7,
-              "column": 9
-            },
-            {
-              "title": "Unauthenticated user should be redirected from /leaderboard to login",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 11,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 3648,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-05-01T08:18:51.385Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
               "id": "60aee255112e33b2be9f-6bc58a8b179554bdb4e2",
@@ -1183,7 +1133,7 @@
             },
             {
               "title": "Unauthenticated user should be redirected from /profile to login",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -1194,20 +1144,34 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 9,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 3219,
-                      "errors": [],
+                      "workerIndex": 7,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 2,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:51.526Z",
+                      "startTime": "2026-05-20T05:26:33.344Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\user\\Downloads\\LMS\\test-results\\frontend-Frontend-Route-Te-5878a-ected-from-profile-to-login-chromium\\error-context.md"
+                        }
+                      ]
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
               "id": "60aee255112e33b2be9f-c0e85830ce56cc0a0d2b",
@@ -1228,47 +1192,31 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 10,
-                      "parallelIndex": 2,
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
                       "status": "failed",
-                      "duration": 3275,
+                      "duration": 2,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mnot\u001b[2m.\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: not \u001b[32m\"/login\"\u001b[39m\nReceived string:        \u001b[31m\"http://localhost:3000\u001b[7m/login\u001b[27m\"\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mnot\u001b[2m.\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: not \u001b[32m\"/login\"\u001b[39m\nReceived string:        \u001b[31m\"http://localhost:3000\u001b[7m/login\u001b[27m\"\u001b[39m\n    at C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\frontend.spec.ts:17:28",
-                        "location": {
-                          "file": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\frontend.spec.ts",
-                          "column": 28,
-                          "line": 17
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 15 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 16 |\u001b[39m     \u001b[90m// Check if landing page or dashboard (if public) renders\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 17 |\u001b[39m     expect(page\u001b[33m.\u001b[39murl())\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContain(\u001b[32m'/login'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 18 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 19 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 20 |\u001b[39m\u001b[0m"
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
                       },
                       "errors": [
                         {
-                          "location": {
-                            "file": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\frontend.spec.ts",
-                            "column": 28,
-                            "line": 17
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mnot\u001b[2m.\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: not \u001b[32m\"/login\"\u001b[39m\nReceived string:        \u001b[31m\"http://localhost:3000\u001b[7m/login\u001b[27m\"\u001b[39m\n\n  15 |     await page.goto('/');\n  16 |     // Check if landing page or dashboard (if public) renders\n> 17 |     expect(page.url()).not.toContain('/login');\n     |                            ^\n  18 |   });\n  19 | });\n  20 |\n    at C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\frontend.spec.ts:17:28"
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-01T08:18:51.623Z",
+                      "startTime": "2026-05-20T05:26:33.509Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "error-context",
                           "contentType": "text/markdown",
-                          "path": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\test-results\\frontend-Frontend-Route-Te-d81a2--pages-should-be-accessible-chromium\\error-context.md"
+                          "path": "C:\\Users\\user\\Downloads\\LMS\\test-results\\frontend-Frontend-Route-Te-d81a2--pages-should-be-accessible-chromium\\error-context.md"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\Likhith Kumar\\Downloads\\LMS\\LMS\\tests\\frontend.spec.ts",
-                        "column": 28,
-                        "line": 17
-                      }
+                      ]
                     }
                   ],
                   "status": "unexpected"
@@ -1286,11 +1234,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-05-01T08:18:39.352Z",
-    "duration": 20532.809,
-    "expected": 22,
+    "startTime": "2026-05-20T05:26:28.514Z",
+    "duration": 5054.462,
+    "expected": 20,
     "skipped": 0,
-    "unexpected": 6,
+    "unexpected": 8,
     "flaky": 0
   }
 }

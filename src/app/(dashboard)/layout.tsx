@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import Sidebar from '@/components/layout/sidebar';
 import Topbar from '@/components/layout/topbar';
+import SupportButton from '@/components/support-button';
 
 export default async function DashboardLayout({
   children,
@@ -45,6 +46,9 @@ export default async function DashboardLayout({
           {children}
         </div>
       </main>
+
+      {/* Floating Support Button */}
+      <SupportButton userName={profile?.full_name} />
     </div>
   );
 }
