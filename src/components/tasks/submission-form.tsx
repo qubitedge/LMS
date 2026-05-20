@@ -126,7 +126,7 @@ export default function SubmissionForm({ taskId, acceptedFormats }: SubmissionFo
             <Code size={16} className="mr-2 hidden sm:inline" /> GitHub
           </TabsTrigger>
           <TabsTrigger value="pdf" disabled={!acceptedFormats.includes('pdf')} className="data-[state=active]:bg-[#40C4D0] data-[state=active]:text-white rounded-lg transition-colors">
-            <FileText size={16} className="mr-2 hidden sm:inline" /> PDF
+            <FileText size={16} className="mr-2 hidden sm:inline" /> Document
           </TabsTrigger>
           <TabsTrigger value="zip" disabled={!acceptedFormats.includes('zip')} className="data-[state=active]:bg-[#40C4D0] data-[state=active]:text-white rounded-lg transition-colors">
             <FileArchive size={16} className="mr-2 hidden sm:inline" /> ZIP
@@ -184,15 +184,15 @@ export default function SubmissionForm({ taskId, acceptedFormats }: SubmissionFo
               style={{ borderColor: '#40C4D0' }}>
               <Input
                 type="file"
-                accept=".pdf"
+                accept=".pdf,.ppt,.pptx,.doc,.docx,.xls,.xlsx,.csv"
                 onChange={handleFileChange}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
               <UploadCloud size={40} className="mx-auto text-[#40C4D0] mb-4" />
               <p className="text-sm font-medium mb-1" style={{ color: '#2C2C2C' }}>
-                {file ? file.name : 'Click or drag PDF to upload'}
+                {file ? file.name : 'Click or drag document to upload'}
               </p>
-              <p className="text-xs" style={{ color: '#7A7268' }}>Max file size 10MB</p>
+              <p className="text-xs" style={{ color: '#7A7268' }}>Supports: PDF, Word, Excel, PPT, CSV (Max 10MB)</p>
             </div>
           </TabsContent>
 
