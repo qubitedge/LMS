@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function SupportButton({ userName }: { userName?: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [concern, setConcern] = useState('');
+  const [hasImage, setHasImage] = useState(false);
 
   const WHATSAPP_NUMBER = '916302829618';
 
@@ -19,6 +20,10 @@ export default function SupportButton({ userName }: { userName?: string }) {
       message += `Hi, I am ${userName}. I need help with:\n\n${concern}`;
     } else {
       message += `Hi, I am having trouble logging into the qubitedge LMS Portal. My concern is:\n\n${concern}`;
+    }
+
+    if (hasImage) {
+      message += `\n\n*(I will attach a screenshot to this chat shortly)*`;
     }
     
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
@@ -75,9 +80,22 @@ export default function SupportButton({ userName }: { userName?: string }) {
                     value={concern}
                     onChange={(e) => setConcern(e.target.value)}
                     placeholder="E.g. I can't access my tasks, or I need help with..."
-                    className="w-full h-32 p-4 bg-slate-50 border border-slate-200 rounded-2xl resize-none focus:outline-none focus:ring-4 focus:ring-blue-50 text-sm font-medium transition-all"
+                    className="w-full h-32 p-4 bg-slate-50 border border-slate-200 rounded-2xl resize-none focus:outline-none focus:ring-4 focus:ring-blue-50 text-sm font-medium transition-all mb-4"
                   />
                 </div>
+                
+                <label className="flex items-start gap-3 bg-slate-50 border border-slate-200 p-4 rounded-2xl cursor-pointer hover:bg-slate-100 transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={hasImage}
+                    onChange={(e) => setHasImage(e.target.checked)}
+                    className="mt-1 w-4 h-4 rounded border-slate-300 text-[#25D366] focus:ring-[#25D366]"
+                  />
+                  <div>
+                    <p className="text-xs font-black text-[#1A1A2E] mb-0.5">I want to attach a screenshot</p>
+                    <p className="text-[10px] font-bold text-[#7182C7]">You can attach the image directly once WhatsApp opens.</p>
+                  </div>
+                </label>
                 
                 <button
                   onClick={handleWhatsAppClick}
