@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { format, parseISO } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import SubmissionForm from '@/components/tasks/submission-form';
+import DeleteSubmissionButton from '@/components/tasks/delete-submission-button';
 import FeedbackDisplay from '@/components/tasks/feedback-display';
 
 export default async function TaskDetailPage({ params }: { params: { taskId: string } }) {
@@ -90,23 +91,40 @@ export default async function TaskDetailPage({ params }: { params: { taskId: str
                   <span className="text-sm font-bold" style={{ color: '#2C2C2C' }}>Format: {submission.format.toUpperCase()}</span>
                 </div>
                 {submission.format === 'github' ? (
-                  <a href={submission.content} target="_blank" rel="noreferrer" className="text-sm text-[#40C4D0] hover:underline break-all">
-                    {submission.content}
-                  </a>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <a href={submission.content} target="_blank" rel="noreferrer" className="text-sm text-[#40C4D0] hover:underline break-all">
+                      {submission.content}
+                    </a>
+                    {submission.status !== 'approved' && (
+                      <DeleteSubmissionButton submissionId={submission.id} />
+                    )}
+                  </div>
                 ) : submission.format === 'text' ? (
-                  <div className="p-4 rounded-xl bg-[#FAFAFA] border text-sm text-[#2C2C2C] whitespace-pre-wrap" style={{ borderColor: 'rgba(201,168,130,0.3)' }}>
-                    {submission.content}
+                  <div className="flex flex-col gap-3">
+                    <div className="p-4 rounded-xl bg-[#FAFAFA] border text-sm text-[#2C2C2C] whitespace-pre-wrap" style={{ borderColor: 'rgba(201,168,130,0.3)' }}>
+                      {submission.content}
+                    </div>
+                    {submission.status !== 'approved' && (
+                      <div className="flex justify-end">
+                        <DeleteSubmissionButton submissionId={submission.id} />
+                      </div>
+                    )}
                   </div>
                 ) : (
-                  <a href={submission.file_path || '#'} target="_blank" rel="noreferrer" className="text-sm text-[#40C4D0] hover:underline break-all">
-                    Download attachment
-                  </a>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <a href={submission.file_path || '#'} target="_blank" rel="noreferrer" className="text-sm text-[#40C4D0] hover:underline break-all">
+                      Download attachment
+                    </a>
+                    {submission.status !== 'approved' && (
+                      <DeleteSubmissionButton submissionId={submission.id} />
+                    )}
+                  </div>
                 )}
               </div>
 
-              {submission.status === 'rejected' && (
+              {submission.status !== 'approved' && (
                 <div className="mt-6 pt-6 border-t" style={{ borderColor: 'rgba(201,168,130,0.1)' }}>
-                  <h4 className="text-sm font-bold mb-4" style={{ color: '#2C2C2C' }}>Resubmit</h4>
+                  <h4 className="text-sm font-bold mb-4" style={{ color: '#2C2C2C' }}>Update Submission</h4>
                   <SubmissionForm taskId={taskId} acceptedFormats={task.accepted_formats} />
                 </div>
               )}

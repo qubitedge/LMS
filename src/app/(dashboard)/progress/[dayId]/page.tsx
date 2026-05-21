@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { format, parseISO } from 'date-fns';
 import { createAdminClient } from '@/lib/supabase/admin';
 import SubmissionForm from '@/components/tasks/submission-form';
+import DeleteSubmissionButton from '@/components/tasks/delete-submission-button';
 import { Badge } from '@/components/ui/badge';
 
 export default async function DayDetailPage({ params }: { params: { dayId: string } }) {
@@ -201,6 +202,30 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
               )}
             </div>
 
+            <div className="mb-8 flex flex-col items-center justify-center p-6 bg-[#FAFAFA] rounded-3xl border border-slate-100 shadow-sm">
+              <h4 className="text-[10px] font-black text-[#A0ACDC] uppercase tracking-[0.2em] mb-4">Follow us for more updates</h4>
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                <a href="https://youtube.com/@qubitedge?si=YMPd0bLHXGA9aVM-" target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" className="h-10 rounded-xl border-rose-200 text-rose-500 hover:bg-rose-50 hover:text-rose-600 font-bold transition-all shadow-sm">
+                    <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    Subscribe
+                  </Button>
+                </a>
+                <a href="https://www.instagram.com/qubitedge?igsh=MTl6djFzNWdranFlcA==" target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" className="h-10 rounded-xl border-fuchsia-200 text-fuchsia-500 hover:bg-fuchsia-50 hover:text-fuchsia-600 font-bold transition-all shadow-sm">
+                    <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    Follow
+                  </Button>
+                </a>
+                <a href="https://www.linkedin.com/company/qubitedge.in/" target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" className="h-10 rounded-xl border-blue-200 text-blue-500 hover:bg-blue-50 hover:text-blue-600 font-bold transition-all shadow-sm">
+                    <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    Connect
+                  </Button>
+                </a>
+              </div>
+            </div>
+
             {day.task_link && (
               <div className="mb-8 p-6 rounded-[2rem] bg-[#F4F9F6] border border-[#34C759]/20 flex flex-col items-stretch gap-6 shadow-lg shadow-[#34C759]/5 group">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -264,21 +289,38 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
                       </div>
                       
                       {submission.format === 'github' ? (
-                        <a href={submission.content} target="_blank" rel="noreferrer" className="inline-flex items-center text-sm text-[#4A5DB5] hover:underline font-bold break-all">
-                          {submission.content} <ExternalLink size={14} className="ml-1" />
-                        </a>
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                          <a href={submission.content} target="_blank" rel="noreferrer" className="inline-flex items-center text-sm text-[#4A5DB5] hover:underline font-bold break-all">
+                            {submission.content} <ExternalLink size={14} className="ml-1" />
+                          </a>
+                          {submission.status !== 'approved' && (
+                            <DeleteSubmissionButton submissionId={submission.id} />
+                          )}
+                        </div>
                       ) : submission.format === 'text' ? (
-                        <div className="p-3 rounded-xl bg-slate-50 border text-xs text-[#1A1A2E] whitespace-pre-wrap font-medium">
-                          {submission.content}
+                        <div className="flex flex-col gap-3">
+                          <div className="p-3 rounded-xl bg-slate-50 border text-xs text-[#1A1A2E] whitespace-pre-wrap font-medium">
+                            {submission.content}
+                          </div>
+                          {submission.status !== 'approved' && (
+                            <div className="flex justify-end">
+                              <DeleteSubmissionButton submissionId={submission.id} />
+                            </div>
+                          )}
                         </div>
                       ) : (
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                           <span className="text-xs font-bold text-[#7182C7] italic break-all">{submission.content}</span>
-                          <a href={submission.file_path || '#'} target="_blank" rel="noreferrer">
-                            <Button className="h-10 px-4 rounded-xl bg-[#4A5DB5] hover:bg-[#2238A4] text-white font-black text-xs">
-                              Open in Google Drive <ExternalLink size={14} className="ml-1.5" />
-                            </Button>
-                          </a>
+                          <div className="flex items-center gap-2">
+                            {submission.status !== 'approved' && (
+                              <DeleteSubmissionButton submissionId={submission.id} />
+                            )}
+                            <a href={submission.file_path || '#'} target="_blank" rel="noreferrer">
+                              <Button className="h-10 px-4 rounded-xl bg-[#4A5DB5] hover:bg-[#2238A4] text-white font-black text-xs">
+                                Open in Google Drive <ExternalLink size={14} className="ml-1.5" />
+                              </Button>
+                            </a>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -290,9 +332,9 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
                       </div>
                     )}
 
-                    {submission.status === 'rejected' && (
+                    {submission.status !== 'approved' && (
                       <div className="mt-6 pt-6 border-t border-dashed border-slate-200">
-                        <h4 className="text-md font-black italic mb-4 text-[#1A1A2E]">Resubmit Your Solution</h4>
+                        <h4 className="text-md font-black italic mb-4 text-[#1A1A2E]">Update Your Solution</h4>
                         <SubmissionForm taskId={task.id} acceptedFormats={task.accepted_formats} />
                       </div>
                     )}
