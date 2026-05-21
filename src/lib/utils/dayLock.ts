@@ -62,7 +62,7 @@ export function canAttemptQuiz(dayDate: string): boolean {
 
 /**
  * Checks if current time is within the allowed quiz window.
- * The quiz opens daily at 12:00 PM IST (12:00 PM - 2:00 PM IST).
+ * The quiz opens daily at 12:00 PM IST (12:00 PM - 5:00 PM IST).
  */
 export function isWithinQuizWindow(): boolean {
   const now = new Date();
@@ -72,8 +72,8 @@ export function isWithinQuizWindow(): boolean {
   const minutes = istDate.getMinutes();
   const totalMinutes = hours * 60 + minutes;
   
-  // 12:00 PM (720) to 2 PM (840)
-  return totalMinutes >= 720 && totalMinutes < 840;
+  // 12:00 PM (720) to 5 PM (1020)
+  return totalMinutes >= 720 && totalMinutes < 1020;
 }
 
 /**

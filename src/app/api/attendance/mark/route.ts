@@ -12,16 +12,16 @@ export async function POST() {
     const now = new Date();
     const todayStr = now.toISOString().split('T')[0];
 
-    // Check timing window in Asia/Kolkata (9:30 AM to 2:00 PM IST)
+    // Check timing window in Asia/Kolkata (12:00 PM to 5:00 PM IST)
     const istDate = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
     const hour = istDate.getHours();
     const minute = istDate.getMinutes();
     const totalMinutes = hour * 60 + minute;
-    const isWithinWindow = totalMinutes >= 570 && totalMinutes < 840;
+    const isWithinWindow = totalMinutes >= 720 && totalMinutes < 1020;
 
     if (!isWithinWindow) {
       return NextResponse.json({ 
-        message: 'Attendance can only be marked between 9:30 AM and 2:00 PM IST.' 
+        message: 'Attendance can only be marked between 12:00 PM and 5:00 PM IST.' 
       }, { status: 403 });
     }
 

@@ -78,10 +78,11 @@ export default function CurriculumGrid({
         className="flex flex-col md:flex-row md:items-end justify-between gap-6 p-10 rounded-[2.5rem] bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl shadow-blue-900/5 cursor-pointer group hover:bg-white/80 transition-all"
       >
         <div>
-          <h1 className="text-5xl font-black mb-3 tracking-tight text-[#1A1A2E] flex items-center gap-4">
+          <h1 className="text-5xl font-black mb-3 tracking-tight text-[#1A1A2E] flex flex-wrap items-center gap-4">
             {title}
-            <div className="text-[#A0ACDC] group-hover:text-[#4A5DB5] transition-colors">
-              {isMainExpanded ? <ChevronUp size={40} /> : <ChevronDown size={40} />}
+            <div className="flex items-center gap-2 text-[#A0ACDC] group-hover:text-[#4A5DB5] transition-colors bg-white/60 px-4 py-2 rounded-full border border-blue-50/50 shadow-sm mt-1">
+              <span className="text-[10px] font-black uppercase tracking-widest">{isMainExpanded ? 'Close Modules' : 'Click to Open'}</span>
+              {isMainExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
             </div>
           </h1>
           <p className="text-[#7182C7] font-bold text-lg">{description}</p>

@@ -481,7 +481,7 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
                       Quiz Window Closed
                     </p>
                     <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">
-                      Available daily between 12:00 PM - 02:00 PM IST
+                      Available daily between 12:00 PM - 05:00 PM IST
                     </p>
                   </div>
                 )
@@ -496,7 +496,7 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
                       Quiz Window Closed
                     </p>
                     <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">
-                      Available daily between 12:00 PM - 02:00 PM IST
+                      Available daily between 12:00 PM - 05:00 PM IST
                     </p>
                   </div>
                 )

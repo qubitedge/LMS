@@ -32,6 +32,13 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
   const ascending = sortOrder === 'asc';
   const { data: users } = await query.order(sortBy, { ascending });
 
+  // Fetch all attendance for fast mapping
+  const { data: allAttendance } = await supabase.from('attendance').select('user_id');
+  const attendanceMap = new Map<string, number>();
+  (allAttendance || []).forEach(record => {
+    attendanceMap.set(record.user_id, (attendanceMap.get(record.user_id) || 0) + 1);
+  });
+
   const getSortLink = (column: string) => {
     const nextOrder = sortBy === column && sortOrder === 'desc' ? 'asc' : 'desc';
     const params = new URLSearchParams();
@@ -122,6 +129,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                       </Link>
                     </TableHead>
                     {role === 'intern' && <TableHead className="font-black text-[#1A1A2E] text-center">Certifications</TableHead>}
+                    {role === 'intern' && <TableHead className="font-black text-[#1A1A2E] text-center">Attendance</TableHead>}
                     <TableHead className="font-black text-[#1A1A2E] text-right">
                       <Link href={getSortLink('created_at')} className="flex items-center gap-1 justify-end hover:text-[#4A5DB5] transition-colors">
                         Joined {sortBy === 'created_at' ? (sortOrder === 'asc' ? '▲' : '▼') : '⇅'}
@@ -133,7 +141,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                 <TableBody>
                   {!users || users.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={role === 'intern' ? 9 : 8} className="text-center py-20">
+                      <TableCell colSpan={role === 'intern' ? 10 : 8} className="text-center py-20">
                         <div className="flex flex-col items-center gap-4 text-[#7182C7]">
                           {q ? <Search size={48} className="opacity-20" /> : <Users size={48} className="opacity-20" />}
                           <p className="font-bold">
@@ -189,6 +197,13 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                                 <Award size={16} />
                               </div>
                             </div>
+                          </TableCell>
+                        )}
+                        {role === 'intern' && (
+                          <TableCell className="text-center">
+                            <span className="inline-flex items-center justify-center px-3 py-1 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-100 font-black text-xs">
+                              {attendanceMap.get(user.id) || 0} Days
+                            </span>
                           </TableCell>
                         )}
                         <TableCell className="text-right text-xs font-bold text-[#7182C7]">
