@@ -12,7 +12,7 @@ export default async function AdminSubmissionsPage() {
 
   const { data: submissions } = await supabase
     .from('submissions')
-    .select('*, profiles(full_name, domain), tasks(title)')
+    .select('*, profiles(full_name, domain, email), tasks(title)')
     .order('submitted_at', { ascending: false });
 
   return (
