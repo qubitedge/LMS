@@ -2,6 +2,9 @@
 
 # dependencies
 /node_modules
+lms-mobile/node_modules
+lms-mobile/android
+lms-mobile/ios
 /.pnp
 .pnp.*
 .yarn/*

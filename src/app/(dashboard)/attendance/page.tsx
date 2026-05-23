@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { CheckCircle2, Clock } from 'lucide-react';
+import { CheckCircle2, Clock, CalendarX } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import MarkAttendanceButton from './mark-attendance-button';
 
@@ -20,6 +19,25 @@ export default async function AttendancePage() {
   const istMinute = parseInt(new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', minute: 'numeric' }).format(now), 10);
   const totalMinutes = istHour * 60 + istMinute;
   const isWithinWindow = totalMinutes >= 570 && totalMinutes < 840;
+
+  // Check if today is a module day (i.e., an unlocked day's date matches today)
+  const { data: unlockedSetting } = await supabase
+    .from('site_settings')
+    .select('value')
+    .eq('key', 'unlocked_days')
+    .maybeSingle();
+
+  const unlockedDayIds: string[] = unlockedSetting?.value || [];
+
+  // Fetch the dates for all unlocked days
+  let isTodayModuleDay = false;
+  if (unlockedDayIds.length > 0) {
+    const { data: unlockedDaysData } = await supabase
+      .from('days')
+      .select('date')
+      .in('id', unlockedDayIds);
+    isTodayModuleDay = (unlockedDaysData || []).some(d => d.date === todayStr);
+  }
 
   const { data: attendanceHistory } = await supabase
     .from('attendance')
@@ -57,7 +75,7 @@ export default async function AttendancePage() {
                     Attendance confirmed for {format(new Date(), 'MMMM do')}
                   </p>
                 </div>
-              ) : (
+              ) : isTodayModuleDay ? (
                 <div className="flex flex-col items-center justify-center py-8">
                   <div className="w-24 h-24 rounded-[2rem] bg-amber-50 flex items-center justify-center mb-6 shadow-inner border border-amber-100">
                     <Clock size={48} className="text-[#F59E0B]" />
@@ -73,6 +91,14 @@ export default async function AttendancePage() {
                         : 'Window: 9:30 AM - 2:00 PM'}
                   </p>
                   <MarkAttendanceButton disabled={!isWithinWindow} />
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-8">
+                  <div className="w-24 h-24 rounded-[2rem] bg-slate-50 flex items-center justify-center mb-6 shadow-inner border border-slate-100">
+                    <CalendarX size={48} className="text-[#A0ACDC]" />
+                  </div>
+                  <h3 className="text-2xl font-black text-[#A0ACDC] mb-2 uppercase tracking-tight">No Class Today</h3>
+                  <p className="text-xs font-bold text-[#A0ACDC] uppercase tracking-widest">Attendance is only available on module days.</p>
                 </div>
               )}
             </CardContent>

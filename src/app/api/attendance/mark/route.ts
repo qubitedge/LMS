@@ -25,6 +25,30 @@ export async function POST() {
       }, { status: 403 });
     }
 
+    // Check if today is a module day (unlocked day with today's date)
+    const { data: unlockedSetting } = await supabase
+      .from('site_settings')
+      .select('value')
+      .eq('key', 'unlocked_days')
+      .maybeSingle();
+
+    const unlockedDayIds: string[] = unlockedSetting?.value || [];
+
+    let isTodayModuleDay = false;
+    if (unlockedDayIds.length > 0) {
+      const { data: moduleDays } = await supabase
+        .from('days')
+        .select('date')
+        .in('id', unlockedDayIds);
+      isTodayModuleDay = (moduleDays || []).some(d => d.date === todayStr);
+    }
+
+    if (!isTodayModuleDay) {
+      return NextResponse.json({
+        message: 'Attendance can only be marked on module days.'
+      }, { status: 403 });
+    }
+
     // Check if already marked today
     const { data: existing } = await supabase
       .from('attendance')
