@@ -116,63 +116,39 @@ export const QUIZ_QUESTIONS: Record<number, QuizQuestion[]> = {
     { question: 'What does pass do?', options: ['Exits function', 'Nothing', 'Skips line', 'Returns None'], correct_index: 1 },
   ],
   4: [
-    { question: 'Which keyword defines a function?', options: ['function', 'func', 'def', 'define'], correct_index: 2 },
-    { question: 'What does return do?', options: ['Prints value', 'Sends value back', 'Exits program', 'Logs value'], correct_index: 1 },
-    { question: 'What are *args used for?', options: ['Keyword args', 'Variable positional args', 'Default args', 'Named args'], correct_index: 1 },
-    { question: 'What are **kwargs used for?', options: ['Variable keyword args', 'Positional args', 'List args', 'Tuple args'], correct_index: 0 },
-    { question: 'What is a lambda function?', options: ['Named function', 'Anonymous function', 'Class method', 'Generator'], correct_index: 1 },
-    { question: 'How do you import a module?', options: ['include math', 'import math', 'require math', '#include math'], correct_index: 1 },
-    { question: 'What is __init__ in a class?', options: ['Destructor', 'Constructor', 'Iterator', 'Generator'], correct_index: 1 },
-    { question: 'What does len() return?', options: ['Type', 'Length', 'Size in bytes', 'Index'], correct_index: 1 },
-    { question: 'What is a docstring?', options: ['Comment', 'Documentation string', 'Variable', 'Error message'], correct_index: 1 },
-    { question: 'Which is a built-in module?', options: ['numpy', 'pandas', 'os', 'flask'], correct_index: 2 },
-  ],
-  5: [
-    { question: 'Which method adds to end of list?', options: ['add()', 'insert()', 'append()', 'push()'], correct_index: 2 },
-    { question: 'How to access dict value?', options: ['dict[key]', 'dict.key', 'dict(key)', 'dict->key'], correct_index: 0 },
-    { question: 'What is a set?', options: ['Ordered duplicates', 'Unordered unique', 'Ordered unique', 'Key-value pairs'], correct_index: 1 },
-    { question: 'How to get list length?', options: ['list.size()', 'len(list)', 'list.length', 'count(list)'], correct_index: 1 },
-    { question: 'What does pop() do on a list?', options: ['Adds element', 'Removes last', 'Sorts list', 'Reverses list'], correct_index: 1 },
-    { question: 'Which creates an empty dict?', options: ['[]', '()', '{}', 'dict[]'], correct_index: 2 },
-    { question: 'What is list slicing syntax?', options: ['list(1,3)', 'list[1:3]', 'list.slice(1,3)', 'list{1:3}'], correct_index: 1 },
-    { question: 'Tuples are defined with?', options: ['[]', '()', '{}', '<>'], correct_index: 1 },
-    { question: 'How to check key in dict?', options: ['key in dict', 'dict.has(key)', 'dict.contains(key)', 'key exists dict'], correct_index: 0 },
-    { question: 'What does sorted() return?', options: ['None', 'New sorted list', 'Same list sorted', 'Iterator'], correct_index: 1 },
-  ],
-  6: [
     { question: 'What does SQL stand for?', options: ['Structured Query Language', 'Simple Query Language', 'Sequential Query Language', 'System Query Logic'], correct_index: 0 },
     { question: 'What is a table in a database?', options: ['A graph', 'A collection of rows and columns', 'A query', 'A dashboard'], correct_index: 1 },
     { question: 'Which keyword is used to fetch data?', options: ['GET', 'SELECT', 'SHOW', 'FETCH'], correct_index: 1 },
     { question: 'What does SELECT * FROM users; do?', options: ['Deletes data', 'Shows all rows and columns', 'Updates data', 'Creates table'], correct_index: 1 },
     { question: 'Which clause is used to filter rows?', options: ['GROUP BY', 'WHERE', 'ORDER BY', 'LIMIT'], correct_index: 1 }
   ],
-  7: [
+  5: [
     { question: 'What does TRIM() do?', options: ['Converts text to uppercase', 'Removes spaces', 'Counts characters', 'Joins columns'], correct_index: 1 },
     { question: 'What will SELECT LOWER(\'SQL\') return?', options: ['SQL', 'sql', 'Sql', 'Error'], correct_index: 1 },
     { question: 'Which function combines text?', options: ['JOIN()', 'CONCAT()', 'MERGE()', 'ADD()'], correct_index: 1 },
     { question: 'What does SELECT RIGHT(\'ANALYTICS\', 3) return?', options: ['ANA', 'LYT', 'ICS', 'TIC'], correct_index: 2 },
     { question: 'LENGTH(\'DATA\') returns?', options: ['2', '3', '4', 'DATA'], correct_index: 2 }
   ],
+  6: [
+    { question: 'Q1. What does GROUP BY do?', options: ['Filters data', 'Groups data for aggregation', 'Sorts data', 'Deletes duplicates'], correct_index: 1 },
+    { question: 'Q2. Which function calculates total revenue?', options: ['COUNT()', 'SUM()', 'AVG()', 'MAX()'], correct_index: 1 },
+    { question: 'Q3. What does COUNT(*) do?', options: ['Counts rows', 'Counts columns', 'Counts tables', 'Counts values > 0'], correct_index: 0 },
+    { question: 'Q4. Which clause filters aggregated results?', options: ['WHERE', 'HAVING', 'ORDER BY', 'LIMIT'], correct_index: 1 },
+    { question: 'Q5. What does this query do? [Code: SELECT city, AVG(amount) | FROM orders | GROUP BY city;]', options: ['Avg per city', 'Total orders', 'Count per city', 'Error'], correct_index: 0 }
+  ],
+  7: [
+    { question: 'Q1. Why do we use joins?', options: ['Delete data', 'Combine tables', 'Sort data', 'Filter rows'], correct_index: 1 },
+    { question: 'Q2. INNER JOIN returns:', options: ['All rows', 'Only matching rows', 'Only left table', 'Only right table'], correct_index: 1 },
+    { question: 'Q3. LEFT JOIN returns:', options: ['Only matching rows', 'All left + matching right', 'Only right', 'No rows'], correct_index: 1 },
+    { question: 'Q4. What does this query do? [Code: SELECT * | FROM users u | INNER JOIN orders o | ON u.user_id = o.user_id;]', options: ['Combines matching records', 'Deletes data', 'Filters data', 'Creates table'], correct_index: 0 },
+    { question: 'Q5. Which query finds users with no orders?', options: ['SELECT * FROM users u LEFT JOIN orders o ON u.user_id = o.user_id WHERE o.user_id IS NULL;', 'SELECT * FROM users;', 'SELECT * FROM orders;', 'SELECT * FROM users INNER JOIN orders;'], correct_index: 0 }
+  ],
   8: [
-    { question: 'What does GROUP BY do?', options: ['Filters data', 'Groups data for aggregation', 'Sorts data', 'Deletes duplicates'], correct_index: 1 },
-    { question: 'Which function calculates total revenue?', options: ['COUNT()', 'SUM()', 'AVG()', 'MAX()'], correct_index: 1 },
-    { question: 'What does COUNT(*) do?', options: ['Counts rows', 'Counts columns', 'Counts tables', 'Counts values > 0'], correct_index: 0 },
-    { question: 'Which clause filters aggregated results?', options: ['WHERE', 'HAVING', 'ORDER BY', 'LIMIT'], correct_index: 1 },
-    { question: 'What does SELECT city, AVG(amount) FROM orders GROUP BY city do?', options: ['Avg per city', 'Total orders', 'Count per city', 'Error'], correct_index: 0 }
-  ],
-  9: [
-    { question: 'Why do we use joins?', options: ['Delete data', 'Combine tables', 'Sort data', 'Filter rows'], correct_index: 1 },
-    { question: 'INNER JOIN returns:', options: ['All rows', 'Only matching rows', 'Only left table', 'Only right table'], correct_index: 1 },
-    { question: 'LEFT JOIN returns:', options: ['Only matching rows', 'All left + matching right', 'Only right', 'No rows'], correct_index: 1 },
-    { question: 'What does the INNER JOIN query on users and orders do?', options: ['Combines matching records', 'Deletes data', 'Filters data', 'Creates table'], correct_index: 0 },
-    { question: 'Which query finds users with no orders?', options: ['LEFT JOIN ... WHERE o.user_id IS NULL', 'SELECT * FROM users', 'SELECT * FROM orders', 'SELECT * FROM users INNER JOIN orders'], correct_index: 0 }
-  ],
-  10: [
-    { question: 'What is a subquery?', options: ['Query inside another query', 'A table', 'A column', 'A function'], correct_index: 0 },
-    { question: 'CASE WHEN is used for:', options: ['Sorting', 'Conditional logic', 'Joining', 'Filtering'], correct_index: 1 },
-    { question: 'ROW_NUMBER() does what?', options: ['Counts rows', 'Assigns unique row numbers', 'Groups data', 'Filters data'], correct_index: 1 },
-    { question: 'RANK() differs from ROW_NUMBER() because:', options: ['Same behavior', 'RANK allows ties', 'ROW_NUMBER allows ties', 'None'], correct_index: 1 },
-    { question: 'What does RANK() OVER (ORDER BY amount DESC) do?', options: ['Ranks rows by amount', 'Filters rows', 'Deletes rows', 'Groups data'], correct_index: 0 }
+    { question: 'Q1. What is a subquery?', options: ['Query inside another query', 'A table', 'A column', 'A function'], correct_index: 0 },
+    { question: 'Q2. CASE WHEN is used for:', options: ['Sorting', 'Conditional logic', 'Joining', 'Filtering'], correct_index: 1 },
+    { question: 'Q3. ROW_NUMBER() does what?', options: ['Counts rows', 'Assigns unique row numbers', 'Groups data', 'Filters data'], correct_index: 1 },
+    { question: 'Q4. RANK() differs from ROW_NUMBER() because:', options: ['Same behavior', 'RANK allows ties', 'ROW_NUMBER allows ties', 'None'], correct_index: 1 },
+    { question: 'Q5. What does this query do? [Code: SELECT *, | RANK() OVER (ORDER BY amount DESC) AS rnk | FROM orders;]', options: ['Ranks rows by amount', 'Filters rows', 'Deletes rows', 'Groups data'], correct_index: 0 }
   ]
 };
 

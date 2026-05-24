@@ -1,0 +1,12 @@
+{
+  "appId": "com.qubitedge.lms",
+  "appName": "Qubitedge LMS",
+  "webDir": "www",
+  "server": {
+    "url": "https://lms.qubitedge.in",
+    "cleartext": false
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}

@@ -140,13 +140,16 @@ export default function CurriculumGrid({
                     {week.week_number}
                   </div>
                   <div>
-                    <h2 className="text-3xl font-black tracking-tight text-[#1A1A2E] flex items-center gap-3">
+                    <h2 className="text-3xl font-black tracking-tight text-[#1A1A2E] flex flex-wrap items-center gap-3">
                       {week.title}
-                      {expandedWeeks.has(week.id) ? (
-                        <ChevronUp className="text-[#A0ACDC]" size={24} />
-                      ) : (
-                        <ChevronDown className="text-[#A0ACDC]" size={24} />
-                      )}
+                      <div className="flex items-center gap-2 text-[#A0ACDC] group-hover:text-[#4A5DB5] transition-colors bg-white/60 px-3 py-1.5 rounded-full border border-blue-50/50 shadow-sm mt-1">
+                        <span className="text-[10px] font-black uppercase tracking-widest">{expandedWeeks.has(week.id) ? 'Close Module' : 'Click to Open'}</span>
+                        {expandedWeeks.has(week.id) ? (
+                          <ChevronUp size={16} />
+                        ) : (
+                          <ChevronDown size={16} />
+                        )}
+                      </div>
                     </h2>
                     <Badge variant="outline" className="mt-2 border-[#A0ACDC]/30 text-[#4A5DB5] bg-white font-bold py-1 px-3 rounded-xl">
                       {week.domain}
