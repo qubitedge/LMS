@@ -178,7 +178,7 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
                 day.video_url.includes('youtube.com') || day.video_url.includes('youtu.be') ? (
                   <iframe
                     className="absolute inset-0 w-full h-full"
-                    src={`https://www.youtube.com/embed/${day.video_url.match(/(?:youtu\\.be\\/|youtube\\.com\\/(?:embed\\/|v\\/|watch\\?v=|watch\\?.+&v=))([^&?]+)/)?.[1] || day.video_url.split('/').pop()}`}
+                    src={`https://www.youtube.com/embed/${day.video_url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/)?.[1] || day.video_url.split('/').pop()}`}
                     title="YouTube video player"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
