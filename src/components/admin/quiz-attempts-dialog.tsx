@@ -18,11 +18,9 @@ export default function QuizAttemptsDialog({ quiz }: QuizAttemptsDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="ghost" className="h-10 px-4 rounded-xl border border-slate-200 text-[#4A5DB5] hover:bg-[#4A5DB5] hover:text-white hover:border-[#4A5DB5] transition-all flex items-center gap-2">
-          <Users size={16} />
-          <span className="font-black">{attempts.length} Attempts</span>
-        </Button>
+      <DialogTrigger render={<Button variant="ghost" className="h-10 px-4 rounded-xl border border-slate-200 text-[#4A5DB5] hover:bg-[#4A5DB5] hover:text-white hover:border-[#4A5DB5] transition-all flex items-center gap-2" />}>
+        <Users size={16} />
+        <span className="font-black">{attempts.length} Attempts</span>
       </DialogTrigger>
       
       <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden rounded-[3rem] border-none bg-white shadow-2xl">
