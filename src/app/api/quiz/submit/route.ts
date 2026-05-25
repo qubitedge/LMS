@@ -49,13 +49,6 @@ export async function POST(req: Request) {
       if (!isUnlocked) {
         return NextResponse.json({ message: 'This day is currently locked by the administrator.' }, { status: 403 });
       }
-
-      if (!dayDate || !isToday(parseISO(dayDate))) {
-        return NextResponse.json({ message: 'This quiz is not available for attempt today.' }, { status: 403 });
-      }
-      if (!isWithinQuizWindow()) {
-        return NextResponse.json({ message: 'Quiz window is closed. Available between 12:00 PM - 02:00 PM IST.' }, { status: 403 });
-      }
     }
 
     // 3. Check for existing attempt

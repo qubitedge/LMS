@@ -4,6 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { HelpCircle, Trash2, Edit3, TrendingUp } from 'lucide-react';
 import QuizCreateDialog from '@/components/admin/quiz-create-dialog';
 import QuizActions from '@/components/admin/quiz-actions';
+import QuizAttemptsDialog from '@/components/admin/quiz-attempts-dialog';
 
 export const revalidate = 0;
 
@@ -13,7 +14,7 @@ export default async function AdminQuizzesPage() {
   // Fetch quizzes with day info
   const { data: quizzes } = await supabase
     .from('quizzes')
-    .select('*, days(day_number, topic)')
+    .select('*, days(day_number, topic), scores(id, score, attempted_at, profiles(full_name, email, avatar_url))')
     .order('days(day_number)', { ascending: true });
 
   // Fetch days for the creation dialog
@@ -48,13 +49,14 @@ export default async function AdminQuizzesPage() {
                     <TableHead className="font-black text-[#1A1A2E] px-8 py-6 w-[150px]">Day</TableHead>
                     <TableHead className="font-black text-[#1A1A2E]">Module Topic</TableHead>
                     <TableHead className="font-black text-[#1A1A2E] text-center">Questions</TableHead>
+                    <TableHead className="font-black text-[#1A1A2E] text-center">Attempts</TableHead>
                     <TableHead className="font-black text-[#1A1A2E] text-right px-8">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {!quizzes || quizzes.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={4} className="text-center py-20">
+                      <TableCell colSpan={5} className="text-center py-20">
                         <div className="flex flex-col items-center gap-4 text-[#7182C7]">
                           <TrendingUp size={48} className="opacity-20" />
                           <p className="font-bold">No quizzes have been designed yet.</p>
@@ -74,6 +76,9 @@ export default async function AdminQuizzesPage() {
                           <span className="px-3 py-1 rounded-lg bg-blue-50">
                             {quiz.questions?.length || 0}
                           </span>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <QuizAttemptsDialog quiz={quiz} />
                         </TableCell>
                         <TableCell className="text-right px-8">
                           <QuizActions quiz={quiz} />

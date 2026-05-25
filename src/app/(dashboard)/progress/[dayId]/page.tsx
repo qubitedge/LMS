@@ -178,7 +178,7 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
                 day.video_url.includes('youtube.com') || day.video_url.includes('youtu.be') ? (
                   <iframe
                     className="absolute inset-0 w-full h-full"
-                    src={`https://www.youtube.com/embed/${day.video_url.split('v=')[1]?.split('&')[0] || day.video_url.split('/').pop()}`}
+                    src={`https://www.youtube.com/embed/${day.video_url.match(/(?:youtu\\.be\\/|youtube\\.com\\/(?:embed\\/|v\\/|watch\\?v=|watch\\?.+&v=))([^&?]+)/)?.[1] || day.video_url.split('/').pop()}`}
                     title="YouTube video player"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -469,36 +469,16 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
               </p>
 
               {day.quiz_link ? (
-                (isWithinQuizWindow() || isAdmin) ? (
                   <a href={day.quiz_link} target="_blank" rel="noopener noreferrer" className="block">
                     <Button className="w-full h-20 rounded-[2rem] bg-gradient-to-r from-[#4A5DB5] to-[#7182C7] hover:scale-[1.02] active:scale-95 transition-all text-white font-black text-xl shadow-2xl shadow-blue-500/40">
                       GET QUIZ <ExternalLink size={24} className="ml-3" />
                     </Button>
                   </a>
-                ) : (
-                  <div className="text-center py-8 px-6 rounded-[2rem] border-2 border-red-500/20 bg-red-500/5 backdrop-blur-sm">
-                    <p className="text-red-400 font-black italic uppercase tracking-widest text-sm mb-2">
-                      Quiz Window Closed
-                    </p>
-                    <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">
-                      Available daily between 12:00 PM - 05:00 PM IST
-                    </p>
-                  </div>
-                )
               ) : quiz ? (
                 hasAttempted ? (
                   <ScoreCard score={scoreObj.score} maxScore={quiz.max_score} />
-                ) : (isWithinQuizWindow() || isAdmin) ? (
-                  <QuizPlayer quizId={quiz.id} questions={quiz.questions} />
                 ) : (
-                  <div className="text-center py-8 px-6 rounded-[2rem] border-2 border-red-500/20 bg-red-500/5 backdrop-blur-sm">
-                    <p className="text-red-400 font-black italic uppercase tracking-widest text-sm mb-2">
-                      Quiz Window Closed
-                    </p>
-                    <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">
-                      Available daily between 12:00 PM - 05:00 PM IST
-                    </p>
-                  </div>
+                  <QuizPlayer quizId={quiz.id} questions={quiz.questions} />
                 )
               ) : (
                 <div className="text-center py-6 px-4 rounded-[2rem] border-2 border-dashed border-white/20">
