@@ -49,7 +49,7 @@ export default function CurriculumGrid({
   
   const totalDays = weeks.reduce((acc, week) => acc + week.days.length, 0);
   const completedDays = weeks.reduce((acc, week) => 
-    acc + week.days.filter(d => d.status === 'completed').length, 0
+    acc + week.days.filter(d => d.status !== 'locked').length, 0
   );
   const overallProgress = Math.round((completedDays / totalDays) * 100) || 0;
 
@@ -125,7 +125,7 @@ export default function CurriculumGrid({
             className="space-y-20 overflow-hidden"
           >
         {weeks.map((week, weekIdx) => {
-          const weekCompleted = week.days.filter(d => d.status === 'completed').length;
+          const weekCompleted = week.days.filter(d => d.status !== 'locked').length;
           const weekProgress = Math.round((weekCompleted / week.days.length) * 100) || 0;
 
           return (
