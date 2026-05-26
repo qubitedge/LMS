@@ -12,10 +12,16 @@ export default async function AdminQuizzesPage() {
   const supabase = await createClient();
 
   // Fetch quizzes with day info
-  const { data: quizzes } = await supabase
+  const { data: quizzesData } = await supabase
     .from('quizzes')
-    .select('*, days(day_number, topic), scores(id, score, attempted_at, profiles(full_name, email, avatar_url))')
-    .order('days(day_number)', { ascending: true });
+    .select('*, days(day_number, topic), scores(id, score, attempted_at, profiles(full_name, email, avatar_url))');
+
+  // Sort quizzes by day_number in JS since ordering by joined table column can cause Supabase errors
+  const quizzes = (quizzesData || []).sort((a, b) => {
+    const dayA = a.days?.day_number || 0;
+    const dayB = b.days?.day_number || 0;
+    return dayA - dayB;
+  });
 
   // Fetch days for the creation dialog
   const { data: days } = await supabase
