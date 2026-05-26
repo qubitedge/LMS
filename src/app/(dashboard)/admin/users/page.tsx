@@ -99,9 +99,9 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
 
         <Card className="rounded-[2.5rem] bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl overflow-hidden">
           <CardContent className="p-0">
-            <div className="overflow-x-auto">
+            <div className="overflow-auto max-h-[calc(100vh-280px)]">
               <Table>
-                <TableHeader className="bg-[#E9EEF9]/50">
+                <TableHeader className="bg-[#E9EEF9]/50 sticky top-0 z-10">
                   <TableRow className="border-b-blue-100/50">
                     <TableHead className="font-black text-[#1A1A2E] px-4 py-6">
                       <Link href={getSortLink('full_name')} className="flex items-center gap-1 hover:text-[#4A5DB5] transition-colors">
