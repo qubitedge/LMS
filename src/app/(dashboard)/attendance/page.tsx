@@ -18,7 +18,7 @@ export default async function AttendancePage() {
   const istHour = parseInt(new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', hour12: false }).format(now), 10);
   const istMinute = parseInt(new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', minute: 'numeric' }).format(now), 10);
   const totalMinutes = istHour * 60 + istMinute;
-  const isWithinWindow = totalMinutes >= 570 && totalMinutes < 840;
+  const isWithinWindow = totalMinutes >= 615 && totalMinutes < 840;
 
   // Check if today is a module day (i.e., an unlocked day's date matches today)
   const { data: unlockedSetting } = await supabase
@@ -53,8 +53,7 @@ export default async function AttendancePage() {
         <h1 className="text-5xl font-black mb-3 tracking-tight" style={{ fontFamily: 'Playfair Display', color: '#1A1A2E' }}>
           Attendance
         </h1>
-        <p className="text-lg font-bold text-[#7182C7]">
-          Mark your daily presence between <span className="text-[#2238A4]">9:30 AM</span> and <span className="text-[#2238A4]">2:00 PM</span>.
+          Mark your daily presence between <span className="text-[#2238A4]">10:15 AM</span> and <span className="text-[#2238A4]">2:00 PM</span>.
         </p>
       </div>
 
@@ -81,14 +80,14 @@ export default async function AttendancePage() {
                     <Clock size={48} className="text-[#F59E0B]" />
                   </div>
                   <h3 className="text-2xl font-black text-[#F59E0B] mb-2 uppercase tracking-tight">
-                    {totalMinutes < 570 ? 'Not Started' : totalMinutes >= 840 ? 'Too Late!' : 'Pending'}
+                    {totalMinutes < 615 ? 'Not Started' : totalMinutes >= 840 ? 'Too Late!' : 'Pending'}
                   </h3>
                   <p className="text-xs font-bold text-rose-500 mb-6 uppercase tracking-widest">
-                    {totalMinutes < 570 
-                      ? 'Opens at 9:30 AM' 
+                    {totalMinutes < 615 
+                      ? 'Opens at 10:15 AM' 
                       : totalMinutes >= 840 
                         ? 'Window closed at 2:00 PM' 
-                        : 'Window: 9:30 AM - 2:00 PM'}
+                        : 'Window: 10:15 AM - 2:00 PM'}
                   </p>
                   <MarkAttendanceButton disabled={!isWithinWindow} />
                 </div>
