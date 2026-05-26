@@ -80,6 +80,10 @@ export function AttendanceClient({ initialData, initialDate, initialCollege }: {
             <p className="text-lg font-bold text-[#7182C7]">
               Real-time tracking of intern participation and punctuality.
             </p>
+            <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-xl border border-blue-100">
+              <span className="text-sm font-black">Total Attendees:</span>
+              <span className="text-lg font-black">{initialData?.length || 0}</span>
+            </div>
           </div>
           
           <div className="flex flex-wrap items-center gap-3">
@@ -173,10 +177,11 @@ export function AttendanceClient({ initialData, initialDate, initialCollege }: {
 
         <Card className="rounded-[2.5rem] bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl overflow-hidden">
           <CardContent className="p-0">
-            <div className="overflow-x-auto">
+            <div className="overflow-auto max-h-[600px]">
               <Table>
-                <TableHeader className="bg-[#E9EEF9]/50">
+                <TableHeader className="bg-[#E9EEF9]/50 sticky top-0 z-10 shadow-sm backdrop-blur-md">
                   <TableRow className="border-b-blue-100/50">
+                    <TableHead className="font-black text-[#1A1A2E] px-6 py-6 w-[80px] text-center">Sl No</TableHead>
                     <TableHead className="font-black text-[#1A1A2E] px-8 py-6">Intern</TableHead>
                     <TableHead className="font-black text-[#1A1A2E]">College</TableHead>
                     <TableHead className="font-black text-[#1A1A2E]">Category</TableHead>
@@ -187,7 +192,7 @@ export function AttendanceClient({ initialData, initialDate, initialCollege }: {
                 <TableBody>
                   {!initialData || initialData.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center py-20">
+                      <TableCell colSpan={6} className="text-center py-20">
                         <div className="flex flex-col items-center gap-4 text-[#7182C7]">
                           <CalendarCheck size={48} className="opacity-20" />
                           <p className="font-bold">No attendance records found.</p>
@@ -195,8 +200,11 @@ export function AttendanceClient({ initialData, initialDate, initialCollege }: {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    initialData.map((entry: any) => (
+                    initialData.map((entry: any, index: number) => (
                       <TableRow key={entry.id} className="hover:bg-blue-50/30 transition-colors border-b-blue-50/50">
+                        <TableCell className="px-6 py-6 text-center">
+                          <span className="text-sm font-black text-[#7182C7]">{index + 1}</span>
+                        </TableCell>
                         <TableCell className="px-8 py-6">
                           <div>
                             <p className="font-black text-[#1A1A2E]">{entry.profiles?.full_name}</p>
