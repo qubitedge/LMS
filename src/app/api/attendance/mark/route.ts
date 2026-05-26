@@ -25,23 +25,14 @@ export async function POST() {
       }, { status: 403 });
     }
 
-    // Check if today is a module day (unlocked day with today's date)
-    const { data: unlockedSetting } = await supabase
-      .from('site_settings')
-      .select('value')
-      .eq('key', 'unlocked_days')
+    // Check if today is a module day
+    const { data: todayModule } = await supabase
+      .from('days')
+      .select('id')
+      .eq('date', todayStr)
       .maybeSingle();
 
-    const unlockedDayIds: string[] = unlockedSetting?.value || [];
-
-    let isTodayModuleDay = false;
-    if (unlockedDayIds.length > 0) {
-      const { data: moduleDays } = await supabase
-        .from('days')
-        .select('date')
-        .in('id', unlockedDayIds);
-      isTodayModuleDay = (moduleDays || []).some(d => d.date === todayStr);
-    }
+    const isTodayModuleDay = !!todayModule;
 
     if (!isTodayModuleDay) {
       return NextResponse.json({
