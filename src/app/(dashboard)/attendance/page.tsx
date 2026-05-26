@@ -30,13 +30,24 @@ export default async function AttendancePage() {
 
   const unlockedDayIds: string[] = unlockedSetting?.value || [];
 
-  // Fetch all module days to list in history
+  // Fetch all module days to list in history, starting from May 18, 2026
   const { data: allDaysData } = await supabase
     .from('days')
     .select('id, date, topic')
+    .gte('date', '2026-05-18')
     .order('date', { ascending: true });
 
-  const allModuleDays = allDaysData || [];
+  const allModuleDays: any[] = [];
+  const seenDates = new Set();
+  
+  if (allDaysData) {
+    for (const day of allDaysData) {
+      if (day.date && !seenDates.has(day.date)) {
+        seenDates.add(day.date);
+        allModuleDays.push(day);
+      }
+    }
+  }
 
   // Check if today is a module day (regardless of unlock status)
   let isTodayModuleDay = false;
