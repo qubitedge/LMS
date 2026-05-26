@@ -165,9 +165,6 @@ export default async function AttendancePage() {
                             <p className={`text-sm font-black ${isFutureDate ? 'text-slate-500' : 'text-[#1A1A2E]'}`}>
                               {moduleDay.date ? format(parseISO(moduleDay.date), 'MMM d, yyyy') : 'TBD'}
                             </p>
-                            <p className="text-xs font-bold text-[#7182C7] line-clamp-1 max-w-[200px] md:max-w-xs">
-                              {moduleDay.topic}
-                            </p>
                           </div>
                         </div>
 
