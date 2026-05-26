@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle2, Clock, CalendarX } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import MarkAttendanceButton from './mark-attendance-button';
+import MarkPastAttendanceButton from './mark-past-attendance-button';
 
 export const revalidate = 0;
 
@@ -29,23 +30,38 @@ export default async function AttendancePage() {
 
   const unlockedDayIds: string[] = unlockedSetting?.value || [];
 
-  // Fetch the dates for all unlocked days
+  // Fetch all module days to list in history
+  const { data: allDaysData } = await supabase
+    .from('days')
+    .select('id, date, topic')
+    .order('date', { ascending: false });
+
+  const allModuleDays = allDaysData || [];
+
+  // Check if today is an unlocked module day
   let isTodayModuleDay = false;
   if (unlockedDayIds.length > 0) {
-    const { data: unlockedDaysData } = await supabase
-      .from('days')
-      .select('date')
-      .in('id', unlockedDayIds);
-    isTodayModuleDay = (unlockedDaysData || []).some(d => d.date === todayStr);
+    const todayModule = allModuleDays.find(d => d.date === todayStr && unlockedDayIds.includes(d.id));
+    if (todayModule) {
+      isTodayModuleDay = true;
+    }
   }
 
+  // Fetch all attendance for user
   const { data: attendanceHistory } = await supabase
     .from('attendance')
     .select('*')
-    .eq('user_id', user.id)
-    .order('date', { ascending: false });
+    .eq('user_id', user.id);
 
-  const hasMarkedToday = attendanceHistory?.some(a => a.date === todayStr);
+  // Map for fast lookup
+  const markedAttendanceMap = new Map();
+  if (attendanceHistory) {
+    attendanceHistory.forEach(record => {
+      markedAttendanceMap.set(record.date, record);
+    });
+  }
+
+  const hasMarkedToday = markedAttendanceMap.has(todayStr);
 
   return (
     <div className="pb-10">
@@ -53,6 +69,7 @@ export default async function AttendancePage() {
         <h1 className="text-5xl font-black mb-3 tracking-tight" style={{ fontFamily: 'Playfair Display', color: '#1A1A2E' }}>
           Attendance
         </h1>
+        <p className="text-lg font-bold text-[#7182C7]">
           Mark your daily presence between <span className="text-[#2238A4]">10:15 AM</span> and <span className="text-[#2238A4]">2:00 PM</span>.
         </p>
       </div>
@@ -110,30 +127,62 @@ export default async function AttendancePage() {
               <CardTitle className="text-xl font-black text-[#1A1A2E]">Attendance History</CardTitle>
             </CardHeader>
             <CardContent>
-              {(!attendanceHistory || attendanceHistory.length === 0) ? (
+              {(!allModuleDays || allModuleDays.length === 0) ? (
                 <div className="py-20 text-center" style={{ color: '#7182C7' }}>
-                  <p className="text-md font-bold">No attendance records found.</p>
+                  <p className="text-md font-bold">No module days found.</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-5">
-                  {attendanceHistory.map((record) => (
-                    <div 
-                      key={record.id} 
-                      className="p-5 rounded-[1.5rem] bg-white border border-blue-50 shadow-sm flex items-center gap-4 transition-all hover:shadow-lg hover:-translate-y-1 group"
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0 transition-colors group-hover:bg-emerald-100">
-                        <CheckCircle2 size={20} className="text-[#10B981]" />
+                <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                  {allModuleDays.map((moduleDay) => {
+                    const isUnlocked = unlockedDayIds.includes(moduleDay.id);
+                    const attendanceRecord = markedAttendanceMap.get(moduleDay.date);
+
+                    return (
+                      <div 
+                        key={moduleDay.id} 
+                        className={`p-4 rounded-2xl bg-white border shadow-sm flex items-center justify-between transition-all ${isUnlocked ? 'border-blue-50 hover:shadow-md' : 'border-slate-100 opacity-70'}`}
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${isUnlocked ? (attendanceRecord ? 'bg-emerald-50 text-[#10B981]' : 'bg-amber-50 text-amber-500') : 'bg-slate-50 text-slate-400'}`}>
+                            {isUnlocked ? (
+                                attendanceRecord ? <CheckCircle2 size={20} /> : <Clock size={20} />
+                            ) : (
+                                <CalendarX size={20} />
+                            )}
+                          </div>
+                          <div>
+                            <p className={`text-sm font-black ${isUnlocked ? 'text-[#1A1A2E]' : 'text-slate-500'}`}>
+                              {moduleDay.date ? format(parseISO(moduleDay.date), 'MMM d, yyyy') : 'TBD'}
+                            </p>
+                            <p className="text-xs font-bold text-[#7182C7] line-clamp-1 max-w-[200px] md:max-w-xs">
+                              {moduleDay.topic}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div>
+                          {!isUnlocked ? (
+                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-1.5 rounded-md border border-slate-100 whitespace-nowrap">
+                              Session didn't complete yet
+                            </span>
+                          ) : attendanceRecord ? (
+                            <div className="text-right">
+                              <span className="text-[10px] font-bold text-[#10B981] uppercase tracking-widest bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100">
+                                Marked
+                              </span>
+                              {attendanceRecord.checked_in_at && (
+                                <p className="text-[10px] text-[#A0ACDC] mt-1 font-bold">
+                                  {format(parseISO(attendanceRecord.checked_in_at), 'h:mm a')}
+                                </p>
+                              )}
+                            </div>
+                          ) : (
+                            <MarkPastAttendanceButton date={moduleDay.date} />
+                          )}
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-sm font-black text-[#1A1A2E]">
-                          {format(parseISO(record.date), 'MMM d')}
-                        </p>
-                        <p className="text-[10px] font-bold text-[#A0ACDC] uppercase tracking-widest">
-                          {format(parseISO(record.checked_in_at), 'h:mm a')}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </CardContent>
