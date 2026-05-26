@@ -144,18 +144,25 @@ export default async function AttendancePage() {
                 <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
                   {allModuleDays.map((moduleDay) => {
                     const attendanceRecord = markedAttendanceMap.get(moduleDay.date);
+                    const isFutureDate = moduleDay.date > todayStr;
 
                     return (
                       <div 
                         key={moduleDay.id} 
-                        className={`p-4 rounded-2xl bg-white border shadow-sm flex items-center justify-between transition-all border-blue-50 hover:shadow-md`}
+                        className={`p-4 rounded-2xl bg-white border shadow-sm flex items-center justify-between transition-all ${isFutureDate ? 'border-slate-100 opacity-70' : 'border-blue-50 hover:shadow-md'}`}
                       >
                         <div className="flex items-center gap-4">
-                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${attendanceRecord ? 'bg-emerald-50 text-[#10B981]' : 'bg-amber-50 text-amber-500'}`}>
-                            {attendanceRecord ? <CheckCircle2 size={20} /> : <Clock size={20} />}
+                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${isFutureDate ? 'bg-slate-50 text-slate-400' : (attendanceRecord ? 'bg-emerald-50 text-[#10B981]' : 'bg-amber-50 text-amber-500')}`}>
+                            {isFutureDate ? (
+                              <CalendarX size={20} />
+                            ) : attendanceRecord ? (
+                              <CheckCircle2 size={20} />
+                            ) : (
+                              <Clock size={20} />
+                            )}
                           </div>
                           <div>
-                            <p className="text-sm font-black text-[#1A1A2E]">
+                            <p className={`text-sm font-black ${isFutureDate ? 'text-slate-500' : 'text-[#1A1A2E]'}`}>
                               {moduleDay.date ? format(parseISO(moduleDay.date), 'MMM d, yyyy') : 'TBD'}
                             </p>
                             <p className="text-xs font-bold text-[#7182C7] line-clamp-1 max-w-[200px] md:max-w-xs">
@@ -165,7 +172,11 @@ export default async function AttendancePage() {
                         </div>
 
                         <div>
-                          {attendanceRecord ? (
+                          {isFutureDate ? (
+                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-1.5 rounded-md border border-slate-100 whitespace-nowrap">
+                              Session hasn't started
+                            </span>
+                          ) : attendanceRecord ? (
                             <div className="text-right">
                               <span className="text-[10px] font-bold text-[#10B981] uppercase tracking-widest bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100">
                                 Marked
