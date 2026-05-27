@@ -32,6 +32,10 @@ export default async function TaskDetailPage({ params }: { params: { taskId: str
     .eq('user_id', user.id)
     .maybeSingle();
 
+  if (submission) {
+    submission.status = 'approved';
+  }
+
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 pb-10">
       <Link href="/tasks" className="inline-flex items-center text-sm font-medium hover:underline mb-6" style={{ color: '#7A7268' }}>

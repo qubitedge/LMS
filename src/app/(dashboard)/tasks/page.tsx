@@ -36,7 +36,8 @@ export default async function TasksPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {(tasks || []).map((task) => {
-          const status = subMap.get(task.id);
+          const originalStatus = subMap.get(task.id);
+          const status = originalStatus ? 'approved' : undefined;
           let badgeClass = 'bg-slate-100 text-[#7182C7] border-slate-200';
           let statusText = 'Pending Submission';
 
