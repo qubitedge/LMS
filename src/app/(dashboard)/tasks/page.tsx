@@ -41,15 +41,9 @@ export default async function TasksPage() {
           let badgeClass = 'bg-slate-100 text-[#7182C7] border-slate-200';
           let statusText = 'Pending Submission';
 
-          if (status === 'pending') {
-            badgeClass = 'bg-amber-50 text-[#D97706] border-amber-200';
-            statusText = 'Under Review';
-          } else if (status === 'approved') {
+          if (status === 'approved') {
             badgeClass = 'bg-emerald-50 text-[#10B981] border-emerald-200';
             statusText = 'Approved';
-          } else if (status === 'rejected') {
-            badgeClass = 'bg-rose-50 text-[#E11D48] border-rose-200';
-            statusText = 'Needs Revision';
           }
 
           return (
