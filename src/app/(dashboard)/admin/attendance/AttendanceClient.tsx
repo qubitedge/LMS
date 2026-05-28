@@ -23,12 +23,21 @@ export function AttendanceClient({ initialData, initialDate, initialCollege }: {
   };
 
   const handleDownload = async (type: 'daily' | 'weekly' | 'college') => {
+    let downloadCollege = college;
+    if (type === 'college' && !downloadCollege) {
+      const col = window.prompt("Enter the College name to download report:");
+      if (!col) return;
+      downloadCollege = col;
+      setCollege(col);
+      handleFilter(date, col);
+    }
+
     setIsDownloading(true);
     try {
       const params = new URLSearchParams();
       params.set('type', type);
       if (date) params.set('date', date);
-      if (college) params.set('college', college);
+      if (downloadCollege) params.set('college', downloadCollege);
 
       const res = await fetch(`/api/admin/attendance/export?${params.toString()}`);
       if (!res.ok) throw new Error('Failed to fetch data for export');
@@ -50,6 +59,15 @@ export function AttendanceClient({ initialData, initialDate, initialCollege }: {
         'Check-in Time': entry.checked_in_at ? format(parseISO(entry.checked_in_at), 'h:mm:ss a') : 'N/A'
       }));
 
+      // Sort: Present first, Absent second
+      exportData.sort((a: any, b: any) => {
+        const aIsPresent = a.Status.includes('✅');
+        const bIsPresent = b.Status.includes('✅');
+        if (aIsPresent && !bIsPresent) return -1;
+        if (!aIsPresent && bIsPresent) return 1;
+        return 0;
+      });
+
       const worksheet = XLSX.utils.json_to_sheet(exportData);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Attendance');
@@ -57,7 +75,7 @@ export function AttendanceClient({ initialData, initialDate, initialCollege }: {
       let filename = 'Attendance_Report.xlsx';
       if (type === 'daily') filename = `Daily_Attendance_${date || format(new Date(), 'yyyy-MM-dd')}.xlsx`;
       if (type === 'weekly') filename = `Weekly_Attendance_${date || format(new Date(), 'yyyy-MM-dd')}.xlsx`;
-      if (type === 'college') filename = `College_Attendance_${college || 'All'}.xlsx`;
+      if (type === 'college') filename = `College_Attendance_${downloadCollege || 'All'}.xlsx`;
 
       XLSX.writeFile(workbook, filename);
     } catch (error) {
@@ -104,16 +122,14 @@ export function AttendanceClient({ initialData, initialDate, initialCollege }: {
               >
                 <Download className="mr-2 h-4 w-4" /> Weekly Report
              </Button>
-             {college && (
-               <Button 
-                  variant="outline" 
-                  className="bg-white/70 backdrop-blur-xl border-white/40 shadow-sm rounded-xl font-bold text-[#4A5DB5] hover:bg-white"
-                  onClick={() => handleDownload('college')}
-                  disabled={isDownloading}
-                >
-                  <Download className="mr-2 h-4 w-4" /> College Report
-               </Button>
-             )}
+             <Button 
+                variant="outline" 
+                className="bg-white/70 backdrop-blur-xl border-white/40 shadow-sm rounded-xl font-bold text-[#4A5DB5] hover:bg-white"
+                onClick={() => handleDownload('college')}
+                disabled={isDownloading}
+              >
+                <Download className="mr-2 h-4 w-4" /> College Report
+             </Button>
           </div>
         </div>
 
