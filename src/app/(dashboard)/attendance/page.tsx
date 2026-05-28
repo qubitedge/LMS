@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle2, Clock, CalendarX } from 'lucide-react';
+import { CheckCircle2, Clock, CalendarX, XCircle } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import MarkAttendanceButton from './mark-attendance-button';
 import MarkPastAttendanceButton from './mark-past-attendance-button';
@@ -145,6 +145,8 @@ export default async function AttendancePage() {
                   {allModuleDays.map((moduleDay) => {
                     const attendanceRecord = markedAttendanceMap.get(moduleDay.date);
                     const isFutureDate = moduleDay.date > todayStr;
+                    const isToday = moduleDay.date === todayStr;
+                    const isPastDate = moduleDay.date < todayStr;
 
                     return (
                       <div 
@@ -152,11 +154,18 @@ export default async function AttendancePage() {
                         className={`p-4 rounded-2xl bg-white border shadow-sm flex items-center justify-between transition-all ${isFutureDate ? 'border-slate-100 opacity-70' : 'border-blue-50 hover:shadow-md'}`}
                       >
                         <div className="flex items-center gap-4">
-                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${isFutureDate ? 'bg-slate-50 text-slate-400' : (attendanceRecord ? 'bg-emerald-50 text-[#10B981]' : 'bg-amber-50 text-amber-500')}`}>
+                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                            isFutureDate ? 'bg-slate-50 text-slate-400' : 
+                            attendanceRecord ? 'bg-emerald-50 text-[#10B981]' : 
+                            isPastDate ? 'bg-rose-50 text-rose-500' : 
+                            'bg-amber-50 text-amber-500'
+                          }`}>
                             {isFutureDate ? (
                               <CalendarX size={20} />
                             ) : attendanceRecord ? (
                               <CheckCircle2 size={20} />
+                            ) : isPastDate ? (
+                              <XCircle size={20} />
                             ) : (
                               <Clock size={20} />
                             )}
@@ -184,6 +193,10 @@ export default async function AttendancePage() {
                                 </p>
                               )}
                             </div>
+                          ) : isPastDate ? (
+                            <span className="text-[9px] font-bold text-rose-500 uppercase tracking-widest bg-rose-50 px-2 py-1.5 rounded-md border border-rose-100 whitespace-nowrap">
+                              Unmarked
+                            </span>
                           ) : (
                             <MarkPastAttendanceButton date={moduleDay.date} />
                           )}
