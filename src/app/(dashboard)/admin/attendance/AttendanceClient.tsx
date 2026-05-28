@@ -42,11 +42,12 @@ export function AttendanceClient({ initialData, initialDate, initialCollege }: {
 
       const exportData = data.map((entry: any) => ({
         Date: entry.date,
-        'Check-in Time': format(parseISO(entry.checked_in_at), 'h:mm:ss a'),
         Name: entry.profiles?.full_name,
         Email: entry.profiles?.email,
         Domain: entry.profiles?.domain || 'Intern',
-        College: entry.profiles?.address || 'N/A'
+        College: entry.profiles?.address || 'N/A',
+        Status: entry.status || (entry.checked_in_at ? '✅ Present' : '❌ Absent'),
+        'Check-in Time': entry.checked_in_at ? format(parseISO(entry.checked_in_at), 'h:mm:ss a') : 'N/A'
       }));
 
       const worksheet = XLSX.utils.json_to_sheet(exportData);

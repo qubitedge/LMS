@@ -17,35 +17,52 @@ export async function GET(request: NextRequest) {
   const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
   if (profile?.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
+  if (type === 'daily' || type === 'college') {
+    const targetDate = dateStr || format(new Date(), 'yyyy-MM-dd');
+    
+    // 1. Fetch profiles
+    let profilesQuery = supabase.from('profiles').select('id, full_name, email, domain, address').eq('role', 'intern');
+    if (college) {
+      profilesQuery = profilesQuery.eq('address', college);
+    }
+    const { data: profiles, error: pError } = await profilesQuery;
+    if (pError) return NextResponse.json({ error: pError.message }, { status: 500 });
+
+    // 2. Fetch attendance
+    let attendanceQuery = supabase.from('attendance').select('user_id, checked_in_at').eq('date', targetDate);
+    const { data: attendance, error: aError } = await attendanceQuery;
+    if (aError) return NextResponse.json({ error: aError.message }, { status: 500 });
+
+    const attendanceMap = new Map((attendance || []).map(a => [a.user_id, a.checked_in_at]));
+
+    // 3. Merge
+    const mergedData = (profiles || []).map(p => {
+      const checkedInAt = attendanceMap.get(p.id);
+      return {
+        date: targetDate,
+        checked_in_at: checkedInAt || null,
+        status: checkedInAt ? '✅ Present' : '❌ Absent',
+        profiles: p
+      };
+    });
+
+    return NextResponse.json({ data: mergedData });
+  }
+
+  // Fallback for weekly
   let query = supabase
     .from('attendance')
     .select('id, date, checked_in_at, profiles(full_name, email, domain, address)')
     .order('date', { ascending: false })
     .order('checked_in_at', { ascending: false });
 
-  if (type === 'daily') {
-    if (dateStr) {
-      query = query.eq('date', dateStr);
-    } else {
-      query = query.eq('date', format(new Date(), 'yyyy-MM-dd'));
-    }
-    if (college) {
-      query = query.eq('profiles.address', college);
-    }
-  } else if (type === 'weekly') {
+  if (type === 'weekly') {
     const targetDate = dateStr ? parseISO(dateStr) : new Date();
     const start = format(startOfWeek(targetDate, { weekStartsOn: 1 }), 'yyyy-MM-dd');
     const end = format(endOfWeek(targetDate, { weekStartsOn: 1 }), 'yyyy-MM-dd');
     query = query.gte('date', start).lte('date', end);
     if (college) {
       query = query.eq('profiles.address', college);
-    }
-  } else if (type === 'college') {
-    if (college) {
-      query = query.eq('profiles.address', college);
-    }
-    if (dateStr) {
-      query = query.eq('date', dateStr);
     }
   }
 
@@ -55,7 +72,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
   
-  // Filter out null profiles (if inner join didn't work as expected with PostgREST eq on joined table)
   let filteredData = data;
   if (college) {
       filteredData = data?.filter((record: any) => record.profiles?.address === college) || [];
