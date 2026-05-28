@@ -28,7 +28,7 @@ export default async function DashboardLayout({
   }
 
   const { count: completedDays } = await supabase
-    .from('scores')
+    .from('attendance')
     .select('*', { count: 'exact', head: true })
     .eq('user_id', user.id);
 
