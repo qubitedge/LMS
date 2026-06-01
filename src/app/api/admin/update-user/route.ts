@@ -23,6 +23,10 @@ export async function POST(req: Request) {
     if (Object.keys(updateData).length > 0) {
       const { error: authError } = await adminAuthClient.auth.admin.updateUserById(id, updateData);
       if (authError) throw authError;
+
+      // Force sign out all existing sessions so the user must re-login with new credentials.
+      // This prevents stale JWT tokens from causing foreign key errors in attendance/scores.
+      await adminAuthClient.auth.admin.signOut(id);
     }
 
     // 2. Update Profile
