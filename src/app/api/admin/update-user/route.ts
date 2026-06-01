@@ -12,7 +12,10 @@ export async function POST(req: Request) {
 
     // 1. Update Auth User if email or password is provided
     const updateData: any = {};
-    if (email) updateData.email = email;
+    if (email) {
+      updateData.email = email;
+      updateData.email_confirm = true; // Prevents 500 error from Supabase SMTP rate limit
+    }
     if (password) updateData.password = password;
 
     if (Object.keys(updateData).length > 0) {
