@@ -1,19 +1,22 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { format, parseISO } from 'date-fns';
 import * as XLSX from 'xlsx';
-import { CalendarCheck, Download, Calendar, Building2, Search } from 'lucide-react';
+import { CalendarCheck, Download, Calendar, Building2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+
+const PAGE_SIZE = 30;
 
 export function AttendanceClient({ initialData, initialDate, initialCollege }: { initialData: any[], initialDate: string, initialCollege: string }) {
   const router = useRouter();
   const [isDownloading, setIsDownloading] = useState(false);
   const [date, setDate] = useState(initialDate);
   const [college, setCollege] = useState(initialCollege);
+  const [page, setPage] = useState(0);
 
   const handleFilter = (newDate: string, newCollege: string) => {
     const params = new URLSearchParams();
@@ -192,76 +195,130 @@ export function AttendanceClient({ initialData, initialDate, initialCollege }: {
           </div>
         </Card>
 
-        <Card className="rounded-[2.5rem] bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl overflow-hidden">
-          <CardContent className="p-0">
-            <div className="overflow-auto max-h-[600px]">
-              <Table>
-                <TableHeader className="bg-[#E9EEF9]/50 sticky top-0 z-10 shadow-sm backdrop-blur-md">
-                  <TableRow className="border-b-blue-100/50">
-                    <TableHead className="font-black text-[#1A1A2E] px-6 py-6 w-[80px] text-center">Sl No</TableHead>
-                    <TableHead className="font-black text-[#1A1A2E] px-8 py-6">Intern</TableHead>
-                    <TableHead className="font-black text-[#1A1A2E]">College</TableHead>
-                    <TableHead className="font-black text-[#1A1A2E]">Category</TableHead>
-                    <TableHead className="font-black text-[#1A1A2E] text-center">Date</TableHead>
-                    <TableHead className="font-black text-[#1A1A2E] text-right px-8">Check-in Time</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {!initialData || initialData.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={6} className="text-center py-20">
-                        <div className="flex flex-col items-center gap-4 text-[#7182C7]">
-                          <CalendarCheck size={48} className="opacity-20" />
-                          <p className="font-bold">No attendance records found.</p>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    initialData.map((entry: any, index: number) => (
-                      <TableRow key={entry.id} className="hover:bg-blue-50/30 transition-colors border-b-blue-50/50">
-                        <TableCell className="px-6 py-6 text-center">
-                          <span className="text-sm font-black text-[#7182C7]">{index + 1}</span>
-                        </TableCell>
-                        <TableCell className="px-8 py-6">
-                          <div>
-                            <p className="font-black text-[#1A1A2E]">{entry.profiles?.full_name}</p>
-                            <p className="text-xs text-[#7182C7]">{entry.profiles?.email}</p>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                           <p className="text-sm font-bold text-[#4A5DB5] max-w-[200px] truncate" title={entry.profiles?.address || 'N/A'}>
-                             {entry.profiles?.address || 'N/A'}
-                           </p>
-                        </TableCell>
-                        <TableCell>
-                          <span className="px-3 py-1 bg-white border border-blue-100 text-[#4A5DB5] rounded-xl text-[10px] font-black uppercase tracking-wider">
-                            {entry.profiles?.domain || 'Intern'}
-                          </span>
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <p className="text-sm font-black text-[#1A1A2E]">
-                            {format(parseISO(entry.date), 'EEEE')}
-                          </p>
-                          <p className="text-[10px] font-bold text-[#A0ACDC]">
-                            {format(parseISO(entry.date), 'MMM d, yyyy')}
-                          </p>
-                        </TableCell>
-                        <TableCell className="text-right px-8">
-                          <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-2xl border border-emerald-100">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                            <span className="text-xs font-black">
-                              {format(parseISO(entry.checked_in_at), 'h:mm:ss a')}
-                            </span>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-        </Card>
+        {(() => {
+          const totalPages = Math.ceil((initialData?.length || 0) / PAGE_SIZE);
+          const pageData = (initialData || []).slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+          const startIdx = page * PAGE_SIZE;
+
+          return (
+            <>
+              <Card className="rounded-[2.5rem] bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl overflow-hidden">
+                <CardContent className="p-0">
+                  <div className="overflow-auto max-h-[600px]">
+                    <Table>
+                      <TableHeader className="bg-[#E9EEF9]/50 sticky top-0 z-10 shadow-sm backdrop-blur-md">
+                        <TableRow className="border-b-blue-100/50">
+                          <TableHead className="font-black text-[#1A1A2E] px-6 py-6 w-[80px] text-center">Sl No</TableHead>
+                          <TableHead className="font-black text-[#1A1A2E] px-8 py-6">Intern</TableHead>
+                          <TableHead className="font-black text-[#1A1A2E]">College</TableHead>
+                          <TableHead className="font-black text-[#1A1A2E]">Category</TableHead>
+                          <TableHead className="font-black text-[#1A1A2E] text-center">Date</TableHead>
+                          <TableHead className="font-black text-[#1A1A2E] text-right px-8">Check-in Time</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {!initialData || initialData.length === 0 ? (
+                          <TableRow>
+                            <TableCell colSpan={6} className="text-center py-20">
+                              <div className="flex flex-col items-center gap-4 text-[#7182C7]">
+                                <CalendarCheck size={48} className="opacity-20" />
+                                <p className="font-bold">No attendance records found.</p>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ) : (
+                          pageData.map((entry: any, index: number) => (
+                            <TableRow key={entry.id} className="hover:bg-blue-50/30 transition-colors border-b-blue-50/50">
+                              <TableCell className="px-6 py-6 text-center">
+                                <span className="text-sm font-black text-[#7182C7]">{startIdx + index + 1}</span>
+                              </TableCell>
+                              <TableCell className="px-8 py-6">
+                                <div>
+                                  <p className="font-black text-[#1A1A2E]">{entry.profiles?.full_name}</p>
+                                  <p className="text-xs text-[#7182C7]">{entry.profiles?.email}</p>
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <p className="text-sm font-bold text-[#4A5DB5] max-w-[200px] truncate" title={entry.profiles?.address || 'N/A'}>
+                                  {entry.profiles?.address || 'N/A'}
+                                </p>
+                              </TableCell>
+                              <TableCell>
+                                <span className="px-3 py-1 bg-white border border-blue-100 text-[#4A5DB5] rounded-xl text-[10px] font-black uppercase tracking-wider">
+                                  {entry.profiles?.domain || 'Intern'}
+                                </span>
+                              </TableCell>
+                              <TableCell className="text-center">
+                                <p className="text-sm font-black text-[#1A1A2E]">
+                                  {format(parseISO(entry.date), 'EEEE')}
+                                </p>
+                                <p className="text-[10px] font-bold text-[#A0ACDC]">
+                                  {format(parseISO(entry.date), 'MMM d, yyyy')}
+                                </p>
+                              </TableCell>
+                              <TableCell className="text-right px-8">
+                                <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-2xl border border-emerald-100">
+                                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                  <span className="text-xs font-black">
+                                    {format(parseISO(entry.checked_in_at), 'h:mm:ss a')}
+                                  </span>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="mt-6 flex items-center justify-between px-2">
+                  <p className="text-sm font-bold text-[#7182C7]">
+                    Showing <span className="text-[#1A1A2E]">{startIdx + 1}–{Math.min(startIdx + PAGE_SIZE, initialData.length)}</span> of <span className="text-[#1A1A2E]">{initialData.length}</span> records
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setPage(p => Math.max(0, p - 1))}
+                      disabled={page === 0}
+                      className="h-10 px-4 rounded-xl border-[#E9EEF9] font-bold text-[#4A5DB5] hover:bg-[#F8FAFF] disabled:opacity-40"
+                    >
+                      <ChevronLeft size={16} className="mr-1" /> Prev
+                    </Button>
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: totalPages }, (_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setPage(i)}
+                          className={`w-9 h-9 rounded-xl text-sm font-black transition-all ${
+                            i === page
+                              ? 'bg-[#4A5DB5] text-white shadow-md shadow-blue-500/20'
+                              : 'text-[#7182C7] hover:bg-[#E9EEF9]'
+                          }`}
+                        >
+                          {i + 1}
+                        </button>
+                      ))}
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+                      disabled={page >= totalPages - 1}
+                      className="h-10 px-4 rounded-xl border-[#E9EEF9] font-bold text-[#4A5DB5] hover:bg-[#F8FAFF] disabled:opacity-40"
+                    >
+                      Next <ChevronRight size={16} className="ml-1" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </>
+          );
+        })()}
       </div>
     </div>
   );

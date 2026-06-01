@@ -20,6 +20,8 @@ export default function UserSearch() {
     } else {
       params.delete('q');
     }
+    // Always reset to page 0 when search changes so results start from the beginning
+    params.delete('page');
     router.replace(`?${params.toString()}`);
   }, [debouncedQuery, router, searchParams]);
 

@@ -57,7 +57,7 @@ export default function SubmissionForm({ taskId, acceptedFormats }: SubmissionFo
     };
 
     fetchProfileName();
-  }, [supabase]);
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {

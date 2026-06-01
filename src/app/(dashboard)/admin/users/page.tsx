@@ -7,23 +7,36 @@ import UserActions from '@/components/admin/user-actions';
 import BulkUserUpload from '@/components/admin/bulk-user-upload';
 import UserListExport from '@/components/admin/user-list-export';
 import UserSearch from '@/components/admin/user-search';
-import { Users, Mail, Shield, CheckCircle2, XCircle, FileText, Award, Search } from 'lucide-react';
+import { Users, Mail, Shield, CheckCircle2, XCircle, FileText, Award, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
-export const revalidate = 0;
+export const revalidate = 60;
+
+const PAGE_SIZE = 30;
 
 interface PageProps {
-  searchParams: Promise<{ role?: string; q?: string; sortBy?: string; sortOrder?: string }>;
+  searchParams: Promise<{ role?: string; q?: string; sortBy?: string; sortOrder?: string; page?: string }>;
 }
 
 export default async function AdminUsersPage({ searchParams }: PageProps) {
-  const { role = 'intern', q = '', sortBy = 'created_at', sortOrder = 'desc' } = await searchParams;
+  const { role = 'intern', q = '', sortBy = 'created_at', sortOrder = 'desc', page = '0' } = await searchParams;
+  const pageNum = Math.max(0, parseInt(page, 10) || 0);
   const supabase = await createClient();
+
+  // Count total for pagination
+  let countQuery = supabase
+    .from('profiles')
+    .select('id', { count: 'exact', head: true })
+    .eq('role', role);
+  if (q) countQuery = countQuery.or(`full_name.ilike.%${q}%,email.ilike.%${q}%,address.ilike.%${q}%`);
+  const { count: totalCount } = await countQuery;
+  const totalPages = Math.ceil((totalCount || 0) / PAGE_SIZE);
 
   let query = supabase
     .from('profiles')
-    .select('*')
-    .eq('role', role);
+    .select('id, full_name, email, role, address, is_active, domain, created_at, avatar_url, offer_letter_url, certificate_url')
+    .eq('role', role)
+    .range(pageNum * PAGE_SIZE, pageNum * PAGE_SIZE + PAGE_SIZE - 1);
 
   if (q) {
     query = query.or(`full_name.ilike.%${q}%,email.ilike.%${q}%,address.ilike.%${q}%`);
@@ -46,6 +59,17 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
     if (q) params.set('q', q);
     params.set('sortBy', column);
     params.set('sortOrder', nextOrder);
+    params.set('page', '0');
+    return `/admin/users?${params.toString()}`;
+  };
+
+  const getPageLink = (targetPage: number) => {
+    const params = new URLSearchParams();
+    params.set('role', role);
+    if (q) params.set('q', q);
+    params.set('sortBy', sortBy);
+    params.set('sortOrder', sortOrder);
+    params.set('page', String(targetPage));
     return `/admin/users?${params.toString()}`;
   };
 
@@ -220,6 +244,46 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
             </div>
           </CardContent>
         </Card>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="mt-6 flex items-center justify-between px-2">
+            <p className="text-sm font-bold text-[#7182C7]">
+              Showing <span className="text-[#1A1A2E]">{pageNum * PAGE_SIZE + 1}–{Math.min((pageNum + 1) * PAGE_SIZE, totalCount || 0)}</span> of <span className="text-[#1A1A2E]">{totalCount}</span> {role}s
+            </p>
+            <div className="flex items-center gap-2">
+              <Link
+                href={getPageLink(pageNum - 1)}
+                aria-disabled={pageNum === 0}
+                className={`inline-flex items-center h-10 px-4 rounded-xl border border-[#E9EEF9] font-bold text-sm text-[#4A5DB5] hover:bg-[#F8FAFF] transition-colors ${pageNum === 0 ? 'pointer-events-none opacity-40' : ''}`}
+              >
+                <ChevronLeft size={16} className="mr-1" /> Prev
+              </Link>
+              <div className="flex items-center gap-1">
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <Link
+                    key={i}
+                    href={getPageLink(i)}
+                    className={`w-9 h-9 flex items-center justify-center rounded-xl text-sm font-black transition-all ${
+                      i === pageNum
+                        ? 'bg-[#4A5DB5] text-white shadow-md shadow-blue-500/20'
+                        : 'text-[#7182C7] hover:bg-[#E9EEF9]'
+                    }`}
+                  >
+                    {i + 1}
+                  </Link>
+                ))}
+              </div>
+              <Link
+                href={getPageLink(pageNum + 1)}
+                aria-disabled={pageNum >= totalPages - 1}
+                className={`inline-flex items-center h-10 px-4 rounded-xl border border-[#E9EEF9] font-bold text-sm text-[#4A5DB5] hover:bg-[#F8FAFF] transition-colors ${pageNum >= totalPages - 1 ? 'pointer-events-none opacity-40' : ''}`}
+              >
+                Next <ChevronRight size={16} className="ml-1" />
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

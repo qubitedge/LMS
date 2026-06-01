@@ -2,10 +2,11 @@
 
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { 
   Mail, Briefcase, MapPin, Phone, Edit2, 
   Camera, Lock, Save, X, Trophy, Flame, 
-  Star, CheckCircle2, LogOut, Key, Loader2,
+  CheckCircle2, LogOut, Key, Loader2,
   ChevronRight, Globe, Eye, EyeOff
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,7 +25,6 @@ import { useRouter } from 'next/navigation';
 interface ProfileContentProps {
   initialProfile: any;
   stats: {
-    totalPoints: number;
     quizzesCount: number;
     attendanceCount: number;
     totalExpectedDays: number;
@@ -61,8 +61,25 @@ export default function ProfileContent({ initialProfile, stats }: ProfileContent
       };
       reader.readAsDataURL(file);
       
-      // In a real app, upload to Supabase Storage here
-      // For now, we'll keep the preview and "mock" the upload on save
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${profile.id}.${fileExt}`;
+      
+      try {
+        const { error: uploadError } = await supabase.storage
+          .from('avatars')
+          .upload(fileName, file, { upsert: true });
+          
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('avatars')
+          .getPublicUrl(fileName);
+          
+        setAvatarPreview(publicUrl);
+        setEditedProfile((prev: any) => ({ ...prev, avatar_url: publicUrl }));
+      } catch (error) {
+        toast.error('Failed to upload avatar image');
+      }
     }
   };
 
@@ -76,7 +93,7 @@ export default function ProfileContent({ initialProfile, stats }: ProfileContent
           phone: editedProfile.phone,
           address: editedProfile.address,
           domain: editedProfile.domain,
-          avatar_url: avatarPreview // Mocking upload for now
+          avatar_url: editedProfile.avatar_url
         })
         .eq('id', profile.id);
 
@@ -252,7 +269,7 @@ export default function ProfileContent({ initialProfile, stats }: ProfileContent
               {/* Avatar Section */}
               <div className="relative group/avatar cursor-pointer -mt-20 mb-6" onClick={handleAvatarClick}>
                 <div 
-                  className={`w-40 h-40 rounded-[3rem] flex items-center justify-center text-5xl font-black border-8 border-white shadow-2xl transition-all duration-500 overflow-hidden
+                  className={`relative w-40 h-40 rounded-[3rem] flex items-center justify-center text-5xl font-black border-8 border-white shadow-2xl transition-all duration-500 overflow-hidden
                     ${isEditing ? 'ring-4 ring-[#4A5DB5]/30' : ''}`}
                   style={{ 
                     background: 'white',
@@ -260,7 +277,7 @@ export default function ProfileContent({ initialProfile, stats }: ProfileContent
                   }}
                 >
                   {avatarPreview ? (
-                    <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
+                    <Image src={avatarPreview} alt="Avatar" fill className="object-cover" />
                   ) : (
                     profile?.full_name?.charAt(0) || 'U'
                   )}
@@ -409,22 +426,7 @@ export default function ProfileContent({ initialProfile, stats }: ProfileContent
         {/* Right Side: Performance Dashboard */}
         <div className="lg:col-span-8 space-y-10">
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <motion.div whileHover={{ y: -5 }} className="p-8 rounded-[2.5rem] bg-gradient-to-br from-white to-[#E9EEF9] border-2 border-white shadow-xl relative overflow-hidden group">
-               <div className="relative z-10">
-                  <div className="w-14 h-14 rounded-2xl bg-yellow-50 flex items-center justify-center text-yellow-600 mb-6 shadow-inner group-hover:scale-110 group-hover:rotate-6 transition-transform">
-                     <Star size={28} />
-                  </div>
-                  <p className="text-xs font-black uppercase tracking-widest text-[#7182C7] mb-2">Total Points</p>
-                  <div className="flex items-baseline gap-3">
-                    <span className="text-6xl font-black tracking-tighter text-[#1A1A2E]">{stats.totalPoints}</span>
-                    <span className="text-xl font-bold text-[#A0ACDC]">EXP ⭐</span>
-                  </div>
-               </div>
-               <div className="absolute -bottom-10 -right-10 opacity-5 group-hover:opacity-10 transition-opacity">
-                  <Star size={180} />
-               </div>
-            </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
             <motion.div whileHover={{ y: -5 }} className="p-8 rounded-[2.5rem] bg-gradient-to-br from-white to-[#E9EEF9] border-2 border-white shadow-xl relative overflow-hidden group">
                <div className="relative z-10">

@@ -14,7 +14,7 @@ export default async function AdminQuizzesPage() {
   // Fetch quizzes with day info
   const { data: quizzesData } = await supabase
     .from('quizzes')
-    .select('*, days(day_number, topic), scores(id, score, attempted_at, profiles(full_name, email, avatar_url))');
+    .select('id, day_id, max_score, questions, days(day_number, topic), scores(count)');
 
   // Sort quizzes by day_number in JS since ordering by joined table column can cause Supabase errors
   const quizzes = (quizzesData || []).sort((a, b) => {

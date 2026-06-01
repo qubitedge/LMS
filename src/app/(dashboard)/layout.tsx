@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { getProfile } from '@/lib/supabase/get-profile';
 import Sidebar from '@/components/layout/sidebar';
 import Topbar from '@/components/layout/topbar';
 import SupportButton from '@/components/support-button';
@@ -16,11 +17,7 @@ export default async function DashboardLayout({
     redirect('/login');
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single();
+  const profile = await getProfile(user.id);
 
   if (profile && profile.is_active === false) {
     await supabase.auth.signOut();

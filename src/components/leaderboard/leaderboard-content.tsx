@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Trophy, Medal, Star, CheckCircle2, 
@@ -32,6 +33,8 @@ export default function LeaderboardContent({ entries, currentUserId }: Leaderboa
   const [filter, setFilter] = useState('');
   const [domainFilter, setDomainFilter] = useState('All');
   const [filteredEntries, setFilteredEntries] = useState(entries);
+  const [showAll, setShowAll] = useState(false);
+  const PAGE_LIMIT = 10;
 
   const domains = ['All', ...Array.from(new Set(entries.map(e => e.domain).filter(Boolean))) as string[]];
 
@@ -47,7 +50,7 @@ export default function LeaderboardContent({ entries, currentUserId }: Leaderboa
   }, [filter, domainFilter, entries]);
 
   const top3 = entries.slice(0, 3);
-  const remaining = filteredEntries.slice(filteredEntries[0]?.rank <= 3 ? 3 - (entries.indexOf(filteredEntries[0])) : 0);
+  const tableEntries = showAll ? filteredEntries : filteredEntries.slice(0, PAGE_LIMIT);
   
   // Confetti for Rank 1 on mount
   useEffect(() => {
@@ -172,7 +175,7 @@ export default function LeaderboardContent({ entries, currentUserId }: Leaderboa
               </thead>
               <tbody className="divide-y divide-blue-50">
                 <AnimatePresence mode="popLayout">
-                  {filteredEntries.map((entry) => (
+                  {tableEntries.map((entry) => (
                     <motion.tr 
                       layout
                       key={entry.user_id}
@@ -195,9 +198,9 @@ export default function LeaderboardContent({ entries, currentUserId }: Leaderboa
                       </td>
                       <td className="px-8 py-6">
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-xl bg-[#E9EEF9] flex items-center justify-center overflow-hidden border-2 border-white shadow-sm transition-transform group-hover:scale-110">
+                          <div className="relative w-12 h-12 rounded-xl bg-[#E9EEF9] flex items-center justify-center overflow-hidden border-2 border-white shadow-sm transition-transform group-hover:scale-110">
                             {entry.avatar_url ? (
-                              <img src={entry.avatar_url} alt="" className="w-full h-full object-cover" />
+                              <Image src={entry.avatar_url} alt="" fill className="object-cover" />
                             ) : (
                               <User className="text-[#4A5DB5]" size={20} />
                             )}
@@ -233,6 +236,30 @@ export default function LeaderboardContent({ entries, currentUserId }: Leaderboa
               </tbody>
             </table>
           </div>
+
+          {/* Show More / Show Less */}
+          {filteredEntries.length > PAGE_LIMIT && (
+            <div className="border-t border-blue-50 px-8 py-6 flex flex-col items-center gap-3 bg-white/30">
+              <p className="text-sm font-bold text-[#7182C7]">
+                Showing <span className="text-[#1A1A2E] font-black">{showAll ? filteredEntries.length : Math.min(PAGE_LIMIT, filteredEntries.length)}</span> of <span className="text-[#1A1A2E] font-black">{filteredEntries.length}</span> members
+              </p>
+              <Button
+                onClick={() => setShowAll(prev => !prev)}
+                variant="outline"
+                className="h-12 px-8 rounded-2xl border-blue-100 font-black text-[#2238A4] hover:bg-[#E9EEF9] transition-all"
+              >
+                {showAll ? (
+                  <>
+                    <span className="mr-2">▲</span> Show Less
+                  </>
+                ) : (
+                  <>
+                    <span className="mr-2">▼</span> Show All {filteredEntries.length} Members
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
@@ -279,9 +306,9 @@ function PodiumCard({ entry, type, isCurrentUser }: { entry: LeaderboardEntry; t
           <div className="absolute -top-12 left-1/2 -translate-x-1/2 animate-bounce">
             {styles.icon}
           </div>
-          <div className={`w-32 h-32 rounded-[2.5rem] overflow-hidden border-4 shadow-2xl ${styles.avatar}`}>
+          <div className={`relative w-32 h-32 rounded-[2.5rem] overflow-hidden border-4 shadow-2xl ${styles.avatar}`}>
             {entry.avatar_url ? (
-              <img src={entry.avatar_url} alt="" className="w-full h-full object-cover" />
+              <Image src={entry.avatar_url} alt="" fill className="object-cover" />
             ) : (
               <div className="w-full h-full bg-[#E9EEF9] flex items-center justify-center">
                  <User className="text-[#4A5DB5]" size={40} />

@@ -1,7 +1,7 @@
 'use client';
 
 import { Menu, User as UserIcon, Shield, LayoutDashboard } from 'lucide-react';
-import QubitedgeLogo from '@/components/logo';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -20,7 +20,14 @@ export default function Topbar({ user }: TopbarProps) {
     <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white/80 backdrop-blur-xl border-b fixed top-0 left-0 right-0 z-40"
       style={{ borderColor: 'rgba(34, 56, 164, 0.1)' }}>
       <div className="flex items-center gap-2">
-        <QubitedgeLogo size={28} />
+        <Image 
+          src="/logo.jpg" 
+          width={28} 
+          height={28} 
+          alt="Qubitedge"
+          priority
+          className="rounded-lg object-cover"
+        />
         <h1 className="text-base font-bold" style={{ fontFamily: 'DM Sans', color: accentColor }}>
           qubitedge
         </h1>
