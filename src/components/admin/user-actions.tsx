@@ -143,13 +143,24 @@ export default function UserActions({ user }: UserActionsProps) {
   const handleUpdate = async () => {
     setIsUpdating(true);
     try {
+      const payload: any = {
+        id: user.id,
+        full_name: editData.full_name,
+        domain: editData.domain,
+        address: editData.address,
+      };
+
+      if (editData.email !== user.email) {
+        payload.email = editData.email;
+      }
+      if (editData.password.trim() !== '') {
+        payload.password = editData.password;
+      }
+
       const res = await fetch('/api/admin/update-user', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id: user.id,
-          ...editData,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
