@@ -17,9 +17,9 @@ export default async function AdminQuizzesPage() {
     .select('id, day_id, max_score, questions, days(day_number, topic), scores(count)');
 
   // Sort quizzes by day_number in JS since ordering by joined table column can cause Supabase errors
-  const quizzes = (quizzesData || []).sort((a, b) => {
-    const dayA = a.days?.day_number || 0;
-    const dayB = b.days?.day_number || 0;
+  const quizzes = (quizzesData || []).sort((a: any, b: any) => {
+    const dayA = Array.isArray(a.days) ? a.days[0]?.day_number : a.days?.day_number || 0;
+    const dayB = Array.isArray(b.days) ? b.days[0]?.day_number : b.days?.day_number || 0;
     return dayA - dayB;
   });
 
