@@ -1,5 +1,6 @@
 import { createAdminClient } from '@/lib/supabase/admin';
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 
 export async function POST(req: Request) {
   try {
@@ -42,6 +43,7 @@ export async function POST(req: Request) {
       if (profileError) throw profileError;
     }
 
+    revalidatePath('/admin/users');
     return NextResponse.json({ success: true });
     
   } catch (error: any) {
