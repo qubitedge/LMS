@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { AttendanceClient } from './AttendanceClient';
 
-export const revalidate = 60;
+export const revalidate = 0;
 
 export default async function AdminAttendancePage(props: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const searchParams = await props.searchParams;
