@@ -3,7 +3,7 @@ import { getDayStatus } from '@/lib/utils/dayLock';
 import { WeekWithDays, DayWithStatus } from '@/types';
 import CurriculumGrid from '@/components/progress/curriculum-grid';
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 export default async function ProgressPage() {
   const supabase = await createClient();

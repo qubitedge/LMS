@@ -6,7 +6,7 @@ import QuizCreateDialog from '@/components/admin/quiz-create-dialog';
 import QuizActions from '@/components/admin/quiz-actions';
 import QuizAttemptsDialog from '@/components/admin/quiz-attempts-dialog';
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 export default async function AdminQuizzesPage() {
   const supabase = await createClient();

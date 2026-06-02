@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import CertificationsContent from '@/components/certifications/certifications-content';
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 export default async function CertificationsPage() {
   const supabase = await createClient();

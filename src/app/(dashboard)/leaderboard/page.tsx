@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import LeaderboardContent from '@/components/leaderboard/leaderboard-content';
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 export default async function LeaderboardPage() {
   const supabase = await createClient();

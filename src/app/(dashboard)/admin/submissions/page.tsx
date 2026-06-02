@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { format, parseISO } from 'date-fns';
 import SubmissionReviewDialog from '@/components/admin/submission-review-dialog';
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 export default async function AdminSubmissionsPage() {
   const supabase = await createClient();

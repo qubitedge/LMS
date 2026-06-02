@@ -5,7 +5,7 @@ import { format, parseISO } from 'date-fns';
 import MarkAttendanceButton from './mark-attendance-button';
 import MarkPastAttendanceButton from './mark-past-attendance-button';
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 export default async function AttendancePage() {
   const supabase = await createClient();

@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import EventsManagementClient from '@/components/admin/events-management-client';
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 export default async function AdminCurriculumPage() {
   const supabase = await createClient();
