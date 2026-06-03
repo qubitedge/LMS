@@ -17,7 +17,7 @@ export function OneSignalProvider() {
           allowLocalhostAsSecureOrigin: true,
           notifyButton: {
             enable: true,
-          },
+          } as any,
         });
         setInitialized(true);
       } catch (error) {
