@@ -24,15 +24,24 @@ export default async function DashboardLayout({
     redirect('/login?error=account_disabled');
   }
 
-  const { count: completedDays } = await supabase
-    .from('attendance')
-    .select('*', { count: 'exact', head: true })
-    .eq('user_id', user.id);
+  const [{ count: completedDays }, { data: setting }] = await Promise.all([
+    supabase
+      .from('attendance')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', user.id),
+    supabase
+      .from('site_settings')
+      .select('value')
+      .eq('key', 'projects_unlocked')
+      .maybeSingle()
+  ]);
+
+  const projectsUnlocked = setting?.value === true;
 
   return (
     <div className="flex h-[100dvh] overflow-hidden w-full relative">
       {/* Sidebar - Desktop & Bottom Nav - Mobile */}
-      <Sidebar user={profile} completedDays={completedDays || 0} />
+      <Sidebar user={profile} completedDays={completedDays || 0} projectsUnlocked={projectsUnlocked} />
 
       {/* Topbar - Mobile only */}
       <Topbar user={profile} />

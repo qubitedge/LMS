@@ -16,7 +16,7 @@ const internNav = [
   { href: '/progress', label: 'My Learning', icon: TrendingUp },
   // { href: '/programmes', label: 'Programmes', icon: BookOpen },
   { href: '/attendance', label: 'Attendance', icon: CalendarCheck },
-  // { href: '/tasks', label: 'Tasks', icon: ClipboardList },
+  { href: '/projects', label: 'Projects', icon: ClipboardList },
   { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
   { href: '/certifications', label: 'My Certifications', icon: BookOpen },
   { href: '/profile', label: 'Profile', icon: User },
@@ -27,7 +27,7 @@ const adminNav = [
   { href: '/admin/users', label: 'Users', icon: User },
   { href: '/admin/curriculum', label: 'Events', icon: CalendarCheck },
   { href: '/admin/quizzes', label: 'Quizzes', icon: TrendingUp },
-  // { href: '/admin/submissions', label: 'Submissions', icon: ClipboardList },
+  { href: '/admin/project-submissions', label: 'Task Submissions', icon: ClipboardList },
   { href: '/admin/attendance', label: 'Attendance', icon: CalendarCheck },
   { href: '/admin/announcements', label: 'Announcements', icon: Trophy },
   { href: '/admin/leaderboard', label: 'Leaderboard', icon: Trophy },
@@ -36,13 +36,16 @@ const adminNav = [
 interface SidebarProps {
   user: { full_name: string; avatar_url: string | null; role: string; current_streak?: number } | null;
   completedDays: number;
+  projectsUnlocked?: boolean;
 }
 
-export default function Sidebar({ user, completedDays }: SidebarProps) {
+export default function Sidebar({ user, completedDays, projectsUnlocked = false }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const isAdmin = user?.role === 'admin';
-  const navItems = isAdmin && pathname.startsWith('/admin') ? adminNav : internNav;
+  const navItems = isAdmin && pathname.startsWith('/admin') 
+    ? adminNav 
+    : internNav.filter(item => item.href !== '/projects' || projectsUnlocked);
   const accentColor = isAdmin && pathname.startsWith('/admin') ? '#2238A4' : '#4A5DB5';
   const activeColor = '#2238A4';
 

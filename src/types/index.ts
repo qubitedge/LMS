@@ -17,6 +17,7 @@ export interface Profile {
   current_streak: number;
   longest_streak: number;
   last_active_date: string | null;
+  performance_percentage: number;
   created_at: string;
 }
 
@@ -91,6 +92,17 @@ export interface Submission {
   status: SubmissionStatus;
   feedback: string | null;
   submitted_at: string;
+}
+
+export interface ProjectSubmission {
+  id: string;
+  user_id: string;
+  project_id: number;
+  project_name: string;
+  github_url: string;
+  status: SubmissionStatus;
+  submitted_at: string;
+  reviewed_at: string | null;
 }
 
 export interface Announcement {
