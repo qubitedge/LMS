@@ -5,7 +5,6 @@ import { ProjectData } from '@/data/projects';
 import { ProjectSubmission } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/badge';
 import { Button as UIButton } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -138,12 +137,12 @@ export default function ProjectCard({ project, submission, onSubmissionComplete 
             </div>
           ) : (
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
-              <DialogTrigger asChild>
+              <DialogTrigger render={
                 <UIButton className="w-full gap-2 group">
                   <Github className="w-4 h-4 transition-transform group-hover:scale-110" />
                   Submit Project
                 </UIButton>
-              </DialogTrigger>
+              } />
               <DialogContent>
                 <form onSubmit={handleSubmit}>
                   <DialogHeader>

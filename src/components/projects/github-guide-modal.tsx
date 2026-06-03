@@ -14,12 +14,12 @@ import { Code, BookOpen } from 'lucide-react';
 export default function GithubGuideModal() {
   return (
     <Dialog>
-      <DialogTrigger asChild>
+      <DialogTrigger render={
         <Button variant="outline" className="w-full justify-start text-left h-auto py-3 bg-white hover:bg-slate-50 text-[#4A5DB5] border-[#4A5DB5]/20 hover:border-[#4A5DB5]/40 mt-2">
           <BookOpen size={16} className="mr-2 shrink-0" />
           <span className="font-semibold text-sm">View Complete Step-by-Step GitHub Guide</span>
         </Button>
-      </DialogTrigger>
+      } />
       <DialogContent className="sm:max-w-4xl w-[95vw] md:w-[90vw] rounded-3xl h-[85vh] p-0 flex flex-col gap-0 overflow-hidden">
         <DialogHeader className="p-6 pb-4 border-b">
           <DialogTitle className="text-2xl flex items-center gap-2" style={{ fontFamily: 'Playfair Display', color: '#2C2C2C' }}>

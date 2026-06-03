@@ -45,11 +45,11 @@ export default function ProjectReviewDialog({ submission }: { submission: any })
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger render={
         <Button variant="outline" size="sm" className="text-xs h-8">
           Review
         </Button>
-      </DialogTrigger>
+      } />
       <DialogContent className="sm:max-w-[500px] rounded-3xl">
         <DialogHeader>
           <DialogTitle className="text-xl" style={{ fontFamily: 'Playfair Display', color: '#2C2C2C' }}>

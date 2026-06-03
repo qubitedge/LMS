@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, DM_Sans, JetBrains_Mono } from 'next/font/google';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { OneSignalProvider } from '@/components/providers/onesignal-provider';
 import './globals.css';
 
 const inter = Inter({
@@ -53,6 +54,7 @@ export default function RootLayout({
           {children}
         </TooltipProvider>
         <Toaster richColors position="top-right" />
+        <OneSignalProvider />
       </body>
     </html>
   );

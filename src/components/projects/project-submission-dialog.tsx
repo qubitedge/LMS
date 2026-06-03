@@ -61,11 +61,11 @@ export default function ProjectSubmissionDialog({ project }: { project: ProjectD
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger render={
         <Button className="w-full bg-[#40C4D0] hover:bg-[#35A5B0] text-white rounded-xl shadow-sm">
           Submit Project
         </Button>
-      </DialogTrigger>
+      } />
       <DialogContent className="sm:max-w-[425px] rounded-3xl">
         <DialogHeader>
           <DialogTitle className="text-xl" style={{ fontFamily: 'Playfair Display', color: '#2C2C2C' }}>
