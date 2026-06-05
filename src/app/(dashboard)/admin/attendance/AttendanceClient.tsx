@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { format, parseISO } from 'date-fns';
 import * as XLSX from 'xlsx';
-import { CalendarCheck, Download, Calendar, Building2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { CalendarCheck, Download, Calendar, Building2, ChevronLeft, ChevronRight, Trophy } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
@@ -17,6 +17,25 @@ export function AttendanceClient({ initialData, initialDate, initialCollege }: {
   const [date, setDate] = useState(initialDate);
   const [college, setCollege] = useState(initialCollege);
   const [page, setPage] = useState(0);
+
+  const topAttendees = useMemo(() => {
+    if (!initialData || initialData.length === 0) return [];
+    const counts: Record<string, any> = {};
+    initialData.forEach((entry) => {
+      const email = entry.profiles?.email;
+      if (!email) return;
+      if (!counts[email]) {
+        counts[email] = {
+          name: entry.profiles?.full_name,
+          email: email,
+          college: entry.profiles?.address,
+          count: 0,
+        };
+      }
+      counts[email].count += 1;
+    });
+    return Object.values(counts).sort((a: any, b: any) => b.count - a.count).slice(0, 6);
+  }, [initialData]);
 
   const handleFilter = (newDate: string, newCollege: string) => {
     const params = new URLSearchParams();
@@ -194,6 +213,40 @@ export function AttendanceClient({ initialData, initialDate, initialCollege }: {
             </Button>
           </div>
         </Card>
+
+        {/* Top Attendees Section */}
+        {topAttendees.length > 0 && !date && (
+          <Card className="rounded-[2rem] bg-white/70 backdrop-blur-xl border border-white/40 shadow-lg mb-8 overflow-hidden p-6">
+            <div className="flex items-center gap-2 mb-6">
+              <Trophy className="text-yellow-500 w-6 h-6" />
+              <h2 className="text-xl font-black text-[#1A1A2E]">Top Attendees</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+               {topAttendees.map((attendee, idx) => (
+                  <div key={attendee.email} className="bg-gradient-to-br from-white to-blue-50/50 rounded-2xl p-4 flex items-center justify-between border border-blue-100 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-4">
+                      <div className={`w-10 h-10 rounded-xl font-black flex items-center justify-center text-lg ${
+                        idx === 0 ? 'bg-yellow-100 text-yellow-600' : 
+                        idx === 1 ? 'bg-slate-200 text-slate-600' :
+                        idx === 2 ? 'bg-orange-100 text-orange-600' :
+                        'bg-blue-100 text-blue-600'
+                      }`}>
+                        #{idx + 1}
+                      </div>
+                      <div>
+                        <p className="font-black text-[#1A1A2E] text-sm leading-tight mb-1">{attendee.name || 'Unknown'}</p>
+                        <p className="text-xs text-[#7182C7] font-bold truncate max-w-[150px]">{attendee.college || 'N/A'}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-2xl font-black text-[#4A5DB5] leading-none">{attendee.count}</p>
+                      <p className="text-[10px] font-black text-[#7182C7] uppercase tracking-wider mt-1">Days</p>
+                    </div>
+                  </div>
+               ))}
+            </div>
+          </Card>
+        )}
 
         {(() => {
           const totalPages = Math.ceil((initialData?.length || 0) / PAGE_SIZE);

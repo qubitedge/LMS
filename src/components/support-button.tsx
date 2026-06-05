@@ -8,6 +8,8 @@ export default function SupportButton({ userName }: { userName?: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [concern, setConcern] = useState('');
   const [hasImage, setHasImage] = useState(false);
+  const [name, setName] = useState(userName || '');
+  const [email, setEmail] = useState('');
 
   const WHATSAPP_NUMBER = '916302829618';
 
@@ -15,12 +17,10 @@ export default function SupportButton({ userName }: { userName?: string }) {
     // Generate a simple 5-digit ticket number
     const ticketNumber = `QE-${Math.floor(10000 + Math.random() * 90000)}`;
     
-    let message = `*Ticket: ${ticketNumber}*\n\n`;
-    if (userName) {
-      message += `Hi, I am ${userName}. I need help with:\n\n${concern}`;
-    } else {
-      message += `Hi, I am having trouble logging into the qubitedge LMS Portal. My concern is:\n\n${concern}`;
-    }
+    let message = `*Support Ticket: ${ticketNumber}*\n\n`;
+    message += `*Name:* ${name.trim() || 'Not provided'}\n`;
+    message += `*Email:* ${email.trim() || 'Not provided'}\n\n`;
+    message += `*Concern:*\n${concern}`;
 
     if (hasImage) {
       message += `\n\n*(I will attach a screenshot to this chat shortly)*`;
@@ -72,16 +72,42 @@ export default function SupportButton({ userName }: { userName?: string }) {
               </div>
 
               <div className="space-y-4">
-                <div>
-                  <label className="text-[10px] font-black uppercase tracking-widest text-[#1A1A2E]/60 mb-2 block">
-                    Describe your concern
-                  </label>
-                  <textarea
-                    value={concern}
-                    onChange={(e) => setConcern(e.target.value)}
-                    placeholder="E.g. I can't access my tasks, or I need help with..."
-                    className="w-full h-32 p-4 bg-slate-50 border border-slate-200 rounded-2xl resize-none focus:outline-none focus:ring-4 focus:ring-blue-50 text-sm font-medium transition-all mb-4"
-                  />
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-[#1A1A2E]/60 mb-1 block">
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Your Full Name"
+                      className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-50 text-sm font-medium transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-[#1A1A2E]/60 mb-1 block">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Your Email Address"
+                      className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-50 text-sm font-medium transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-[#1A1A2E]/60 mb-1 block">
+                      Describe your concern
+                    </label>
+                    <textarea
+                      value={concern}
+                      onChange={(e) => setConcern(e.target.value)}
+                      placeholder="E.g. I can't access my tasks, or I need help with..."
+                      className="w-full h-24 p-3 bg-slate-50 border border-slate-200 rounded-xl resize-none focus:outline-none focus:ring-4 focus:ring-blue-50 text-sm font-medium transition-all mb-2"
+                    />
+                  </div>
                 </div>
                 
                 <label className="flex items-start gap-3 bg-slate-50 border border-slate-200 p-4 rounded-2xl cursor-pointer hover:bg-slate-100 transition-colors">
