@@ -27,6 +27,7 @@ const adminNav = [
   { href: '/admin/users', label: 'Users', icon: User },
   { href: '/admin/curriculum', label: 'Events', icon: CalendarCheck },
   { href: '/admin/quizzes', label: 'Quizzes', icon: TrendingUp },
+  { href: '/projects', label: 'Projects', icon: ClipboardList },
   { href: '/admin/project-submissions', label: 'Task Submissions', icon: ClipboardList },
   { href: '/admin/attendance', label: 'Attendance', icon: CalendarCheck },
   { href: '/admin/announcements', label: 'Announcements', icon: Trophy },
@@ -45,7 +46,7 @@ export default function Sidebar({ user, completedDays, projectsUnlocked = false 
   const isAdmin = user?.role === 'admin';
   const navItems = isAdmin && pathname.startsWith('/admin') 
     ? adminNav 
-    : internNav.filter(item => item.href !== '/projects' || projectsUnlocked);
+    : internNav.filter(item => item.href !== '/projects' || projectsUnlocked || isAdmin);
   const accentColor = isAdmin && pathname.startsWith('/admin') ? '#2238A4' : '#4A5DB5';
   const activeColor = '#2238A4';
 

@@ -4,7 +4,9 @@ import { Badge } from '@/components/ui/badge';
 import ProjectSubmissionDialog from '@/components/projects/project-submission-dialog';
 import { AlertCircle, Code, Database, FolderGit2, Info, BookOpen, Lightbulb, FileText, TableProperties, Lock } from 'lucide-react';
 import GithubGuideModal from '@/components/projects/github-guide-modal';
+import ProjectGuideModal from '@/components/projects/project-guide-modal';
 import { createClient } from '@/lib/supabase/server';
+import { getProfile } from '@/lib/supabase/get-profile';
 
 export const metadata = {
   title: 'Mini Projects - Qubitedge LMS',
@@ -14,6 +16,13 @@ export const revalidate = 60;
 
 export default async function ProjectsPage() {
   const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  let isAdmin = false;
+  if (user) {
+    const profile = await getProfile(user.id);
+    isAdmin = profile?.role === 'admin';
+  }
 
   const { data: setting } = await supabase
     .from('site_settings')
@@ -21,7 +30,7 @@ export default async function ProjectsPage() {
     .eq('key', 'projects_unlocked')
     .maybeSingle();
 
-  const isUnlocked = setting?.value === true;
+  const isUnlocked = setting?.value === true || isAdmin;
 
   if (!isUnlocked) {
     return (
@@ -196,12 +205,15 @@ export default async function ProjectsPage() {
           <div className="space-y-6">
             <div>
               <h4 className="text-md font-bold text-[#4A5DB5] flex items-center gap-2 mb-3">
-                <Info size={18} /> Complete GitHub Guide
+                <Info size={18} /> Complete Guides
               </h4>
               <p className="text-sm text-[#4a4a4a] mb-2">
-                Need help putting your project on GitHub? Follow our comprehensive step-by-step guide from creating an account to preparing your README.
+                Need help with your Python project code or putting your project on GitHub? Follow our comprehensive step-by-step guides.
               </p>
-              <GithubGuideModal />
+              <div className="flex flex-col gap-2">
+                <ProjectGuideModal />
+                <GithubGuideModal />
+              </div>
             </div>
             <div>
                <p className="text-sm text-[#7A7268] bg-yellow-50 p-4 rounded-xl border border-yellow-200 flex items-start gap-3">
