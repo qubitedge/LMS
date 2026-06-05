@@ -14,12 +14,12 @@ import { Code, BookOpen, Database, FolderGit2 } from 'lucide-react';
 export default function ProjectGuideModal() {
   return (
     <Dialog>
-      <DialogTrigger asChild>
+      <DialogTrigger render={
         <Button variant="outline" className="w-full justify-start text-left h-auto py-3 bg-white hover:bg-slate-50 text-[#40C4D0] border-[#40C4D0]/20 hover:border-[#40C4D0]/40 mt-2">
           <Code size={16} className="mr-2 shrink-0" />
           <span className="font-semibold text-sm">View Python Project Code Guide</span>
         </Button>
-      </DialogTrigger>
+      } />
       <DialogContent className="sm:max-w-4xl w-[95vw] md:w-[90vw] rounded-3xl h-[85vh] p-0 flex flex-col gap-0 overflow-hidden">
         <DialogHeader className="p-6 pb-4 border-b">
           <DialogTitle className="text-2xl flex items-center gap-2" style={{ fontFamily: 'Playfair Display', color: '#2C2C2C' }}>
