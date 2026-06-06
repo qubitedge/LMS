@@ -2,28 +2,66 @@ import { createClient } from '@/lib/supabase/server';
 import { Card, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { ArrowUpDown } from 'lucide-react';
+import Link from 'next/link';
 import { format, parseISO } from 'date-fns';
 import SubmissionReviewDialog from '@/components/admin/submission-review-dialog';
 
 export const revalidate = 60;
 
-export default async function AdminSubmissionsPage() {
+export default async function AdminSubmissionsPage(props: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
+  const searchParams = await props.searchParams;
+  const sort = typeof searchParams.sort === 'string' ? searchParams.sort : '';
+
   const supabase = await createClient();
 
-  const { data: submissions } = await supabase
+  const { data: rawSubmissions } = await supabase
     .from('submissions')
-    .select('*, profiles(full_name, domain, email), tasks(title)')
+    .select('*, profiles(full_name, domain, email, address), tasks(title)')
     .order('submitted_at', { ascending: false });
+
+  let submissions = rawSubmissions || [];
+
+  if (sort === 'college') {
+    submissions = [...submissions].sort((a: any, b: any) => {
+      const colA = a.profiles?.address || '';
+      const colB = b.profiles?.address || '';
+      return colA.localeCompare(colB);
+    });
+  }
+
+
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 pb-10">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: 'Playfair Display', color: '#2C2C2C' }}>
-          Submissions Review
-        </h1>
-        <p className="text-sm" style={{ color: '#7A7268' }}>
-          Review and grade intern task submissions.
-        </p>
+      <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: 'Playfair Display', color: '#2C2C2C' }}>
+            Submissions Review
+          </h1>
+          <p className="text-sm" style={{ color: '#7A7268' }}>
+            Review and grade intern task submissions.
+          </p>
+        </div>
+        
+        <div className="flex gap-2">
+          {sort === 'college' ? (
+            <Link href="/admin/submissions">
+              <Button variant="outline" className="text-xs text-[#7A7268]">
+                <ArrowUpDown className="mr-2 h-3 w-3" />
+                Sort by Date
+              </Button>
+            </Link>
+          ) : (
+            <Link href="/admin/submissions?sort=college">
+              <Button variant="outline" className="text-xs text-[#7A7268]">
+                <ArrowUpDown className="mr-2 h-3 w-3" />
+                Sort by College
+              </Button>
+            </Link>
+          )}
+        </div>
       </div>
 
       <Card className="qe-card border-none overflow-hidden">
@@ -33,6 +71,7 @@ export default async function AdminSubmissionsPage() {
               <TableHeader className="bg-[#FAFAFA]">
                 <TableRow>
                   <TableHead className="font-bold">Intern</TableHead>
+                  <TableHead className="font-bold">College</TableHead>
                   <TableHead className="font-bold">Task</TableHead>
                   <TableHead className="font-bold text-center">Format</TableHead>
                   <TableHead className="font-bold text-center">Status</TableHead>
@@ -43,7 +82,7 @@ export default async function AdminSubmissionsPage() {
               <TableBody>
                 {!submissions || submissions.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-10 text-[#7A7268]">
+                    <TableCell colSpan={7} className="text-center py-10 text-[#7A7268]">
                       No submissions found.
                     </TableCell>
                   </TableRow>
@@ -53,6 +92,11 @@ export default async function AdminSubmissionsPage() {
                       <TableCell>
                         <p className="font-bold text-sm text-[#2C2C2C]">{sub.profiles?.full_name}</p>
                         <p className="text-xs text-[#7A7268]">{sub.profiles?.domain}</p>
+                      </TableCell>
+                      <TableCell>
+                        <p className="text-xs font-medium text-[#7A7268] max-w-[150px] truncate" title={sub.profiles?.address || 'N/A'}>
+                          {sub.profiles?.address || 'N/A'}
+                        </p>
                       </TableCell>
                       <TableCell>
                         <p className="font-medium text-sm text-[#2C2C2C] max-w-[200px] truncate" title={sub.tasks?.title}>
