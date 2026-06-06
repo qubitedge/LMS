@@ -18,7 +18,7 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { ProjectData } from '@/lib/projects-data';
 
-export default function ProjectSubmissionDialog({ project }: { project: ProjectData }) {
+export default function ProjectSubmissionDialog({ project, submission }: { project: ProjectData, submission?: any }) {
   const [isOpen, setIsOpen] = useState(false);
   const [githubUrl, setGithubUrl] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -58,6 +58,22 @@ export default function ProjectSubmissionDialog({ project }: { project: ProjectD
       setIsSubmitting(false);
     }
   };
+
+  if (submission?.status === 'approved') {
+    return (
+      <div className="w-full bg-emerald-50 text-emerald-700 py-3 px-4 rounded-xl shadow-sm text-center font-medium border border-emerald-200">
+        🎉 Congratulations! Your project has been approved.
+      </div>
+    );
+  }
+
+  if (submission) {
+    return (
+      <div className="w-full bg-blue-50 text-blue-700 py-3 px-4 rounded-xl shadow-sm text-center font-medium border border-blue-200">
+        ✅ Submitted ({submission.status})
+      </div>
+    );
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

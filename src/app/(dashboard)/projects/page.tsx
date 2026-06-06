@@ -24,11 +24,17 @@ export default async function ProjectsPage() {
     isAdmin = profile?.role === 'admin';
   }
 
-  const { data: setting } = await supabase
-    .from('site_settings')
-    .select('value')
-    .eq('key', 'projects_unlocked')
-    .maybeSingle();
+  const [{ data: setting }, { data: userSubmissions }] = await Promise.all([
+    supabase
+      .from('site_settings')
+      .select('value')
+      .eq('key', 'projects_unlocked')
+      .maybeSingle(),
+    supabase
+      .from('project_submissions')
+      .select('project_name, status, github_url')
+      .eq('user_id', user?.id || '')
+  ]);
 
   const isUnlocked = setting?.value === true || isAdmin;
 
@@ -189,7 +195,7 @@ export default async function ProjectsPage() {
               </div>
 
               <div className="mt-6 pt-4 border-t border-gray-100">
-                <ProjectSubmissionDialog project={project} />
+                <ProjectSubmissionDialog project={project} submission={userSubmissions?.find(s => s.project_name === project.name)} />
               </div>
             </CardContent>
           </Card>
