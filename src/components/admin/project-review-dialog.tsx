@@ -14,9 +14,13 @@ import { CheckCircle2, XCircle, Loader2, Code, ExternalLink } from 'lucide-react
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+
 export default function ProjectReviewDialog({ submission }: { submission: any }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [adminComment, setAdminComment] = useState(submission.admin_comment || '');
   const router = useRouter();
 
   const handleReview = async (status: 'approved' | 'rejected') => {
@@ -28,6 +32,7 @@ export default function ProjectReviewDialog({ submission }: { submission: any })
         body: JSON.stringify({
           submissionId: submission.id,
           status,
+          adminComment,
         }),
       });
 
@@ -73,6 +78,17 @@ export default function ProjectReviewDialog({ submission }: { submission: any })
               <span className="truncate flex-1">{submission.github_url}</span>
               <ExternalLink size={14} className="text-gray-400" />
             </a>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-sm font-bold text-gray-700">Admin Comment (Optional)</Label>
+            <Textarea
+              placeholder="e.g. Needs enhancements on the styling..."
+              value={adminComment}
+              onChange={(e) => setAdminComment(e.target.value)}
+              disabled={isUpdating}
+              className="resize-none h-24 bg-white rounded-xl border-gray-200"
+            />
           </div>
 
           <div className="flex gap-4">

@@ -4,6 +4,7 @@ import { getProfile } from '@/lib/supabase/get-profile';
 import Sidebar from '@/components/layout/sidebar';
 import Topbar from '@/components/layout/topbar';
 import SupportButton from '@/components/support-button';
+import ReviewStatusPopup from '@/components/projects/review-status-popup';
 
 export default async function DashboardLayout({
   children,
@@ -55,6 +56,9 @@ export default async function DashboardLayout({
 
       {/* Floating Support Button */}
       <SupportButton userName={profile?.full_name} />
+
+      {/* Review Status Popup */}
+      <ReviewStatusPopup />
     </div>
   );
 }
