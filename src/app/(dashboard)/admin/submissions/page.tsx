@@ -70,6 +70,7 @@ export default async function AdminSubmissionsPage(props: { searchParams: Promis
             <Table>
               <TableHeader className="bg-[#FAFAFA]">
                 <TableRow>
+                  <TableHead className="font-bold w-[60px] text-center">Sl No.</TableHead>
                   <TableHead className="font-bold">Intern</TableHead>
                   <TableHead className="font-bold">College</TableHead>
                   <TableHead className="font-bold">Task</TableHead>
@@ -82,13 +83,16 @@ export default async function AdminSubmissionsPage(props: { searchParams: Promis
               <TableBody>
                 {!submissions || submissions.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-10 text-[#7A7268]">
+                    <TableCell colSpan={8} className="text-center py-10 text-[#7A7268]">
                       No submissions found.
                     </TableCell>
                   </TableRow>
                 ) : (
-                  submissions.map((sub: any) => (
+                  submissions.map((sub: any, index: number) => (
                     <TableRow key={sub.id} className="hover:bg-gray-50/50 transition-colors border-b-gray-100">
+                      <TableCell className="text-center text-sm font-bold text-[#7A7268]">
+                        {index + 1}
+                      </TableCell>
                       <TableCell>
                         <p className="font-bold text-sm text-[#2C2C2C]">{sub.profiles?.full_name}</p>
                         <p className="text-xs text-[#7A7268]">{sub.profiles?.domain}</p>
