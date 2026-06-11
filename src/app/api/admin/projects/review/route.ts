@@ -32,7 +32,7 @@ export async function POST(req: Request) {
       .update({
         status,
         admin_comment: adminComment || null,
-        score: status === 'approved' ? (score || null) : null,
+        score: status === 'approved' ? (score !== undefined && score !== null ? score : null) : null,
         has_seen_review: false,
         reviewed_at: new Date().toISOString(),
       })

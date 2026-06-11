@@ -26,8 +26,8 @@ export default function ProjectReviewDialog({ submission }: { submission: any })
   const router = useRouter();
 
   const handleReview = async (status: 'approved' | 'rejected') => {
-    if (status === 'approved' && (score === '' || Number(score) < 0 || Number(score) > 10)) {
-      toast.error('Please enter a valid score between 0 and 10 to approve.');
+    if (status === 'approved' && score !== '' && (Number(score) < 0 || Number(score) > 10)) {
+      toast.error('If provided, score must be between 0 and 10.');
       return;
     }
 
@@ -100,7 +100,7 @@ export default function ProjectReviewDialog({ submission }: { submission: any })
           </div>
 
           <div className="space-y-2">
-            <Label className="text-sm font-bold text-gray-700">Score (out of 10) - Required for Approval</Label>
+            <Label className="text-sm font-bold text-gray-700">Score (out of 10) - Optional</Label>
             <Input
               type="number"
               min="0"
