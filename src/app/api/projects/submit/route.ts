@@ -16,6 +16,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
+    const deadline = new Date('2026-06-11T23:59:59').getTime();
+    if (new Date().getTime() > deadline) {
+      return NextResponse.json({ message: 'The submission deadline has passed. Projects are now locked.' }, { status: 403 });
+    }
+
     // Insert or update submission
     // Using an upsert based on (user_id, project_id) since it's a UNIQUE constraint
     const { error: insertError } = await supabase

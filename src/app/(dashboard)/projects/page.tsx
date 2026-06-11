@@ -36,7 +36,10 @@ export default async function ProjectsPage() {
       .eq('user_id', user?.id || '')
   ]);
 
-  const isUnlocked = setting?.value === true || isAdmin;
+  const deadline = new Date('2026-06-11T23:59:59').getTime();
+  const isPastDeadline = new Date().getTime() > deadline;
+  
+  const isUnlocked = (setting?.value === true && !isPastDeadline) || isAdmin;
 
   if (!isUnlocked) {
     return (
