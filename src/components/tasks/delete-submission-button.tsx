@@ -19,14 +19,16 @@ export default function DeleteSubmissionButton({ submissionId }: { submissionId:
 
     setIsDeleting(true);
     try {
-      // Deleting the record from Supabase
-      // Note: This does not delete the file from Google Drive, just the database record
-      const { error } = await supabase
-        .from('submissions')
-        .delete()
-        .eq('id', submissionId);
+      const res = await fetch('/api/tasks/submit', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ submissionId }),
+      });
 
-      if (error) throw error;
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Failed to delete submission');
+      }
 
       toast.success('Submission deleted successfully');
       router.refresh();

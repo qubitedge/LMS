@@ -192,3 +192,64 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: error.message || 'Internal Server Error' }, { status: 500 });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+
+    const { submissionId } = await req.json();
+
+    if (!submissionId) {
+      return NextResponse.json({ message: 'Submission ID is required' }, { status: 400 });
+    }
+
+    const { data: submission } = await supabase
+      .from('submissions')
+      .select('user_id')
+      .eq('id', submissionId)
+      .single();
+
+    if (!submission) {
+      return NextResponse.json({ message: 'Submission not found' }, { status: 404 });
+    }
+
+    if (submission.user_id !== user.id) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+      
+      if (profile?.role !== 'admin') {
+        return NextResponse.json({ message: 'Forbidden' }, { status: 403 });
+      }
+    }
+
+    const { createClient: createAdminClient } = require('@supabase/supabase-js');
+    const adminSupabase = createAdminClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+
+    const { error: deleteError, data: deletedData } = await adminSupabase
+      .from('submissions')
+      .delete()
+      .eq('id', submissionId)
+      .select();
+
+    if (deleteError) {
+      return NextResponse.json({ message: 'Failed to delete submission' }, { status: 500 });
+    }
+    
+    if (!deletedData || deletedData.length === 0) {
+      return NextResponse.json({ message: 'Submission could not be deleted (it might not exist anymore)' }, { status: 400 });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error: any) {
+    return NextResponse.json({ message: error.message || 'Internal Server Error' }, { status: 500 });
+  }
+}
