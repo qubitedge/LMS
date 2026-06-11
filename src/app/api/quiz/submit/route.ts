@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { calculateStreak } from '@/lib/utils/streak';
 import { canAttemptQuiz, isWithinQuizWindow } from '@/lib/utils/dayLock';
 import { parseISO, isToday } from 'date-fns';
+import { revalidatePath } from 'next/cache';
 
 export async function POST(req: Request) {
   try {
@@ -94,6 +95,9 @@ export async function POST(req: Request) {
         })
         .eq('id', user.id);
     }
+
+    revalidatePath('/leaderboard');
+    revalidatePath('/admin/leaderboard');
 
     return NextResponse.json({ success: true });
     

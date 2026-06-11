@@ -16,14 +16,21 @@ import { useRouter } from 'next/navigation';
 
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
 export default function ProjectReviewDialog({ submission }: { submission: any }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [adminComment, setAdminComment] = useState(submission.admin_comment || '');
+  const [score, setScore] = useState<string>(submission.score !== null && submission.score !== undefined ? String(submission.score) : '');
   const router = useRouter();
 
   const handleReview = async (status: 'approved' | 'rejected') => {
+    if (status === 'approved' && (score === '' || Number(score) < 0 || Number(score) > 10)) {
+      toast.error('Please enter a valid score between 0 and 10 to approve.');
+      return;
+    }
+
     setIsUpdating(true);
     try {
       const res = await fetch('/api/admin/projects/review', {
@@ -33,6 +40,7 @@ export default function ProjectReviewDialog({ submission }: { submission: any })
           submissionId: submission.id,
           status,
           adminComment,
+          score: status === 'approved' && score !== '' ? Number(score) : null,
         }),
       });
 
@@ -88,6 +96,20 @@ export default function ProjectReviewDialog({ submission }: { submission: any })
               onChange={(e) => setAdminComment(e.target.value)}
               disabled={isUpdating}
               className="resize-none h-24 bg-white rounded-xl border-gray-200"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-sm font-bold text-gray-700">Score (out of 10) - Required for Approval</Label>
+            <Input
+              type="number"
+              min="0"
+              max="10"
+              placeholder="e.g. 8"
+              value={score}
+              onChange={(e) => setScore(e.target.value)}
+              disabled={isUpdating}
+              className="bg-white rounded-xl border-gray-200"
             />
           </div>
 

@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: 'Forbidden' }, { status: 403 });
     }
 
-    const { submissionId, status, adminComment } = await req.json();
+    const { submissionId, status, adminComment, score } = await req.json();
 
     if (!submissionId || !status) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
@@ -32,6 +32,7 @@ export async function POST(req: Request) {
       .update({
         status,
         admin_comment: adminComment || null,
+        score: status === 'approved' ? (score || null) : null,
         has_seen_review: false,
         reviewed_at: new Date().toISOString(),
       })

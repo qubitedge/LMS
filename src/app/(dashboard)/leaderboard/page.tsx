@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import LeaderboardContent from '@/components/leaderboard/leaderboard-content';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function LeaderboardPage() {
   const supabase = await createClient();
@@ -13,13 +13,24 @@ export default async function LeaderboardPage() {
   // Use admin client to bypass scores RLS select policy for leaderboard calculation
   const adminSupabase = createAdminClient();
 
-  // Fetch only necessary data for calculation
-  const [
-    { data: profiles },
-    { data: scoresData }
-  ] = await Promise.all([
-    adminSupabase.from('profiles').select('id, full_name, avatar_url, domain, role'),
-    adminSupabase.from('scores').select('user_id, score'),
+  // Helper to fetch all rows circumventing Supabase 1000 row limit
+  async function fetchAll(table: string, columns: string) {
+    let allData: any[] = [];
+    let page = 0;
+    while (true) {
+      const { data, error } = await adminSupabase.from(table).select(columns).range(page * 1000, (page + 1) * 1000 - 1);
+      if (error || !data || data.length === 0) break;
+      allData.push(...data);
+      if (data.length < 1000) break;
+      page++;
+    }
+    return allData;
+  }
+
+  // Fetch all necessary data for calculation
+  const [profiles, scoresData] = await Promise.all([
+    fetchAll('profiles', 'id, full_name, avatar_url, domain, role'),
+    fetchAll('scores', 'user_id, score'),
   ]);
 
   // Group scores

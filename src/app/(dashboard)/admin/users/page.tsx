@@ -45,10 +45,19 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
   const ascending = sortOrder === 'asc';
   const { data: users } = await query.order(sortBy, { ascending });
 
-  // Fetch all attendance for fast mapping
-  const { data: allAttendance } = await supabase.from('attendance').select('user_id');
+  // Fetch all attendance for fast mapping circumventing the 1000 row API limit
+  let allAttendance: any[] = [];
+  let attPage = 0;
+  while (true) {
+    const { data, error } = await supabase.from('attendance').select('user_id').range(attPage * 1000, (attPage + 1) * 1000 - 1);
+    if (error || !data || data.length === 0) break;
+    allAttendance.push(...data);
+    if (data.length < 1000) break;
+    attPage++;
+  }
+
   const attendanceMap = new Map<string, number>();
-  (allAttendance || []).forEach(record => {
+  allAttendance.forEach(record => {
     attendanceMap.set(record.user_id, (attendanceMap.get(record.user_id) || 0) + 1);
   });
 

@@ -14,6 +14,7 @@ export const revalidate = 0;
 export default async function AdminProjectSubmissionsPage(props: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const searchParams = await props.searchParams;
   const sort = typeof searchParams.sort === 'string' ? searchParams.sort : '';
+  const statusFilter = typeof searchParams.status === 'string' ? searchParams.status : 'all';
 
   const supabase = await createClient();
 
@@ -29,7 +30,21 @@ export default async function AdminProjectSubmissionsPage(props: { searchParams:
       .maybeSingle(),
   ]);
 
-  let submissions = rawSubmissions || [];
+  // Deduplicate: Keep only the most recent submission per user per project
+  // Since we ordered by submitted_at DESC, the first one we encounter is the newest
+  const deduplicated = new Map<string, any>();
+  for (const sub of (rawSubmissions || [])) {
+    const key = `${sub.user_id}-${sub.project_name}`;
+    if (!deduplicated.has(key)) {
+      deduplicated.set(key, sub);
+    }
+  }
+
+  let submissions = Array.from(deduplicated.values());
+
+  if (statusFilter !== 'all') {
+    submissions = submissions.filter(sub => sub.status === statusFilter);
+  }
 
   if (sort === 'college') {
     submissions = [...submissions].sort((a: any, b: any) => {
@@ -63,14 +78,14 @@ export default async function AdminProjectSubmissionsPage(props: { searchParams:
           </div>
           <div className="flex gap-2">
             {sort === 'college' ? (
-              <Link href="/admin/project-submissions">
+              <Link href={`/admin/project-submissions?status=${statusFilter}`}>
                 <Button variant="outline" className="text-xs text-[#7A7268]">
                   <ArrowUpDown className="mr-2 h-3 w-3" />
                   Sort by Date
                 </Button>
               </Link>
             ) : (
-              <Link href="/admin/project-submissions?sort=college">
+              <Link href={`/admin/project-submissions?sort=college&status=${statusFilter}`}>
                 <Button variant="outline" className="text-xs text-[#7A7268]">
                   <ArrowUpDown className="mr-2 h-3 w-3" />
                   Sort by College
@@ -79,6 +94,21 @@ export default async function AdminProjectSubmissionsPage(props: { searchParams:
             )}
           </div>
         </div>
+      </div>
+
+      <div className="flex flex-wrap gap-2 mb-6">
+        <Link href={`/admin/project-submissions?sort=${sort}&status=all`}>
+          <Badge className={statusFilter === 'all' ? 'bg-[#2C2C2C] text-white hover:bg-[#1A1A1A]' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} variant="outline">All Status</Badge>
+        </Link>
+        <Link href={`/admin/project-submissions?sort=${sort}&status=pending`}>
+          <Badge className={statusFilter === 'pending' ? 'bg-amber-100 text-amber-800 hover:bg-amber-200' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} variant="outline">Pending</Badge>
+        </Link>
+        <Link href={`/admin/project-submissions?sort=${sort}&status=approved`}>
+          <Badge className={statusFilter === 'approved' ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} variant="outline">Approved</Badge>
+        </Link>
+        <Link href={`/admin/project-submissions?sort=${sort}&status=rejected`}>
+          <Badge className={statusFilter === 'rejected' ? 'bg-rose-100 text-rose-800 hover:bg-rose-200' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} variant="outline">Rejected</Badge>
+        </Link>
       </div>
 
       <Card className="qe-card border-none overflow-hidden">
@@ -91,6 +121,7 @@ export default async function AdminProjectSubmissionsPage(props: { searchParams:
                   <TableHead className="font-bold">College</TableHead>
                   <TableHead className="font-bold">Project</TableHead>
                   <TableHead className="font-bold">GitHub</TableHead>
+                  <TableHead className="font-bold text-center">Score</TableHead>
                   <TableHead className="font-bold text-center">Status</TableHead>
                   <TableHead className="font-bold">Submitted At</TableHead>
                   <TableHead className="font-bold text-right">Action</TableHead>
@@ -99,7 +130,7 @@ export default async function AdminProjectSubmissionsPage(props: { searchParams:
               <TableBody>
                 {!submissions || submissions.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-10 text-[#7A7268]">
+                    <TableCell colSpan={8} className="text-center py-10 text-[#7A7268]">
                       No project submissions found.
                     </TableCell>
                   </TableRow>
@@ -131,6 +162,9 @@ export default async function AdminProjectSubmissionsPage(props: { searchParams:
                           <Code size={14} className="shrink-0" /> 
                           <span className="font-medium">Click to Url</span>
                         </a>
+                      </TableCell>
+                      <TableCell className="text-center font-bold text-sm text-[#2C2C2C]">
+                        {sub.status === 'approved' ? (sub.score !== null ? `${sub.score}/10` : '—') : '—'}
                       </TableCell>
                       <TableCell className="text-center">
                         <Badge className={
