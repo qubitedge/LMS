@@ -44,3 +44,38 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: error.message || 'Internal Server Error' }, { status: 500 });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const projectId = searchParams.get('projectId');
+
+    if (!projectId) {
+      return NextResponse.json({ message: 'Missing project ID' }, { status: 400 });
+    }
+
+    const { error: deleteError } = await supabase
+      .from('project_submissions')
+      .delete()
+      .eq('user_id', user.id)
+      .eq('project_id', projectId);
+
+    if (deleteError) {
+      console.error('Project submission delete error:', deleteError);
+      return NextResponse.json({ message: 'Failed to delete submission. Please try again later.' }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true, message: 'Project submission deleted successfully' });
+
+  } catch (error: any) {
+    console.error('Error handling project deletion:', error);
+    return NextResponse.json({ message: error.message || 'Internal Server Error' }, { status: 500 });
+  }
+}
