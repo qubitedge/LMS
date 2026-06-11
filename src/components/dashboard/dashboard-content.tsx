@@ -7,6 +7,7 @@ import StatCard from '@/components/dashboard/stat-card';
 import QuickActions from '@/components/dashboard/quick-actions';
 import ActivityFeed from '@/components/dashboard/activity-feed';
 import { Button } from '@/components/ui/button';
+import ProjectDeadlineTimer from '@/components/dashboard/project-deadline-timer';
 
 interface DashboardContentProps {
   profile: any;
@@ -57,12 +58,17 @@ export default function DashboardContent({
           transition={{ delay: 0.2 }}
           className="mb-10"
         >
-          <h1 className="text-5xl font-black mb-3 tracking-tight" style={{ fontFamily: 'Playfair Display', color: '#1A1A2E' }}>
-            Welcome back, {profile?.full_name?.split(' ')[0] || 'Explorer'} 👋
-          </h1>
-          <p className="text-lg font-bold text-[#7182C7]">
-            Ready to continue your mastery today?
-          </p>
+          <div className="mb-8 relative z-10 pr-16 md:pr-24">
+            <h1 className="text-5xl font-black mb-4 tracking-tight" style={{ fontFamily: 'Playfair Display', color: '#1A1A2E' }}>
+              Welcome back, {profile?.full_name?.split(' ')[0] || 'Explorer'} 👋
+            </h1>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+              <p className="text-lg font-bold text-[#7182C7]">
+                Ready to continue your mastery today?
+              </p>
+              <ProjectDeadlineTimer />
+            </div>
+          </div>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
