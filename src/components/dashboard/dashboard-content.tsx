@@ -7,7 +7,6 @@ import StatCard from '@/components/dashboard/stat-card';
 import QuickActions from '@/components/dashboard/quick-actions';
 import ActivityFeed from '@/components/dashboard/activity-feed';
 import { Button } from '@/components/ui/button';
-import ProjectDeadlineTimer from '@/components/dashboard/project-deadline-timer';
 
 interface DashboardContentProps {
   profile: any;
@@ -66,7 +65,6 @@ export default function DashboardContent({
               <p className="text-lg font-bold text-[#7182C7]">
                 Ready to continue your mastery today?
               </p>
-              <ProjectDeadlineTimer />
             </div>
           </div>
         </motion.div>

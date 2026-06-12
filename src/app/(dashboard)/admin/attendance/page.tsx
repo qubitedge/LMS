@@ -30,11 +30,20 @@ export default async function AdminAttendancePage(props: { searchParams: Promise
     ) || [];
   }
 
+  const { data: setting } = await supabase
+    .from('site_settings')
+    .select('value')
+    .eq('key', 'attendance_unlocked')
+    .maybeSingle();
+
+  const isAttendanceUnlocked = setting?.value === true;
+
   return (
     <AttendanceClient 
       initialData={filteredAttendance || []} 
       initialDate={dateStr}
       initialCollege={collegeStr}
+      initialAttendanceUnlocked={isAttendanceUnlocked}
     />
   );
 }

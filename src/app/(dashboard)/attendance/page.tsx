@@ -21,14 +21,17 @@ export default async function AttendancePage() {
   const totalMinutes = istHour * 60 + istMinute;
   const isWithinWindow = totalMinutes >= 615 && totalMinutes < 840;
 
-  // Check if today is a module day (i.e., an unlocked day's date matches today)
-  const { data: unlockedSetting } = await supabase
+  // Fetch relevant settings
+  const { data: settings } = await supabase
     .from('site_settings')
-    .select('value')
-    .eq('key', 'unlocked_days')
-    .maybeSingle();
+    .select('key, value')
+    .in('key', ['unlocked_days', 'attendance_unlocked']);
+
+  const unlockedSetting = settings?.find(s => s.key === 'unlocked_days');
+  const attendanceUnlockedSetting = settings?.find(s => s.key === 'attendance_unlocked');
 
   const unlockedDayIds: string[] = unlockedSetting?.value || [];
+  const isAttendanceUnlocked = attendanceUnlockedSetting?.value === true;
 
   // Fetch all module days to list in history, starting from May 18, 2026
   const { data: allDaysData } = await supabase
@@ -102,20 +105,37 @@ export default async function AttendancePage() {
                 </div>
               ) : isTodayModuleDay ? (
                 <div className="flex flex-col items-center justify-center py-8">
-                  <div className="w-24 h-24 rounded-[2rem] bg-amber-50 flex items-center justify-center mb-6 shadow-inner border border-amber-100">
-                    <Clock size={48} className="text-[#F59E0B]" />
-                  </div>
-                  <h3 className="text-2xl font-black text-[#F59E0B] mb-2 uppercase tracking-tight">
-                    {totalMinutes < 615 ? 'Not Started' : totalMinutes >= 840 ? 'Too Late!' : 'Pending'}
-                  </h3>
-                  <p className="text-xs font-bold text-rose-500 mb-6 uppercase tracking-widest">
-                    {totalMinutes < 615 
-                      ? 'Opens at 10:15 AM' 
-                      : totalMinutes >= 840 
-                        ? 'Window closed at 2:00 PM' 
-                        : 'Window: 10:15 AM - 2:00 PM'}
-                  </p>
-                  <MarkAttendanceButton disabled={!isWithinWindow} />
+                  {isAttendanceUnlocked ? (
+                    <>
+                      <div className="w-24 h-24 rounded-[2rem] bg-amber-50 flex items-center justify-center mb-6 shadow-inner border border-amber-100">
+                        <Clock size={48} className="text-[#F59E0B]" />
+                      </div>
+                      <h3 className="text-2xl font-black text-[#F59E0B] mb-2 uppercase tracking-tight">
+                        {totalMinutes < 615 ? 'Not Started' : totalMinutes >= 840 ? 'Too Late!' : 'Pending'}
+                      </h3>
+                      <p className="text-xs font-bold text-rose-500 mb-6 uppercase tracking-widest">
+                        {totalMinutes < 615 
+                          ? 'Opens at 10:15 AM' 
+                          : totalMinutes >= 840 
+                            ? 'Window closed at 2:00 PM' 
+                            : 'Window: 10:15 AM - 2:00 PM'}
+                      </p>
+                      <MarkAttendanceButton disabled={!isWithinWindow} />
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-24 h-24 rounded-[2rem] bg-blue-50 flex items-center justify-center mb-6 shadow-inner border border-blue-100">
+                        <Clock size={48} className="text-[#4A5DB5]" />
+                      </div>
+                      <h3 className="text-2xl font-black text-[#4A5DB5] mb-2 uppercase tracking-tight">Session Active</h3>
+                      <p className="text-xs font-bold text-rose-500 mb-6 uppercase tracking-widest text-center">
+                        Attendance is locked. Please join the session!
+                      </p>
+                      <a href="https://us06web.zoom.us/j/81333372023?pwd=17jyc7H5UkoqrC4vc0jxoH6VrY7QQT.1" target="_blank" rel="noreferrer" className="w-full inline-flex justify-center items-center px-6 py-4 rounded-xl bg-[#4A5DB5] hover:bg-[#3A4A9A] text-white font-black shadow-md shadow-blue-500/20 transition-all">
+                        Join the Session
+                      </a>
+                    </>
+                  )}
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-8">

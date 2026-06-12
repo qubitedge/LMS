@@ -11,12 +11,14 @@ import { Button } from '@/components/ui/button';
 
 const PAGE_SIZE = 30;
 
-export function AttendanceClient({ initialData, initialDate, initialCollege }: { initialData: any[], initialDate: string, initialCollege: string }) {
+export function AttendanceClient({ initialData, initialDate, initialCollege, initialAttendanceUnlocked }: { initialData: any[], initialDate: string, initialCollege: string, initialAttendanceUnlocked: boolean }) {
   const router = useRouter();
   const [isDownloading, setIsDownloading] = useState(false);
   const [date, setDate] = useState(initialDate);
   const [college, setCollege] = useState(initialCollege);
   const [page, setPage] = useState(0);
+  const [isUnlocked, setIsUnlocked] = useState(initialAttendanceUnlocked);
+  const [isToggling, setIsToggling] = useState(false);
 
   const topAttendees = useMemo(() => {
     if (!initialData || initialData.length === 0) return [];
@@ -108,6 +110,24 @@ export function AttendanceClient({ initialData, initialDate, initialCollege }: {
     }
   };
 
+  const handleToggleAttendanceLock = async () => {
+    setIsToggling(true);
+    try {
+      const res = await fetch('/api/admin/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: 'attendance_unlocked', value: !isUnlocked })
+      });
+      if (!res.ok) throw new Error('Failed to update attendance lock status');
+      setIsUnlocked(!isUnlocked);
+    } catch (error) {
+      console.error(error);
+      alert('Failed to update attendance lock status');
+    } finally {
+      setIsToggling(false);
+    }
+  };
+
   return (
     <div className="relative pb-10">
       <div className="bg-mesh opacity-20" />
@@ -128,6 +148,14 @@ export function AttendanceClient({ initialData, initialDate, initialCollege }: {
           </div>
           
           <div className="flex flex-wrap items-center gap-3">
+             <Button
+                variant={isUnlocked ? "default" : "outline"}
+                className={`font-bold shadow-sm rounded-xl ${isUnlocked ? 'bg-emerald-500 hover:bg-emerald-600 text-white' : 'bg-rose-50 hover:bg-rose-100 text-rose-600 border-rose-200'}`}
+                onClick={handleToggleAttendanceLock}
+                disabled={isToggling}
+              >
+                {isToggling ? 'Updating...' : isUnlocked ? '🔓 Attendance Unlocked' : '🔒 Attendance Locked'}
+             </Button>
              <Button 
                 variant="outline" 
                 className="bg-white/70 backdrop-blur-xl border-white/40 shadow-sm rounded-xl font-bold text-[#4A5DB5] hover:bg-white"
