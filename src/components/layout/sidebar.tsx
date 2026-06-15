@@ -29,6 +29,7 @@ const adminNav = [
   { href: '/admin/quizzes', label: 'Quizzes', icon: TrendingUp },
   { href: '/projects', label: 'Projects', icon: ClipboardList },
   { href: '/admin/project-submissions', label: 'Task Submissions', icon: ClipboardList },
+  { href: '/admin/capstone-selections', label: 'Capstone Selections', icon: ClipboardList },
   { href: '/admin/attendance', label: 'Attendance', icon: CalendarCheck },
   { href: '/admin/announcements', label: 'Announcements', icon: Trophy },
   { href: '/admin/leaderboard', label: 'Leaderboard', icon: Trophy },

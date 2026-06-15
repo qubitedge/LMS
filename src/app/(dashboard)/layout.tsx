@@ -5,6 +5,7 @@ import Sidebar from '@/components/layout/sidebar';
 import Topbar from '@/components/layout/topbar';
 import SupportButton from '@/components/support-button';
 import ReviewStatusPopup from '@/components/projects/review-status-popup';
+import CapstonePopup from '@/components/capstone/capstone-popup';
 
 export default async function DashboardLayout({
   children,
@@ -25,7 +26,7 @@ export default async function DashboardLayout({
     redirect('/login?error=account_disabled');
   }
 
-  const [{ count: completedDays }, { data: setting }] = await Promise.all([
+  const [{ count: completedDays }, { data: setting }, { data: approvedProjects }, { data: capstoneSelection }] = await Promise.all([
     supabase
       .from('attendance')
       .select('*', { count: 'exact', head: true })
@@ -34,8 +35,23 @@ export default async function DashboardLayout({
       .from('site_settings')
       .select('value')
       .eq('key', 'projects_unlocked')
+      .maybeSingle(),
+    supabase
+      .from('project_submissions')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('status', 'approved')
+      .limit(1),
+    supabase
+      .from('capstone_selections')
+      .select('id')
+      .eq('user_id', user.id)
       .maybeSingle()
   ]);
+
+  const isEligibleForCapstone = approvedProjects && approvedProjects.length > 0;
+  const hasSubmittedCapstone = !!capstoneSelection;
+  const showCapstonePopup = isEligibleForCapstone && !hasSubmittedCapstone && profile?.role !== 'admin';
 
   const projectsUnlocked = setting?.value === true;
 
@@ -59,6 +75,9 @@ export default async function DashboardLayout({
 
       {/* Review Status Popup */}
       <ReviewStatusPopup />
+
+      {/* Capstone Selection Popup */}
+      {showCapstonePopup && <CapstonePopup />}
     </div>
   );
 }
