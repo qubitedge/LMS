@@ -32,6 +32,21 @@ export default function CapstoneSelectionsClient({ selections }: { selections: a
     ? safeSelections.filter(sel => sel.domain === selectedDomain)
     : safeSelections;
 
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | 'default'>('default');
+
+  const sortedSelections = [...filteredSelections].sort((a, b) => {
+    if (sortOrder === 'default') {
+      return 0;
+    }
+    
+    const collegeA = (a.profiles?.address || '').toLowerCase();
+    const collegeB = (b.profiles?.address || '').toLowerCase();
+    
+    if (collegeA < collegeB) return sortOrder === 'asc' ? -1 : 1;
+    if (collegeA > collegeB) return sortOrder === 'asc' ? 1 : -1;
+    return 0;
+  });
+
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 pb-10">
       <div className="mb-8">
@@ -110,10 +125,22 @@ export default function CapstoneSelectionsClient({ selections }: { selections: a
         </Card>
       </div>
 
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h2 className="text-lg font-bold" style={{ color: '#2C2C2C' }}>
           {selectedDomain ? `${selectedDomain} Submissions` : 'All Submissions'} ({filteredSelections.length})
         </h2>
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-[#7A7268]">Sort by:</span>
+          <select 
+            className="text-sm border border-gray-200 rounded-md shadow-sm focus:border-[#7A7268] focus:ring focus:ring-[#7A7268] focus:ring-opacity-50 py-1.5 px-3 bg-white text-[#2C2C2C]"
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc' | 'default')}
+          >
+            <option value="default">Submission Date</option>
+            <option value="asc">College (A-Z)</option>
+            <option value="desc">College (Z-A)</option>
+          </select>
+        </div>
       </div>
 
       <Card className="qe-card border-none overflow-hidden">
@@ -132,14 +159,14 @@ export default function CapstoneSelectionsClient({ selections }: { selections: a
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredSelections.length === 0 ? (
+                {sortedSelections.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={7} className="text-center py-10 text-[#7A7268]">
                       No capstone selections found.
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredSelections.map((sel: any, index: number) => (
+                  sortedSelections.map((sel: any, index: number) => (
                     <TableRow key={sel.id} className="hover:bg-gray-50/50 transition-colors border-b-gray-100">
                       <TableCell className="text-center text-sm font-bold text-[#7A7268]">
                         {index + 1}
