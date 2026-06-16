@@ -125,6 +125,8 @@ export default function CapstoneSelectionsClient({ selections }: { selections: a
                   <TableHead className="font-bold w-[60px] text-center">Sl No.</TableHead>
                   <TableHead className="font-bold">Intern Name</TableHead>
                   <TableHead className="font-bold">Email</TableHead>
+                  <TableHead className="font-bold">Branch</TableHead>
+                  <TableHead className="font-bold">College</TableHead>
                   <TableHead className="font-bold text-center">Selected Domain</TableHead>
                   <TableHead className="font-bold">Submitted At</TableHead>
                 </TableRow>
@@ -132,7 +134,7 @@ export default function CapstoneSelectionsClient({ selections }: { selections: a
               <TableBody>
                 {filteredSelections.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-10 text-[#7A7268]">
+                    <TableCell colSpan={7} className="text-center py-10 text-[#7A7268]">
                       No capstone selections found.
                     </TableCell>
                   </TableRow>
@@ -147,6 +149,12 @@ export default function CapstoneSelectionsClient({ selections }: { selections: a
                       </TableCell>
                       <TableCell>
                         <p className="text-sm text-[#7A7268]">{sel.profiles?.email}</p>
+                      </TableCell>
+                      <TableCell>
+                        <p className="text-sm text-[#7A7268]">{sel.profiles?.domain || 'N/A'}</p>
+                      </TableCell>
+                      <TableCell>
+                        <p className="text-sm text-[#7A7268]">{sel.profiles?.address || 'N/A'}</p>
                       </TableCell>
                       <TableCell className="text-center">
                         <Badge className={

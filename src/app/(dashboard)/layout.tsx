@@ -6,6 +6,7 @@ import Topbar from '@/components/layout/topbar';
 import SupportButton from '@/components/support-button';
 import ReviewStatusPopup from '@/components/projects/review-status-popup';
 import CapstonePopup from '@/components/capstone/capstone-popup';
+import DeveloperCredit from '@/components/layout/developer-credit';
 
 export default async function DashboardLayout({
   children,
@@ -78,6 +79,9 @@ export default async function DashboardLayout({
 
       {/* Capstone Selection Popup */}
       {showCapstonePopup && <CapstonePopup />}
+
+      {/* Developer Credit */}
+      <DeveloperCredit />
     </div>
   );
 }
