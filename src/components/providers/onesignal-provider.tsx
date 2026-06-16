@@ -16,7 +16,7 @@ export function OneSignalProvider() {
           safari_web_id: 'web.onesignal.auto.32d5e245-163c-40cb-8f57-67057af17423',
           allowLocalhostAsSecureOrigin: true,
           notifyButton: {
-            enable: true,
+            enable: false,
           } as any,
         });
         setInitialized(true);
