@@ -3,6 +3,7 @@ import { Inter, DM_Sans, JetBrains_Mono } from 'next/font/google';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { OneSignalProvider } from '@/components/providers/onesignal-provider';
+import ConsoleEasterEgg from '@/components/layout/console-easter-egg';
 import './globals.css';
 
 const inter = Inter({
@@ -55,6 +56,7 @@ export default function RootLayout({
         </TooltipProvider>
         <Toaster richColors position="top-right" />
         <OneSignalProvider />
+        <ConsoleEasterEgg />
       </body>
     </html>
   );

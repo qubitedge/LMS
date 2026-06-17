@@ -76,6 +76,7 @@ export default function ResetPasswordPage() {
           src={bgImage}
           alt="Auth Background"
           fill
+          sizes="50vw"
           className="object-cover transition-transform duration-700 group-hover:scale-105"
           priority
         />
