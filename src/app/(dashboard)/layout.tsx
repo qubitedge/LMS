@@ -52,7 +52,7 @@ export default async function DashboardLayout({
 
   const isEligibleForCapstone = approvedProjects && approvedProjects.length > 0;
   const hasSubmittedCapstone = !!capstoneSelection;
-  const showCapstonePopup = isEligibleForCapstone && !hasSubmittedCapstone && profile?.role !== 'admin';
+  const showCapstonePopup = false; // Capstone voting time is over
 
   const projectsUnlocked = setting?.value === true;
 
