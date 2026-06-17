@@ -10,8 +10,8 @@ export default function ConsoleEasterEgg() {
     fired.current = true;
 
     console.log(
-      `%c🚨 Developer Detected!\n\n👋 Hi, I'm Likhith\n\n😏 What are you doing here?\n\nWhile you're here, remember to stay hydrated 💧\n\nHave a great day! 🚀`,
-      'color: #475569; font-size: 13px; font-family: monospace; font-weight: 500; line-height: 1.5;'
+      `%c🚨 Developer Detected!\n👋 Hi, I'm Likhith\n😏 What are you doing here?\nWhile you're here, remember to stay hydrated 💧\nHave a great day! 🚀`,
+      'color: #ffffff; font-size: 13px; font-family: monospace; font-weight: 500; line-height: 1.2;'
     );
   }, []);
 
