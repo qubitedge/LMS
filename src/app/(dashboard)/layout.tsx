@@ -83,7 +83,7 @@ export default async function DashboardLayout({
       {showCapstonePopup && <CapstonePopup />}
 
       {/* Capstone Team Congratulations Popup */}
-      <CapstoneTeamPopup userEmail={user?.email} />
+      <CapstoneTeamPopup userEmail={user?.email} isAdmin={profile?.role === 'admin'} />
 
       {/* Social Media Connect Popup */}
       <SocialConnectPopup user={profile} />
