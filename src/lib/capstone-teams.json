@@ -350,7 +350,8 @@
       "RAJANA KAVYA",
       "MORAM CHAITHANYA",
       "PADALA SAGAR",
-      "Ghanta Rudrani Sai"
+      "Ghanta Rudrani Sai",
+      "Likhitha Soudu"
     ]
   },
   {
@@ -364,7 +365,8 @@
       "RAJANA KAVYA",
       "MORAM CHAITHANYA",
       "PADALA SAGAR",
-      "Ghanta Rudrani Sai"
+      "Ghanta Rudrani Sai",
+      "Likhitha Soudu"
     ]
   },
   {
@@ -378,7 +380,8 @@
       "REGA CHANDU NIVAS",
       "MORAM CHAITHANYA",
       "PADALA SAGAR",
-      "Ghanta Rudrani Sai"
+      "Ghanta Rudrani Sai",
+      "Likhitha Soudu"
     ]
   },
   {
@@ -392,7 +395,8 @@
       "REGA CHANDU NIVAS",
       "RAJANA KAVYA",
       "PADALA SAGAR",
-      "Ghanta Rudrani Sai"
+      "Ghanta Rudrani Sai",
+      "Likhitha Soudu"
     ]
   },
   {
@@ -406,7 +410,8 @@
       "REGA CHANDU NIVAS",
       "RAJANA KAVYA",
       "MORAM CHAITHANYA",
-      "Ghanta Rudrani Sai"
+      "Ghanta Rudrani Sai",
+      "Likhitha Soudu"
     ]
   },
   {
@@ -420,7 +425,8 @@
       "REGA CHANDU NIVAS",
       "RAJANA KAVYA",
       "MORAM CHAITHANYA",
-      "PADALA SAGAR"
+      "PADALA SAGAR",
+      "Likhitha Soudu"
     ]
   },
   {
@@ -832,6 +838,21 @@
       "MITHIREDDY VARSHINI",
       "K V N S R KRISHNA KOUSHIK",
       "Kintala Devika"
+    ]
+  },
+  {
+    "email": "likhithasoudu10a@gmail.com",
+    "studentName": "Likhitha Soudu",
+    "projectName": "Disease Prediction & Patient Profiling System",
+    "mentorName": "Dr Kanthi Kiran",
+    "collegeName": "Avanthi Institute of Engineering and Technology",
+    "teamMembers": [
+      "PITHANA ARUNA SHANMUKHI",
+      "REGA CHANDU NIVAS",
+      "RAJANA KAVYA",
+      "MORAM CHAITHANYA",
+      "PADALA SAGAR",
+      "Ghanta Rudrani Sai"
     ]
   }
 ]
