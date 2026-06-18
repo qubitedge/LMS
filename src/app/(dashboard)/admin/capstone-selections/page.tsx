@@ -9,7 +9,7 @@ export default async function AdminCapstoneSelectionsPage() {
   // Fetch all capstone selections with user details
   const { data: selections } = await supabase
     .from('capstone_selections')
-    .select('id, domain, created_at, profiles(full_name, email, domain, address)')
+    .select('id, domain, created_at, profiles(full_name, email, phone, domain, address)')
     .order('created_at', { ascending: false });
 
   return <CapstoneSelectionsClient selections={selections || []} />;

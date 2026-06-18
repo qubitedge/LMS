@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { format, parseISO } from 'date-fns';
-import { Database, Code, Activity, Network, Users } from 'lucide-react';
+import { Database, Code, Activity, Network, Users, Download } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function CapstoneSelectionsClient({ selections }: { selections: any[] }) {
   const [selectedDomain, setSelectedDomain] = useState<string | null>(null);
@@ -46,6 +47,33 @@ export default function CapstoneSelectionsClient({ selections }: { selections: a
     if (collegeA > collegeB) return sortOrder === 'asc' ? 1 : -1;
     return 0;
   });
+
+  const exportToCsv = () => {
+    const headers = ['Sl No.', 'Intern Name', 'Email', 'Phone', 'Branch', 'College', 'Selected Domain', 'Submitted At'];
+    const csvContent = [
+      headers.join(','),
+      ...sortedSelections.map((sel, index) => [
+        index + 1,
+        `"${sel.profiles?.full_name || ''}"`,
+        `"${sel.profiles?.email || ''}"`,
+        `"${sel.profiles?.phone || ''}"`,
+        `"${sel.profiles?.domain || ''}"`,
+        `"${sel.profiles?.address || ''}"`,
+        `"${sel.domain || ''}"`,
+        `"${format(parseISO(sel.created_at), 'MMM d yyyy HH:mm:ss')}"`
+      ].join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `capstone_selections_${selectedDomain || 'all'}_${format(new Date(), 'yyyy-MM-dd')}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 pb-10">
@@ -140,6 +168,16 @@ export default function CapstoneSelectionsClient({ selections }: { selections: a
             <option value="asc">College (A-Z)</option>
             <option value="desc">College (Z-A)</option>
           </select>
+          
+          <Button 
+            onClick={exportToCsv}
+            variant="outline"
+            size="sm"
+            className="ml-2 h-[34px] border-gray-200 text-[#2C2C2C]"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Export CSV
+          </Button>
         </div>
       </div>
 
@@ -152,6 +190,7 @@ export default function CapstoneSelectionsClient({ selections }: { selections: a
                   <TableHead className="font-bold w-[60px] text-center">Sl No.</TableHead>
                   <TableHead className="font-bold">Intern Name</TableHead>
                   <TableHead className="font-bold">Email</TableHead>
+                  <TableHead className="font-bold">Phone</TableHead>
                   <TableHead className="font-bold">Branch</TableHead>
                   <TableHead className="font-bold">College</TableHead>
                   <TableHead className="font-bold text-center">Selected Domain</TableHead>
@@ -161,7 +200,7 @@ export default function CapstoneSelectionsClient({ selections }: { selections: a
               <TableBody>
                 {sortedSelections.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-10 text-[#7A7268]">
+                    <TableCell colSpan={8} className="text-center py-10 text-[#7A7268]">
                       No capstone selections found.
                     </TableCell>
                   </TableRow>
@@ -176,6 +215,9 @@ export default function CapstoneSelectionsClient({ selections }: { selections: a
                       </TableCell>
                       <TableCell>
                         <p className="text-sm text-[#7A7268]">{sel.profiles?.email}</p>
+                      </TableCell>
+                      <TableCell>
+                        <p className="text-sm text-[#7A7268]">{sel.profiles?.phone || 'N/A'}</p>
                       </TableCell>
                       <TableCell>
                         <p className="text-sm text-[#7A7268]">{sel.profiles?.domain || 'N/A'}</p>
