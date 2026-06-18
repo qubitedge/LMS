@@ -1,0 +1,837 @@
+[
+  {
+    "email": "rachelrapaka@gmail.com",
+    "studentName": "Prathiba rachel rapaka",
+    "projectName": "E-Commerce Customer Analysis",
+    "mentorName": "M Satish Kumar",
+    "collegeName": "Andhra University",
+    "teamMembers": [
+      "TERAPALLI JACINTH",
+      "Chinta Sam Prasad",
+      "Boggavarapu Sri Vishnuvardhan",
+      "Penumatsa Spandana"
+    ]
+  },
+  {
+    "email": "tjacinth7@gmail.com",
+    "studentName": "TERAPALLI JACINTH",
+    "projectName": "E-Commerce Customer Analysis",
+    "mentorName": "M Satish Kumar",
+    "collegeName": "ANDHRA UNIVERSITY",
+    "teamMembers": [
+      "Prathiba rachel rapaka",
+      "Chinta Sam Prasad",
+      "Boggavarapu Sri Vishnuvardhan",
+      "Penumatsa Spandana"
+    ]
+  },
+  {
+    "email": "chintasam43@gmail.com",
+    "studentName": "Chinta Sam Prasad",
+    "projectName": "E-Commerce Customer Analysis",
+    "mentorName": "M Satish Kumar",
+    "collegeName": "Maharaj Vijayaram Gajapathi Raj College of Engineering",
+    "teamMembers": [
+      "Prathiba rachel rapaka",
+      "TERAPALLI JACINTH",
+      "Boggavarapu Sri Vishnuvardhan",
+      "Penumatsa Spandana"
+    ]
+  },
+  {
+    "email": "srivishnuboggavarapu@gmail.com",
+    "studentName": "Boggavarapu Sri Vishnuvardhan",
+    "projectName": "E-Commerce Customer Analysis",
+    "mentorName": "M Satish Kumar",
+    "collegeName": "Raghu Engineering College",
+    "teamMembers": [
+      "Prathiba rachel rapaka",
+      "TERAPALLI JACINTH",
+      "Chinta Sam Prasad",
+      "Penumatsa Spandana"
+    ]
+  },
+  {
+    "email": "spandanapnmts@gmail.com",
+    "studentName": "Penumatsa Spandana",
+    "projectName": "E-Commerce Customer Analysis",
+    "mentorName": "M Satish Kumar",
+    "collegeName": "Visakha Institute of Engineering and Technology",
+    "teamMembers": [
+      "Prathiba rachel rapaka",
+      "TERAPALLI JACINTH",
+      "Chinta Sam Prasad",
+      "Boggavarapu Sri Vishnuvardhan"
+    ]
+  },
+  {
+    "email": "suryathe63@gmail.com",
+    "studentName": "TADI SURYA ESWAR REDDY",
+    "projectName": "IPL Match Statistics Analysis",
+    "mentorName": "A Tharun Kumar",
+    "collegeName": "Avanthi Institute of Engineering and Technology",
+    "teamMembers": [
+      "KARRI HEMAKIRAN",
+      "SOMBHATLA HANITH",
+      "PRATHAPARAO NITHEESH KUMAR",
+      "SANIVADA YOGESWAR"
+    ]
+  },
+  {
+    "email": "khemakiran24@gmail.com",
+    "studentName": "KARRI HEMAKIRAN",
+    "projectName": "IPL Match Statistics Analysis",
+    "mentorName": "A Tharun Kumar",
+    "collegeName": "Avanthi Institute of Engineering and Technology",
+    "teamMembers": [
+      "TADI SURYA ESWAR REDDY",
+      "SOMBHATLA HANITH",
+      "PRATHAPARAO NITHEESH KUMAR",
+      "SANIVADA YOGESWAR"
+    ]
+  },
+  {
+    "email": "hanithsombhatla2006@gmail.com",
+    "studentName": "SOMBHATLA HANITH",
+    "projectName": "IPL Match Statistics Analysis",
+    "mentorName": "A Tharun Kumar",
+    "collegeName": "Avanthi Institute of Engineering and Technology",
+    "teamMembers": [
+      "TADI SURYA ESWAR REDDY",
+      "KARRI HEMAKIRAN",
+      "PRATHAPARAO NITHEESH KUMAR",
+      "SANIVADA YOGESWAR"
+    ]
+  },
+  {
+    "email": "niteeshkumarprataparao@gmail.com",
+    "studentName": "PRATHAPARAO NITHEESH KUMAR",
+    "projectName": "IPL Match Statistics Analysis",
+    "mentorName": "A Tharun Kumar",
+    "collegeName": "Avanthi Institute of Engineering and Technology",
+    "teamMembers": [
+      "TADI SURYA ESWAR REDDY",
+      "KARRI HEMAKIRAN",
+      "SOMBHATLA HANITH",
+      "SANIVADA YOGESWAR"
+    ]
+  },
+  {
+    "email": "yogi135999@gmail.com",
+    "studentName": "SANIVADA YOGESWAR",
+    "projectName": "IPL Match Statistics Analysis",
+    "mentorName": "A Tharun Kumar",
+    "collegeName": "Avanthi Institute of Engineering and Technology",
+    "teamMembers": [
+      "TADI SURYA ESWAR REDDY",
+      "KARRI HEMAKIRAN",
+      "SOMBHATLA HANITH",
+      "PRATHAPARAO NITHEESH KUMAR"
+    ]
+  },
+  {
+    "email": "suradaswethamadhu@gmail.com",
+    "studentName": "Surada Swetha Madhu",
+    "projectName": "Vehicle Number Plate Detection",
+    "mentorName": "M Likhith Kumar",
+    "collegeName": "Andhra University",
+    "teamMembers": [
+      "Tutika Neeraja",
+      "KONADA RASHMITHA",
+      "Guntuku Abhishek Sai",
+      "Manepalli Poornima Sri Sarvani",
+      "PANDI PRABHAVATHI",
+      "Kambhampati Sruthi"
+    ]
+  },
+  {
+    "email": "neerajatutika04@gmail.com",
+    "studentName": "Tutika Neeraja",
+    "projectName": "Vehicle Number Plate Detection",
+    "mentorName": "M Likhith Kumar",
+    "collegeName": "ANDHRA UNIVERSITY",
+    "teamMembers": [
+      "Surada Swetha Madhu",
+      "KONADA RASHMITHA",
+      "Guntuku Abhishek Sai",
+      "Manepalli Poornima Sri Sarvani",
+      "PANDI PRABHAVATHI",
+      "Kambhampati Sruthi"
+    ]
+  },
+  {
+    "email": "k.rashmitha2023@gmail.com",
+    "studentName": "KONADA RASHMITHA",
+    "projectName": "Vehicle Number Plate Detection",
+    "mentorName": "M Likhith Kumar",
+    "collegeName": "Lendi Institute of Engineering and Technology",
+    "teamMembers": [
+      "Surada Swetha Madhu",
+      "Tutika Neeraja",
+      "Guntuku Abhishek Sai",
+      "Manepalli Poornima Sri Sarvani",
+      "PANDI PRABHAVATHI",
+      "Kambhampati Sruthi"
+    ]
+  },
+  {
+    "email": "scs634959@gmail.com",
+    "studentName": "Guntuku Abhishek Sai",
+    "projectName": "Vehicle Number Plate Detection",
+    "mentorName": "M Likhith Kumar",
+    "collegeName": "Lendi Institute of Engineering and Technology",
+    "teamMembers": [
+      "Surada Swetha Madhu",
+      "Tutika Neeraja",
+      "KONADA RASHMITHA",
+      "Manepalli Poornima Sri Sarvani",
+      "PANDI PRABHAVATHI",
+      "Kambhampati Sruthi"
+    ]
+  },
+  {
+    "email": "poornimasarvani@gmail.com",
+    "studentName": "Manepalli Poornima Sri Sarvani",
+    "projectName": "Vehicle Number Plate Detection",
+    "mentorName": "M Likhith Kumar",
+    "collegeName": "Ramachandra College of Engineering",
+    "teamMembers": [
+      "Surada Swetha Madhu",
+      "Tutika Neeraja",
+      "KONADA RASHMITHA",
+      "Guntuku Abhishek Sai",
+      "PANDI PRABHAVATHI",
+      "Kambhampati Sruthi"
+    ]
+  },
+  {
+    "email": "pandiprabhavathi67@gmail.com",
+    "studentName": "PANDI PRABHAVATHI",
+    "projectName": "Vehicle Number Plate Detection",
+    "mentorName": "M Likhith Kumar",
+    "collegeName": "Ramachandra College of Engineering",
+    "teamMembers": [
+      "Surada Swetha Madhu",
+      "Tutika Neeraja",
+      "KONADA RASHMITHA",
+      "Guntuku Abhishek Sai",
+      "Manepalli Poornima Sri Sarvani",
+      "Kambhampati Sruthi"
+    ]
+  },
+  {
+    "email": "kambhampatisruthi@gmail.com",
+    "studentName": "Kambhampati Sruthi",
+    "projectName": "Vehicle Number Plate Detection",
+    "mentorName": "M Likhith Kumar",
+    "collegeName": "Ramachandra College of Engineering",
+    "teamMembers": [
+      "Surada Swetha Madhu",
+      "Tutika Neeraja",
+      "KONADA RASHMITHA",
+      "Guntuku Abhishek Sai",
+      "Manepalli Poornima Sri Sarvani",
+      "PANDI PRABHAVATHI"
+    ]
+  },
+  {
+    "email": "ashu26062006@gmail.com",
+    "studentName": "Davaleswarapu V N S Ashrita",
+    "projectName": "Credit Card Fraud Detection",
+    "mentorName": "Dr Kanthi Kiran",
+    "collegeName": "Raghu Engineering College",
+    "teamMembers": [
+      "BODAPATI VENKAT RAO",
+      "Challa Hari Krishna",
+      "PITTA GAGAN KUMAR",
+      "Somepalli Madhuri",
+      "Kuriti Rohith",
+      "Manukonda Sridhar"
+    ]
+  },
+  {
+    "email": "gorantlavenkat312@gmail.com",
+    "studentName": "BODAPATI VENKAT RAO",
+    "projectName": "Credit Card Fraud Detection",
+    "mentorName": "Dr Kanthi Kiran",
+    "collegeName": "Raghu Engineering College",
+    "teamMembers": [
+      "Davaleswarapu V N S Ashrita",
+      "Challa Hari Krishna",
+      "PITTA GAGAN KUMAR",
+      "Somepalli Madhuri",
+      "Kuriti Rohith",
+      "Manukonda Sridhar"
+    ]
+  },
+  {
+    "email": "chharikrishna9390@gmail.com",
+    "studentName": "Challa Hari Krishna",
+    "projectName": "Credit Card Fraud Detection",
+    "mentorName": "Dr Kanthi Kiran",
+    "collegeName": "Raghu Engineering College",
+    "teamMembers": [
+      "Davaleswarapu V N S Ashrita",
+      "BODAPATI VENKAT RAO",
+      "PITTA GAGAN KUMAR",
+      "Somepalli Madhuri",
+      "Kuriti Rohith",
+      "Manukonda Sridhar"
+    ]
+  },
+  {
+    "email": "23981a05n0@raghuenggcollege.in",
+    "studentName": "PITTA GAGAN KUMAR",
+    "projectName": "Credit Card Fraud Detection",
+    "mentorName": "Dr Kanthi Kiran",
+    "collegeName": "Raghu Engineering College",
+    "teamMembers": [
+      "Davaleswarapu V N S Ashrita",
+      "BODAPATI VENKAT RAO",
+      "Challa Hari Krishna",
+      "Somepalli Madhuri",
+      "Kuriti Rohith",
+      "Manukonda Sridhar"
+    ]
+  },
+  {
+    "email": "smadhuri7186@gmail.com",
+    "studentName": "Somepalli Madhuri",
+    "projectName": "Credit Card Fraud Detection",
+    "mentorName": "Dr Kanthi Kiran",
+    "collegeName": "Raghu Engineering College",
+    "teamMembers": [
+      "Davaleswarapu V N S Ashrita",
+      "BODAPATI VENKAT RAO",
+      "Challa Hari Krishna",
+      "PITTA GAGAN KUMAR",
+      "Kuriti Rohith",
+      "Manukonda Sridhar"
+    ]
+  },
+  {
+    "email": "rohithkuritirohith2006@gmail.com",
+    "studentName": "Kuriti Rohith",
+    "projectName": "Credit Card Fraud Detection",
+    "mentorName": "Dr Kanthi Kiran",
+    "collegeName": "Raghu Engineering College",
+    "teamMembers": [
+      "Davaleswarapu V N S Ashrita",
+      "BODAPATI VENKAT RAO",
+      "Challa Hari Krishna",
+      "PITTA GAGAN KUMAR",
+      "Somepalli Madhuri",
+      "Manukonda Sridhar"
+    ]
+  },
+  {
+    "email": "24985a0534@raghuenggcollege.in",
+    "studentName": "Manukonda Sridhar",
+    "projectName": "Credit Card Fraud Detection",
+    "mentorName": "Dr Kanthi Kiran",
+    "collegeName": "Raghu Engineering College",
+    "teamMembers": [
+      "Davaleswarapu V N S Ashrita",
+      "BODAPATI VENKAT RAO",
+      "Challa Hari Krishna",
+      "PITTA GAGAN KUMAR",
+      "Somepalli Madhuri",
+      "Kuriti Rohith"
+    ]
+  },
+  {
+    "email": "arunashanmukhi8@gmail.com",
+    "studentName": "PITHANA ARUNA SHANMUKHI",
+    "projectName": "Disease Prediction & Patient Profiling System",
+    "mentorName": "Dr Kanthi Kiran",
+    "collegeName": "Avanthi Institute of Engineering and Technology",
+    "teamMembers": [
+      "REGA CHANDU NIVAS",
+      "RAJANA KAVYA",
+      "MORAM CHAITHANYA",
+      "PADALA SAGAR",
+      "Ghanta Rudrani Sai"
+    ]
+  },
+  {
+    "email": "chandunivas11@gmail.com",
+    "studentName": "REGA CHANDU NIVAS",
+    "projectName": "Disease Prediction & Patient Profiling System",
+    "mentorName": "Dr Kanthi Kiran",
+    "collegeName": "Avanthi Institute of Engineering and Technology",
+    "teamMembers": [
+      "PITHANA ARUNA SHANMUKHI",
+      "RAJANA KAVYA",
+      "MORAM CHAITHANYA",
+      "PADALA SAGAR",
+      "Ghanta Rudrani Sai"
+    ]
+  },
+  {
+    "email": "kavyarajana10a@gmail.com",
+    "studentName": "RAJANA KAVYA",
+    "projectName": "Disease Prediction & Patient Profiling System",
+    "mentorName": "Dr Kanthi Kiran",
+    "collegeName": "Avanthi Institute of Engineering and Technology",
+    "teamMembers": [
+      "PITHANA ARUNA SHANMUKHI",
+      "REGA CHANDU NIVAS",
+      "MORAM CHAITHANYA",
+      "PADALA SAGAR",
+      "Ghanta Rudrani Sai"
+    ]
+  },
+  {
+    "email": "chaitanyamoram123@gmail.com",
+    "studentName": "MORAM CHAITHANYA",
+    "projectName": "Disease Prediction & Patient Profiling System",
+    "mentorName": "Dr Kanthi Kiran",
+    "collegeName": "Avanthi Institute of Engineering and Technology",
+    "teamMembers": [
+      "PITHANA ARUNA SHANMUKHI",
+      "REGA CHANDU NIVAS",
+      "RAJANA KAVYA",
+      "PADALA SAGAR",
+      "Ghanta Rudrani Sai"
+    ]
+  },
+  {
+    "email": "sagarpadala777@gmail.com",
+    "studentName": "PADALA SAGAR",
+    "projectName": "Disease Prediction & Patient Profiling System",
+    "mentorName": "Dr Kanthi Kiran",
+    "collegeName": "Avanthi Institute of Engineering and Technology",
+    "teamMembers": [
+      "PITHANA ARUNA SHANMUKHI",
+      "REGA CHANDU NIVAS",
+      "RAJANA KAVYA",
+      "MORAM CHAITHANYA",
+      "Ghanta Rudrani Sai"
+    ]
+  },
+  {
+    "email": "gckala06@gmail.com",
+    "studentName": "Ghanta Rudrani Sai",
+    "projectName": "Disease Prediction & Patient Profiling System",
+    "mentorName": "Dr Kanthi Kiran",
+    "collegeName": "Chaitanya Engineering College",
+    "teamMembers": [
+      "PITHANA ARUNA SHANMUKHI",
+      "REGA CHANDU NIVAS",
+      "RAJANA KAVYA",
+      "MORAM CHAITHANYA",
+      "PADALA SAGAR"
+    ]
+  },
+  {
+    "email": "c886813@gmail.com",
+    "studentName": "Ghanta Ruthvika Sai",
+    "projectName": "Skin Cancer Detection",
+    "mentorName": "K Pravallika",
+    "collegeName": "Chaitanya Engineering College",
+    "teamMembers": [
+      "Swamisetty Durga Shivani",
+      "G BHUMIKA",
+      "Nalluri Sarath Chandrika",
+      "Bandaru Sahasra Tejaswini",
+      "B JHANSY",
+      "K SAILAJA"
+    ]
+  },
+  {
+    "email": "shivangisetty7@gmail.com",
+    "studentName": "Swamisetty Durga Shivani",
+    "projectName": "Skin Cancer Detection",
+    "mentorName": "K Pravallika",
+    "collegeName": "Chaitanya Engineering College",
+    "teamMembers": [
+      "Ghanta Ruthvika Sai",
+      "G BHUMIKA",
+      "Nalluri Sarath Chandrika",
+      "Bandaru Sahasra Tejaswini",
+      "B JHANSY",
+      "K SAILAJA"
+    ]
+  },
+  {
+    "email": "ganisettibhumika@gmail.com",
+    "studentName": "G BHUMIKA",
+    "projectName": "Skin Cancer Detection",
+    "mentorName": "K Pravallika",
+    "collegeName": "Chaitanya Engineering College",
+    "teamMembers": [
+      "Ghanta Ruthvika Sai",
+      "Swamisetty Durga Shivani",
+      "Nalluri Sarath Chandrika",
+      "Bandaru Sahasra Tejaswini",
+      "B JHANSY",
+      "K SAILAJA"
+    ]
+  },
+  {
+    "email": "sarathchandrikanalluri@gmail.com",
+    "studentName": "Nalluri Sarath Chandrika",
+    "projectName": "Skin Cancer Detection",
+    "mentorName": "K Pravallika",
+    "collegeName": "Chaitanya Engineering College",
+    "teamMembers": [
+      "Ghanta Ruthvika Sai",
+      "Swamisetty Durga Shivani",
+      "G BHUMIKA",
+      "Bandaru Sahasra Tejaswini",
+      "B JHANSY",
+      "K SAILAJA"
+    ]
+  },
+  {
+    "email": "bandarusahasra96@gmail.com",
+    "studentName": "Bandaru Sahasra Tejaswini",
+    "projectName": "Skin Cancer Detection",
+    "mentorName": "K Pravallika",
+    "collegeName": "Chaitanya Engineering College",
+    "teamMembers": [
+      "Ghanta Ruthvika Sai",
+      "Swamisetty Durga Shivani",
+      "G BHUMIKA",
+      "Nalluri Sarath Chandrika",
+      "B JHANSY",
+      "K SAILAJA"
+    ]
+  },
+  {
+    "email": "bammidijhansi8@gmail.com",
+    "studentName": "B JHANSY",
+    "projectName": "Skin Cancer Detection",
+    "mentorName": "K Pravallika",
+    "collegeName": "Chaitanya Engineering College",
+    "teamMembers": [
+      "Ghanta Ruthvika Sai",
+      "Swamisetty Durga Shivani",
+      "G BHUMIKA",
+      "Nalluri Sarath Chandrika",
+      "Bandaru Sahasra Tejaswini",
+      "K SAILAJA"
+    ]
+  },
+  {
+    "email": "sailuuu1221@gmail.com",
+    "studentName": "K SAILAJA",
+    "projectName": "Skin Cancer Detection",
+    "mentorName": "K Pravallika",
+    "collegeName": "Chaitanya Engineering College",
+    "teamMembers": [
+      "Ghanta Ruthvika Sai",
+      "Swamisetty Durga Shivani",
+      "G BHUMIKA",
+      "Nalluri Sarath Chandrika",
+      "Bandaru Sahasra Tejaswini",
+      "B JHANSY"
+    ]
+  },
+  {
+    "email": "teja48740@gmail.com",
+    "studentName": "BANDARU RAVI TEJA",
+    "projectName": "Inventory Management",
+    "mentorName": "A Tharun Kumar",
+    "collegeName": "Avanthi Institute of Engineering and Technology",
+    "teamMembers": [
+      "KARRI APPALANAIDU",
+      "KODA VASUNDHARA",
+      "DWARAPUREDDI SIRISHA",
+      "BALLA YAMUNA",
+      "ROUTHU BHAVYA SRI",
+      "MAJJI RAMYA",
+      "VANGALA UDHAY SAGAR",
+      "TALLURI SARAH SHIREEN"
+    ]
+  },
+  {
+    "email": "appalanaidukarri2005@gmail.com",
+    "studentName": "KARRI APPALANAIDU",
+    "projectName": "Inventory Management",
+    "mentorName": "A Tharun Kumar",
+    "collegeName": "Avanthi Institute of Engineering and Technology",
+    "teamMembers": [
+      "BANDARU RAVI TEJA",
+      "KODA VASUNDHARA",
+      "DWARAPUREDDI SIRISHA",
+      "BALLA YAMUNA",
+      "ROUTHU BHAVYA SRI",
+      "MAJJI RAMYA",
+      "VANGALA UDHAY SAGAR",
+      "TALLURI SARAH SHIREEN"
+    ]
+  },
+  {
+    "email": "kodavasundhara88@gmail.com",
+    "studentName": "KODA VASUNDHARA",
+    "projectName": "Inventory Management",
+    "mentorName": "A Tharun Kumar",
+    "collegeName": "Avanthi Institute of Engineering and Technology",
+    "teamMembers": [
+      "BANDARU RAVI TEJA",
+      "KARRI APPALANAIDU",
+      "DWARAPUREDDI SIRISHA",
+      "BALLA YAMUNA",
+      "ROUTHU BHAVYA SRI",
+      "MAJJI RAMYA",
+      "VANGALA UDHAY SAGAR",
+      "TALLURI SARAH SHIREEN"
+    ]
+  },
+  {
+    "email": "siridwarapureddy2006@gmail.com",
+    "studentName": "DWARAPUREDDI SIRISHA",
+    "projectName": "Inventory Management",
+    "mentorName": "A Tharun Kumar",
+    "collegeName": "Avanthi Institute of Engineering and Technology",
+    "teamMembers": [
+      "BANDARU RAVI TEJA",
+      "KARRI APPALANAIDU",
+      "KODA VASUNDHARA",
+      "BALLA YAMUNA",
+      "ROUTHU BHAVYA SRI",
+      "MAJJI RAMYA",
+      "VANGALA UDHAY SAGAR",
+      "TALLURI SARAH SHIREEN"
+    ]
+  },
+  {
+    "email": "yamunaballa033@gmail.com",
+    "studentName": "BALLA YAMUNA",
+    "projectName": "Inventory Management",
+    "mentorName": "A Tharun Kumar",
+    "collegeName": "Avanthi Institute of Engineering and Technology",
+    "teamMembers": [
+      "BANDARU RAVI TEJA",
+      "KARRI APPALANAIDU",
+      "KODA VASUNDHARA",
+      "DWARAPUREDDI SIRISHA",
+      "ROUTHU BHAVYA SRI",
+      "MAJJI RAMYA",
+      "VANGALA UDHAY SAGAR",
+      "TALLURI SARAH SHIREEN"
+    ]
+  },
+  {
+    "email": "bhavyasrirouthu4444@gmail.com",
+    "studentName": "ROUTHU BHAVYA SRI",
+    "projectName": "Inventory Management",
+    "mentorName": "A Tharun Kumar",
+    "collegeName": "Avanthi Institute of Engineering and Technology",
+    "teamMembers": [
+      "BANDARU RAVI TEJA",
+      "KARRI APPALANAIDU",
+      "KODA VASUNDHARA",
+      "DWARAPUREDDI SIRISHA",
+      "BALLA YAMUNA",
+      "MAJJI RAMYA",
+      "VANGALA UDHAY SAGAR",
+      "TALLURI SARAH SHIREEN"
+    ]
+  },
+  {
+    "email": "ramyamajji2006@gmail.com",
+    "studentName": "MAJJI RAMYA",
+    "projectName": "Inventory Management",
+    "mentorName": "A Tharun Kumar",
+    "collegeName": "Avanthi Institute of Engineering and Technology",
+    "teamMembers": [
+      "BANDARU RAVI TEJA",
+      "KARRI APPALANAIDU",
+      "KODA VASUNDHARA",
+      "DWARAPUREDDI SIRISHA",
+      "BALLA YAMUNA",
+      "ROUTHU BHAVYA SRI",
+      "VANGALA UDHAY SAGAR",
+      "TALLURI SARAH SHIREEN"
+    ]
+  },
+  {
+    "email": "udhaysagar.vangala@gmail.com",
+    "studentName": "VANGALA UDHAY SAGAR",
+    "projectName": "Inventory Management",
+    "mentorName": "A Tharun Kumar",
+    "collegeName": "Avanthi Institute of Engineering and Technology",
+    "teamMembers": [
+      "BANDARU RAVI TEJA",
+      "KARRI APPALANAIDU",
+      "KODA VASUNDHARA",
+      "DWARAPUREDDI SIRISHA",
+      "BALLA YAMUNA",
+      "ROUTHU BHAVYA SRI",
+      "MAJJI RAMYA",
+      "TALLURI SARAH SHIREEN"
+    ]
+  },
+  {
+    "email": "sarahshireent@gmail.com",
+    "studentName": "TALLURI SARAH SHIREEN",
+    "projectName": "Inventory Management",
+    "mentorName": "A Tharun Kumar",
+    "collegeName": "ANDHRA UNIVERSITY",
+    "teamMembers": [
+      "BANDARU RAVI TEJA",
+      "KARRI APPALANAIDU",
+      "KODA VASUNDHARA",
+      "DWARAPUREDDI SIRISHA",
+      "BALLA YAMUNA",
+      "ROUTHU BHAVYA SRI",
+      "MAJJI RAMYA",
+      "VANGALA UDHAY SAGAR"
+    ]
+  },
+  {
+    "email": "venkatjayanth593@gmail.com",
+    "studentName": "ADARI VENKAT JAYANTH",
+    "projectName": "Hospital Appointment System",
+    "mentorName": "M Satish Kumar",
+    "collegeName": "Chaitanya Engineering College",
+    "teamMembers": [
+      "Vadama Abhishek Varma",
+      "DOGGA KIRAN KUMAR",
+      "R BHARGAVI",
+      "MARADANA VARSHINI",
+      "MITHIREDDY VARSHINI",
+      "K V N S R KRISHNA KOUSHIK",
+      "Kintala Devika",
+      "MUSKARLA MOWNIKA"
+    ]
+  },
+  {
+    "email": "abhishekvarmaa55@gmail.com",
+    "studentName": "Vadama Abhishek Varma",
+    "projectName": "Hospital Appointment System",
+    "mentorName": "M Satish Kumar",
+    "collegeName": "JNTU GV Vizianagaram",
+    "teamMembers": [
+      "ADARI VENKAT JAYANTH",
+      "DOGGA KIRAN KUMAR",
+      "R BHARGAVI",
+      "MARADANA VARSHINI",
+      "MITHIREDDY VARSHINI",
+      "K V N S R KRISHNA KOUSHIK",
+      "Kintala Devika",
+      "MUSKARLA MOWNIKA"
+    ]
+  },
+  {
+    "email": "kirandogga038@gmail.com",
+    "studentName": "DOGGA KIRAN KUMAR",
+    "projectName": "Hospital Appointment System",
+    "mentorName": "M Satish Kumar",
+    "collegeName": "Chaitanya Engineering College",
+    "teamMembers": [
+      "ADARI VENKAT JAYANTH",
+      "Vadama Abhishek Varma",
+      "R BHARGAVI",
+      "MARADANA VARSHINI",
+      "MITHIREDDY VARSHINI",
+      "K V N S R KRISHNA KOUSHIK",
+      "Kintala Devika",
+      "MUSKARLA MOWNIKA"
+    ]
+  },
+  {
+    "email": "bhaggireddi@gmail.com",
+    "studentName": "R BHARGAVI",
+    "projectName": "Hospital Appointment System",
+    "mentorName": "M Satish Kumar",
+    "collegeName": "Chaitanya Engineering College",
+    "teamMembers": [
+      "ADARI VENKAT JAYANTH",
+      "Vadama Abhishek Varma",
+      "DOGGA KIRAN KUMAR",
+      "MARADANA VARSHINI",
+      "MITHIREDDY VARSHINI",
+      "K V N S R KRISHNA KOUSHIK",
+      "Kintala Devika",
+      "MUSKARLA MOWNIKA"
+    ]
+  },
+  {
+    "email": "varshinimaradana@gmail.com",
+    "studentName": "MARADANA VARSHINI",
+    "projectName": "Hospital Appointment System",
+    "mentorName": "M Satish Kumar",
+    "collegeName": "Chaitanya Engineering College",
+    "teamMembers": [
+      "ADARI VENKAT JAYANTH",
+      "Vadama Abhishek Varma",
+      "DOGGA KIRAN KUMAR",
+      "R BHARGAVI",
+      "MITHIREDDY VARSHINI",
+      "K V N S R KRISHNA KOUSHIK",
+      "Kintala Devika",
+      "MUSKARLA MOWNIKA"
+    ]
+  },
+  {
+    "email": "varshinimithireddy@gmail.com",
+    "studentName": "MITHIREDDY VARSHINI",
+    "projectName": "Hospital Appointment System",
+    "mentorName": "M Satish Kumar",
+    "collegeName": "Chaitanya Engineering College",
+    "teamMembers": [
+      "ADARI VENKAT JAYANTH",
+      "Vadama Abhishek Varma",
+      "DOGGA KIRAN KUMAR",
+      "R BHARGAVI",
+      "MARADANA VARSHINI",
+      "K V N S R KRISHNA KOUSHIK",
+      "Kintala Devika",
+      "MUSKARLA MOWNIKA"
+    ]
+  },
+  {
+    "email": "kvnramakrishnakoushik@gmail.com",
+    "studentName": "K V N S R KRISHNA KOUSHIK",
+    "projectName": "Hospital Appointment System",
+    "mentorName": "M Satish Kumar",
+    "collegeName": "Chaitanya Engineering College",
+    "teamMembers": [
+      "ADARI VENKAT JAYANTH",
+      "Vadama Abhishek Varma",
+      "DOGGA KIRAN KUMAR",
+      "R BHARGAVI",
+      "MARADANA VARSHINI",
+      "MITHIREDDY VARSHINI",
+      "Kintala Devika",
+      "MUSKARLA MOWNIKA"
+    ]
+  },
+  {
+    "email": "kintaladevika@gmail.com",
+    "studentName": "Kintala Devika",
+    "projectName": "Hospital Appointment System",
+    "mentorName": "M Satish Kumar",
+    "collegeName": "Chaitanya Engineering College",
+    "teamMembers": [
+      "ADARI VENKAT JAYANTH",
+      "Vadama Abhishek Varma",
+      "DOGGA KIRAN KUMAR",
+      "R BHARGAVI",
+      "MARADANA VARSHINI",
+      "MITHIREDDY VARSHINI",
+      "K V N S R KRISHNA KOUSHIK",
+      "MUSKARLA MOWNIKA"
+    ]
+  },
+  {
+    "email": "mounikamuskarla@gmail.com",
+    "studentName": "MUSKARLA MOWNIKA",
+    "projectName": "Hospital Appointment System",
+    "mentorName": "M Satish Kumar",
+    "collegeName": "Chaitanya Engineering College",
+    "teamMembers": [
+      "ADARI VENKAT JAYANTH",
+      "Vadama Abhishek Varma",
+      "DOGGA KIRAN KUMAR",
+      "R BHARGAVI",
+      "MARADANA VARSHINI",
+      "MITHIREDDY VARSHINI",
+      "K V N S R KRISHNA KOUSHIK",
+      "Kintala Devika"
+    ]
+  }
+]

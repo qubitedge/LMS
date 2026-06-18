@@ -8,6 +8,7 @@ import ReviewStatusPopup from '@/components/projects/review-status-popup';
 import CapstonePopup from '@/components/capstone/capstone-popup';
 import DeveloperCredit from '@/components/layout/developer-credit';
 import SocialConnectPopup from '@/components/layout/social-connect-popup';
+import CapstoneTeamPopup from '@/components/capstone/capstone-team-popup';
 
 export default async function DashboardLayout({
   children,
@@ -80,6 +81,9 @@ export default async function DashboardLayout({
 
       {/* Capstone Selection Popup */}
       {showCapstonePopup && <CapstonePopup />}
+
+      {/* Capstone Team Congratulations Popup */}
+      <CapstoneTeamPopup userEmail={user?.email} />
 
       {/* Social Media Connect Popup */}
       <SocialConnectPopup user={profile} />
