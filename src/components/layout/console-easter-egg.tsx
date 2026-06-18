@@ -9,10 +9,42 @@ export default function ConsoleEasterEgg() {
     if (fired.current) return;
     fired.current = true;
 
-    console.log(
-      `%c🚨 Developer Detected!\n👋 Hi, I'm Likhith\n😏 What are you doing here?\nWhile you're here, remember to stay hydrated 💧\nHave a great day! 🚀`,
-      'color: #ffffff; font-size: 13px; font-family: monospace; font-weight: 500; line-height: 1.2;'
-    );
+    console.clear();
+
+    console.log(`
+██╗  ██╗██╗
+██║  ██║██║
+███████║██║
+██╔══██║██║
+██║  ██║██║
+╚═╝  ╚═╝╚═╝
+
+██╗███╗   ███╗
+██║████╗ ████║
+██║██╔████╔██║
+██║██║╚██╔╝██║
+██║██║ ╚═╝ ██║
+╚═╝╚═╝     ╚═╝
+
+██╗     ██╗██╗  ██╗██╗██╗████████╗██╗  ██╗
+██║     ██║██║ ██╔╝██║██║╚══██╔══╝██║  ██║
+██║     ██║█████╔╝ ██║██║   ██║   ███████║
+██║     ██║██╔═██╗ ██║██║   ██║   ██╔══██║
+███████╗██║██║  ██╗██║██║   ██║   ██║  ██║
+╚══════╝╚═╝╚═╝  ╚═╝╚═╝╚═╝   ╚═╝   ╚═╝  ╚═╝
+
+👋 Hi, I'm Likhith.
+
+If you're reading this,
+you're either a developer 🧑💻,
+a recruiter 💼,
+or someone who pressed F12 by accident 😂
+
+
+Wanna contact me?
+
+Find me 😉
+`);
   }, []);
 
   return null;
