@@ -9,7 +9,8 @@
       "TERAPALLI JACINTH",
       "Chinta Sam Prasad",
       "Boggavarapu Sri Vishnuvardhan",
-      "Penumatsa Spandana"
+      "Penumatsa Spandana",
+      "Radhakrishna Manthi"
     ]
   },
   {
@@ -22,7 +23,8 @@
       "Prathiba rachel rapaka",
       "Chinta Sam Prasad",
       "Boggavarapu Sri Vishnuvardhan",
-      "Penumatsa Spandana"
+      "Penumatsa Spandana",
+      "Radhakrishna Manthi"
     ]
   },
   {
@@ -35,7 +37,8 @@
       "Prathiba rachel rapaka",
       "TERAPALLI JACINTH",
       "Boggavarapu Sri Vishnuvardhan",
-      "Penumatsa Spandana"
+      "Penumatsa Spandana",
+      "Radhakrishna Manthi"
     ]
   },
   {
@@ -48,7 +51,8 @@
       "Prathiba rachel rapaka",
       "TERAPALLI JACINTH",
       "Chinta Sam Prasad",
-      "Penumatsa Spandana"
+      "Penumatsa Spandana",
+      "Radhakrishna Manthi"
     ]
   },
   {
@@ -61,7 +65,8 @@
       "Prathiba rachel rapaka",
       "TERAPALLI JACINTH",
       "Chinta Sam Prasad",
-      "Boggavarapu Sri Vishnuvardhan"
+      "Boggavarapu Sri Vishnuvardhan",
+      "Radhakrishna Manthi"
     ]
   },
   {
@@ -853,6 +858,20 @@
       "MORAM CHAITHANYA",
       "PADALA SAGAR",
       "Ghanta Rudrani Sai"
+    ]
+  },
+  {
+    "email": "radhakrishnamanthi@gmail.com",
+    "studentName": "Radhakrishna Manthi",
+    "projectName": "E-Commerce Customer Analysis",
+    "mentorName": "M Satish Kumar",
+    "collegeName": "Unknown",
+    "teamMembers": [
+      "Prathiba rachel rapaka",
+      "TERAPALLI JACINTH",
+      "Chinta Sam Prasad",
+      "Boggavarapu Sri Vishnuvardhan",
+      "Penumatsa Spandana"
     ]
   }
 ]
