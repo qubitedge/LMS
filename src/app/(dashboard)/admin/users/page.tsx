@@ -12,7 +12,7 @@ import Link from 'next/link';
 
 export const revalidate = 60;
 
-const PAGE_SIZE = 30;
+const PAGE_SIZE = 10;
 
 interface PageProps {
   searchParams: Promise<{ role?: string; q?: string; sortBy?: string; sortOrder?: string; page?: string }>;
@@ -269,19 +269,44 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                 <ChevronLeft size={16} className="mr-1" /> Prev
               </Link>
               <div className="flex items-center gap-1">
-                {Array.from({ length: totalPages }, (_, i) => (
-                  <Link
-                    key={i}
-                    href={getPageLink(i)}
-                    className={`w-9 h-9 flex items-center justify-center rounded-xl text-sm font-black transition-all ${
-                      i === pageNum
-                        ? 'bg-[#4A5DB5] text-white shadow-md shadow-blue-500/20'
-                        : 'text-[#7182C7] hover:bg-[#E9EEF9]'
-                    }`}
-                  >
-                    {i + 1}
-                  </Link>
-                ))}
+                {(() => {
+                  let start = Math.max(0, pageNum - 2);
+                  let end = Math.min(totalPages - 1, pageNum + 2);
+                  if (pageNum < 2) end = Math.min(totalPages - 1, 4);
+                  if (pageNum > totalPages - 3) start = Math.max(0, totalPages - 5);
+                  
+                  const range = Array.from({ length: end - start + 1 }, (_, i) => start + i);
+                  
+                  return (
+                    <>
+                      {start > 0 && (
+                        <>
+                          <Link href={getPageLink(0)} className="w-9 h-9 flex items-center justify-center rounded-xl text-sm font-black transition-all text-[#7182C7] hover:bg-[#E9EEF9]">1</Link>
+                          {start > 1 && <span className="text-[#7182C7] px-1">...</span>}
+                        </>
+                      )}
+                      {range.map(i => (
+                        <Link
+                          key={i}
+                          href={getPageLink(i)}
+                          className={`w-9 h-9 flex items-center justify-center rounded-xl text-sm font-black transition-all ${
+                            i === pageNum
+                              ? 'bg-[#4A5DB5] text-white shadow-md shadow-blue-500/20'
+                              : 'text-[#7182C7] hover:bg-[#E9EEF9]'
+                          }`}
+                        >
+                          {i + 1}
+                        </Link>
+                      ))}
+                      {end < totalPages - 1 && (
+                        <>
+                          {end < totalPages - 2 && <span className="text-[#7182C7] px-1">...</span>}
+                          <Link href={getPageLink(totalPages - 1)} className="w-9 h-9 flex items-center justify-center rounded-xl text-sm font-black transition-all text-[#7182C7] hover:bg-[#E9EEF9]">{totalPages}</Link>
+                        </>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
               <Link
                 href={getPageLink(pageNum + 1)}

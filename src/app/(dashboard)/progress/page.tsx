@@ -2,6 +2,8 @@ import { createClient } from '@/lib/supabase/server';
 import { getDayStatus } from '@/lib/utils/dayLock';
 import { WeekWithDays, DayWithStatus } from '@/types';
 import CurriculumGrid from '@/components/progress/curriculum-grid';
+import capstoneTeams from '@/lib/capstone-teams.json';
+import InternshipFeedbackModal from '@/components/progress/internship-feedback-modal';
 
 export const revalidate = 60;
 
@@ -44,6 +46,9 @@ export default async function ProgressPage() {
 
   const unlockedDays = setting?.value || [];
 
+  const capstoneUser = capstoneTeams.find(t => t.email === user.email);
+  const isCapstoneSelected = !!capstoneUser;
+
   // Filter out invisible weeks and specific workshops for interns
   const events = (eventsData || [])
     .filter(event => {
@@ -55,6 +60,11 @@ export default async function ProgressPage() {
     ...event,
     weeks: (event.weeks as any[] || [])
       .filter(week => week.is_visible)
+      .filter(week => {
+        const isCapstoneWeek = week.title.toLowerCase().includes('capstone');
+        if (isCapstoneWeek && !isCapstoneSelected && !isAdmin) return false;
+        return true;
+      })
       .sort((a: any, b: any) => a.week_number - b.week_number)
       .map((week: any) => ({
         ...week,
@@ -66,8 +76,14 @@ export default async function ProgressPage() {
           const isUnlocked = unlockedDays.includes(day.id);
           const status = (isAdmin || isUnlocked) ? getDayStatus(day.date, hasAttempted) : 'locked';
 
+          let tutor_name = day.tutor_name;
+          if (week.title.toLowerCase().includes('capstone') && isCapstoneSelected) {
+            tutor_name = capstoneUser?.mentorName || tutor_name;
+          }
+
           return {
             ...day,
+            tutor_name,
             status,
             score,
             quiz: day.quizzes?.[0] ? { ...day.quizzes[0] } : null,
@@ -88,6 +104,7 @@ export default async function ProgressPage() {
           />
         </div>
       ))}
+      <InternshipFeedbackModal shouldShow={!isCapstoneSelected && !isAdmin} />
     </div>
   );
 }

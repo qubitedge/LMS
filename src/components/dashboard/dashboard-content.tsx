@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { Flame, Target, CalendarCheck, Trophy, Sparkles, Binary, Cpu, ChevronRight } from 'lucide-react';
 import AnnouncementStrip from '@/components/dashboard/announcement-strip';
@@ -9,6 +11,7 @@ import ActivityFeed from '@/components/dashboard/activity-feed';
 import { Button } from '@/components/ui/button';
 
 interface DashboardContentProps {
+  userEmail?: string;
   profile: any;
   announcements: any[];
   attendanceCount: number;
@@ -24,6 +27,7 @@ interface DashboardContentProps {
 }
 
 export default function DashboardContent({
+  userEmail,
   profile,
   announcements,
   attendanceCount,
@@ -37,6 +41,18 @@ export default function DashboardContent({
   totalExpectedDays,
   showPreviousWorks,
 }: DashboardContentProps) {
+  useEffect(() => {
+    if (userEmail === 'neerajatutika04@gmail.com') {
+      const timer = setTimeout(() => {
+        toast.info("Project Update", {
+          description: "Your project has been changed. Please review it.",
+          duration: 10000,
+        });
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [userEmail]);
+
   return (
     <div className="relative pb-20">
       {/* Premium Background Effects */}

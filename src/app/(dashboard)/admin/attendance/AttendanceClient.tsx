@@ -9,7 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 
-const PAGE_SIZE = 30;
+const PAGE_SIZE = 10;
 
 export function AttendanceClient({ initialData, initialDate, initialCollege, initialAttendanceUnlocked }: { initialData: any[], initialDate: string, initialCollege: string, initialAttendanceUnlocked: boolean }) {
   const router = useRouter();
@@ -371,19 +371,44 @@ export function AttendanceClient({ initialData, initialDate, initialCollege, ini
                       <ChevronLeft size={16} className="mr-1" /> Prev
                     </Button>
                     <div className="flex items-center gap-1">
-                      {Array.from({ length: totalPages }, (_, i) => (
-                        <button
-                          key={i}
-                          onClick={() => setPage(i)}
-                          className={`w-9 h-9 rounded-xl text-sm font-black transition-all ${
-                            i === page
-                              ? 'bg-[#4A5DB5] text-white shadow-md shadow-blue-500/20'
-                              : 'text-[#7182C7] hover:bg-[#E9EEF9]'
-                          }`}
-                        >
-                          {i + 1}
-                        </button>
-                      ))}
+                      {(() => {
+                        let start = Math.max(0, page - 2);
+                        let end = Math.min(totalPages - 1, page + 2);
+                        if (page < 2) end = Math.min(totalPages - 1, 4);
+                        if (page > totalPages - 3) start = Math.max(0, totalPages - 5);
+                        
+                        const range = Array.from({ length: end - start + 1 }, (_, i) => start + i);
+                        
+                        return (
+                          <>
+                            {start > 0 && (
+                              <>
+                                <button onClick={() => setPage(0)} className="w-9 h-9 rounded-xl text-sm font-black transition-all text-[#7182C7] hover:bg-[#E9EEF9]">1</button>
+                                {start > 1 && <span className="text-[#7182C7] px-1">...</span>}
+                              </>
+                            )}
+                            {range.map(i => (
+                              <button
+                                key={i}
+                                onClick={() => setPage(i)}
+                                className={`w-9 h-9 rounded-xl text-sm font-black transition-all ${
+                                  i === page
+                                    ? 'bg-[#4A5DB5] text-white shadow-md shadow-blue-500/20'
+                                    : 'text-[#7182C7] hover:bg-[#E9EEF9]'
+                                }`}
+                              >
+                                {i + 1}
+                              </button>
+                            ))}
+                            {end < totalPages - 1 && (
+                              <>
+                                {end < totalPages - 2 && <span className="text-[#7182C7] px-1">...</span>}
+                                <button onClick={() => setPage(totalPages - 1)} className="w-9 h-9 rounded-xl text-sm font-black transition-all text-[#7182C7] hover:bg-[#E9EEF9]">{totalPages}</button>
+                              </>
+                            )}
+                          </>
+                        );
+                      })()}
                     </div>
                     <Button
                       variant="outline"

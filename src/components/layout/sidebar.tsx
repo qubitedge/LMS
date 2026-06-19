@@ -33,6 +33,7 @@ const adminNav = [
   { href: '/admin/attendance', label: 'Attendance', icon: CalendarCheck },
   { href: '/admin/announcements', label: 'Announcements', icon: Trophy },
   { href: '/admin/leaderboard', label: 'Leaderboard', icon: Trophy },
+  { href: '/admin/reviews', label: 'Reviews', icon: Trophy },
 ];
 
 interface SidebarProps {

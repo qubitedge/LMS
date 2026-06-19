@@ -62,6 +62,7 @@ export default async function DashboardPage() {
 
   return (
     <DashboardContent
+      userEmail={user.email}
       profile={profile}
       announcements={announcements}
       attendanceCount={attendanceCount}
