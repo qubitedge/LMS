@@ -356,7 +356,8 @@
       "MORAM CHAITHANYA",
       "PADALA SAGAR",
       "Ghanta Rudrani Sai",
-      "Likhitha Soudu"
+      "Likhitha Soudu",
+      "Seeram Sathwika"
     ]
   },
   {
@@ -371,7 +372,8 @@
       "MORAM CHAITHANYA",
       "PADALA SAGAR",
       "Ghanta Rudrani Sai",
-      "Likhitha Soudu"
+      "Likhitha Soudu",
+      "Seeram Sathwika"
     ]
   },
   {
@@ -386,7 +388,8 @@
       "MORAM CHAITHANYA",
       "PADALA SAGAR",
       "Ghanta Rudrani Sai",
-      "Likhitha Soudu"
+      "Likhitha Soudu",
+      "Seeram Sathwika"
     ]
   },
   {
@@ -401,7 +404,8 @@
       "RAJANA KAVYA",
       "PADALA SAGAR",
       "Ghanta Rudrani Sai",
-      "Likhitha Soudu"
+      "Likhitha Soudu",
+      "Seeram Sathwika"
     ]
   },
   {
@@ -416,7 +420,8 @@
       "RAJANA KAVYA",
       "MORAM CHAITHANYA",
       "Ghanta Rudrani Sai",
-      "Likhitha Soudu"
+      "Likhitha Soudu",
+      "Seeram Sathwika"
     ]
   },
   {
@@ -431,7 +436,8 @@
       "RAJANA KAVYA",
       "MORAM CHAITHANYA",
       "PADALA SAGAR",
-      "Likhitha Soudu"
+      "Likhitha Soudu",
+      "Seeram Sathwika"
     ]
   },
   {
@@ -857,7 +863,8 @@
       "RAJANA KAVYA",
       "MORAM CHAITHANYA",
       "PADALA SAGAR",
-      "Ghanta Rudrani Sai"
+      "Ghanta Rudrani Sai",
+      "Seeram Sathwika"
     ]
   },
   {
@@ -872,6 +879,22 @@
       "Chinta Sam Prasad",
       "Boggavarapu Sri Vishnuvardhan",
       "Penumatsa Spandana"
+    ]
+  },
+  {
+    "email": "seeramsathwika@gmail.com",
+    "studentName": "Seeram Sathwika",
+    "projectName": "Disease Prediction & Patient Profiling System",
+    "mentorName": "Dr Kanthi Kiran",
+    "collegeName": "Avanthi Institute of Engineering and Technology",
+    "teamMembers": [
+      "PITHANA ARUNA SHANMUKHI",
+      "RAJANA KAVYA",
+      "Likhitha Soudu",
+      "REGA CHANDU NIVAS",
+      "Ghanta Rudrani Sai",
+      "MORAM CHAITHANYA",
+      "PADALA SAGAR"
     ]
   }
 ]

@@ -100,7 +100,7 @@ export default async function AttendancePage() {
                   </div>
                   <h3 className="text-2xl font-black text-[#10B981] mb-2 uppercase tracking-tight">Present</h3>
                   <p className="text-sm font-bold text-[#A0ACDC]">
-                    Attendance confirmed for {format(new Date(), 'MMMM do')}
+                    Attendance confirmed for {format(parseISO(todayStr), 'MMMM do')}
                   </p>
                 </div>
               ) : isTodayModuleDay ? (
