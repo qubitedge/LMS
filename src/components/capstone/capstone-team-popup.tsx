@@ -112,10 +112,19 @@ export default function CapstoneTeamPopup({ userEmail, isAdmin }: { userEmail: s
                   <h3 className="text-xs sm:text-sm font-bold text-blue-800 uppercase tracking-wider mb-1">Your Project</h3>
                   <p className="text-lg sm:text-xl font-bold text-gray-900 mb-4">{teamData.projectName}</p>
                   
-                  <div className="flex items-center gap-2 text-gray-700 bg-white p-2.5 sm:p-3 rounded-xl shadow-sm border border-gray-100 w-max">
-                    <User size={16} className="text-[#40C4D0] sm:w-[18px] sm:h-[18px]" />
-                    <span className="text-xs sm:text-sm font-medium">Mentor:</span>
-                    <span className="text-xs sm:text-sm font-bold">{teamData.mentorName}</span>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex items-center gap-2 text-gray-700 bg-white p-2.5 sm:p-3 rounded-xl shadow-sm border border-gray-100 w-max">
+                      <User size={16} className="text-[#40C4D0] sm:w-[18px] sm:h-[18px]" />
+                      <span className="text-xs sm:text-sm font-medium">Mentor:</span>
+                      <span className="text-xs sm:text-sm font-bold">{teamData.mentorName}</span>
+                    </div>
+                    {teamData.teamName && (
+                      <div className="flex items-center gap-2 text-gray-700 bg-white p-2.5 sm:p-3 rounded-xl shadow-sm border border-gray-100 w-max">
+                        <Users size={16} className="text-[#FBBF24] sm:w-[18px] sm:h-[18px]" />
+                        <span className="text-xs sm:text-sm font-medium">Team:</span>
+                        <span className="text-xs sm:text-sm font-bold">{teamData.teamName}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 

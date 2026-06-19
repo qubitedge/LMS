@@ -78,7 +78,9 @@ export default async function ProgressPage() {
 
           let tutor_name = day.tutor_name;
           if (week.title.toLowerCase().includes('capstone') && isCapstoneSelected) {
-            tutor_name = capstoneUser?.mentorName || tutor_name;
+            const mentorName = capstoneUser?.mentorName;
+            const teamName = (capstoneUser as any)?.teamName;
+            tutor_name = teamName && mentorName ? `${teamName} - Mentor: ${mentorName}` : (mentorName || tutor_name);
           }
 
           return {
