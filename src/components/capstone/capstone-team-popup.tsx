@@ -77,7 +77,9 @@ export default function CapstoneTeamPopup({ userEmail, isAdmin }: { userEmail: s
   };
 
   const joinGroup = () => {
-    window.open('https://chat.whatsapp.com/Efq8aQKmTWOFYcA4rfP3cB', '_blank');
+    if (teamData?.whatsappLink) {
+      window.open(teamData.whatsappLink, '_blank');
+    }
   };
 
   return (
@@ -157,11 +159,13 @@ export default function CapstoneTeamPopup({ userEmail, isAdmin }: { userEmail: s
 
                   <div className="bg-[#25D366]/10 p-3 sm:p-4 rounded-2xl border border-[#25D366]/20 flex items-center gap-3 sm:gap-4">
                     <div className="shrink-0 bg-white p-1 rounded-xl shadow-sm hidden sm:block">
-                      <img 
-                        src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://chat.whatsapp.com/Efq8aQKmTWOFYcA4rfP3cB" 
-                        alt="WhatsApp Group QR Code" 
-                        className="w-[60px] h-[60px] sm:w-[70px] sm:h-[70px] object-contain rounded-lg"
-                      />
+                      {teamData.whatsappLink && (
+                        <img 
+                          src={`https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent(teamData.whatsappLink)}`} 
+                          alt="WhatsApp Group QR Code" 
+                          className="w-[60px] h-[60px] sm:w-[70px] sm:h-[70px] object-contain rounded-lg"
+                        />
+                      )}
                     </div>
                     <div>
                       <h4 className="font-bold text-[#128C7E] text-xs sm:text-sm flex items-center gap-1">
