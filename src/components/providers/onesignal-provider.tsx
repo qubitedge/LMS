@@ -8,6 +8,12 @@ export function OneSignalProvider() {
 
   useEffect(() => {
     if (initialized.current) return;
+
+    if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+      console.log('OneSignal initialization skipped in local development');
+      return;
+    }
+
     initialized.current = true;
 
     OneSignal.init({

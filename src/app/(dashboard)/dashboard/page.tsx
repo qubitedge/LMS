@@ -72,8 +72,8 @@ export default async function DashboardPage() {
       todayAttendance={todayAttendance}
       todayDay={todayDay}
       hasAttemptedTodayQuiz={hasAttemptedTodayQuiz}
-      activities={activities.map((a: any) => ({
-        id: a.attempted_at,
+      activities={activities.map((a: any, idx: number) => ({
+        id: `${a.attempted_at}-${idx}`,
         type: 'quiz' as const,
         title: `Completed Quiz: ${a.quizzes?.days?.topic || 'Daily Quiz'}`,
         description: `Scored ${a.score} points`,

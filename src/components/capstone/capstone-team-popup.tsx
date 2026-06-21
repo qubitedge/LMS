@@ -44,7 +44,7 @@ export default function CapstoneTeamPopup({ userEmail, isAdmin }: { userEmail: s
     const student = capstoneTeams.find(s => s.email.toLowerCase() === userEmail.toLowerCase());
     
     if (student) {
-      const hasSeen = localStorage.getItem('hasSeenCapstoneTeamPopup');
+      const hasSeen = localStorage.getItem('hasSeenCapstoneTeamPopup_v2');
       if (!hasSeen) {
         setTeamData(student);
         setIsOpen(true);
@@ -52,7 +52,7 @@ export default function CapstoneTeamPopup({ userEmail, isAdmin }: { userEmail: s
       }
     } else if (isAdmin) {
       // Auto-show preview once on load for admin so they see it
-      const hasSeenPreview = localStorage.getItem('hasSeenCapstoneTeamPopupAdminPreview');
+      const hasSeenPreview = localStorage.getItem('hasSeenCapstoneTeamPopupAdminPreview_v2');
       if (!hasSeenPreview) {
         setTeamData(capstoneTeams[0]);
         setIsOpen(true);
@@ -64,9 +64,9 @@ export default function CapstoneTeamPopup({ userEmail, isAdmin }: { userEmail: s
   const handleClose = () => {
     setIsOpen(false);
     if (isAdmin) {
-      localStorage.setItem('hasSeenCapstoneTeamPopupAdminPreview', 'true');
+      localStorage.setItem('hasSeenCapstoneTeamPopupAdminPreview_v2', 'true');
     } else {
-      localStorage.setItem('hasSeenCapstoneTeamPopup', 'true');
+      localStorage.setItem('hasSeenCapstoneTeamPopup_v2', 'true');
     }
   };
 

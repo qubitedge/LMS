@@ -13,36 +13,36 @@ export default async function ProgressPage() {
 
   if (!user) return null;
 
-  // Fetch user's scores
-  const { data: scores } = await supabase
-    .from('scores')
-    .select('quiz_id, score')
-    .eq('user_id', user.id);
+  // Fetch user's scores, profile, events, and settings in parallel
+  const [scoresResult, profileResult, eventsResult, settingResult] = await Promise.all([
+    supabase
+      .from('scores')
+      .select('quiz_id, score')
+      .eq('user_id', user.id),
+    supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single(),
+    supabase
+      .from('events')
+      .select('*, weeks(*, days(*, quizzes(id, max_score)))')
+      .eq('is_active', true)
+      .order('created_at', { ascending: true }),
+    supabase
+      .from('site_settings')
+      .select('value')
+      .eq('key', 'unlocked_days')
+      .maybeSingle()
+  ]);
+
+  const scores = scoresResult.data;
+  const profile = profileResult.data;
+  const eventsData = eventsResult.data;
+  const setting = settingResult.data;
 
   const scoresMap = new Map((scores || []).map(s => [s.quiz_id, s.score]));
-
-  // Fetch user profile for role check
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-  
   const isAdmin = profile?.role === 'admin';
-
-  // Fetch events with visible weeks and days
-  const { data: eventsData } = await supabase
-    .from('events')
-    .select('*, weeks(*, days(*, quizzes(id, max_score)))')
-    .eq('is_active', true)
-    .order('created_at', { ascending: true });
-
-  // Fetch the unlocked days site setting
-  const { data: setting } = await supabase
-    .from('site_settings')
-    .select('value')
-    .eq('key', 'unlocked_days')
-    .maybeSingle();
 
   const unlockedDays = setting?.value || [];
 
@@ -60,38 +60,78 @@ export default async function ProgressPage() {
     ...event,
     weeks: (event.weeks as any[] || [])
       .filter(week => week.is_visible)
-      .filter(week => {
-        const isCapstoneWeek = week.title.toLowerCase().includes('capstone');
-        if (isCapstoneWeek && !isCapstoneSelected && !isAdmin) return false;
-        return true;
-      })
       .sort((a: any, b: any) => a.week_number - b.week_number)
-      .map((week: any) => ({
-        ...week,
-        days: (week.days || []).sort((a: any, b: any) => a.day_number - b.day_number).map((day: any): DayWithStatus => {
-          const quizId = day.quizzes?.[0]?.id;
-          const hasAttempted = !!(quizId && scoresMap.has(quizId));
-          const score = quizId ? scoresMap.get(quizId) : undefined;
-          
-          const isUnlocked = unlockedDays.includes(day.id);
-          const status = (isAdmin || isUnlocked) ? getDayStatus(day.date, hasAttempted) : 'locked';
+      .flatMap((week: any) => {
+        const isCapstoneWeek = week.title.toLowerCase().includes('capstone');
+        const showRevision = isCapstoneWeek && !isCapstoneSelected && !isAdmin;
 
-          let tutor_name = day.tutor_name;
-          if (week.title.toLowerCase().includes('capstone') && isCapstoneSelected) {
-            const mentorName = capstoneUser?.mentorName;
-            const teamName = (capstoneUser as any)?.teamName;
-            tutor_name = teamName && mentorName ? `${teamName} - Mentor: ${mentorName}` : (mentorName || tutor_name);
+        const mapWeek = (isRev: boolean, idSuffix: string = '') => {
+          let mappedTitle = week.title;
+          let mappedDomain = week.domain;
+
+          if (isRev) {
+            mappedTitle = 'Revision & Recording Sessions';
+            mappedDomain = 'Revision';
           }
 
           return {
-            ...day,
-            tutor_name,
-            status,
-            score,
-            quiz: day.quizzes?.[0] ? { ...day.quizzes[0] } : null,
+            ...week,
+            id: week.id + idSuffix,
+            title: mappedTitle,
+            domain: mappedDomain,
+            days: (week.days || []).sort((a: any, b: any) => a.day_number - b.day_number).map((day: any, idx: number): DayWithStatus => {
+              const quizId = day.quizzes?.[0]?.id;
+              const hasAttempted = !!(quizId && scoresMap.has(quizId));
+              const score = quizId ? scoresMap.get(quizId) : undefined;
+              
+              const checkId = isRev ? `${day.id}-revision` : day.id;
+              const isUnlocked = unlockedDays.includes(checkId);
+              let status = (isAdmin || isUnlocked) ? getDayStatus(day.date, hasAttempted) : 'locked';
+              if (status === 'locked' && (isAdmin || isUnlocked)) {
+                status = 'active';
+              }
+
+              let tutor_name = day.tutor_name;
+              let topic = day.topic;
+              let sub_topics = day.sub_topics;
+
+              if (isCapstoneWeek && !isRev) {
+                const mentorName = capstoneUser?.mentorName;
+                const teamName = (capstoneUser as any)?.teamName;
+                tutor_name = teamName && mentorName ? `${teamName} - Mentor: ${mentorName}` : (mentorName || tutor_name);
+              } else if (isRev) {
+                const revisionNames = [
+                  'Week-1 Revision',
+                  'Week-2',
+                  'Week-3',
+                  'Week-4',
+                  'Week-5'
+                ];
+                topic = revisionNames[idx] || `Week-${idx + 1} Revision`;
+                sub_topics = null;
+                tutor_name = 'Qubitedge Team';
+              }
+
+              return {
+                ...day,
+                tutor_name,
+                status,
+                score,
+                topic,
+                sub_topics,
+                quiz: day.quizzes?.[0] ? { ...day.quizzes[0] } : null,
+                isRevisionDay: isRev,
+              };
+            })
           };
-        })
-      }))
+        };
+
+        if (isAdmin && isCapstoneWeek) {
+          return [mapWeek(false), mapWeek(true, '-revision')];
+        }
+
+        return [mapWeek(showRevision)];
+      })
   }));
 
   return (

@@ -138,116 +138,160 @@ export default function EventsManagementClient({ events, initialUnlockedDays = [
               <div className="grid grid-cols-1 gap-12 pl-12 relative">
                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#4A5DB5]/20 via-[#4A5DB5]/10 to-transparent rounded-full ml-[-2px]" />
                 
-                {(event.weeks as any[])?.sort((a: any, b: any) => a.week_number - b.week_number).map((week, wIdx) => (
-                  <div key={week.id} className="relative">
-                    {/* Connector line dot */}
-                    <div className="absolute left-[-54px] top-8 w-4 h-4 rounded-full bg-white border-4 border-[#4A5DB5] z-10" />
-                    
-                    <div className="flex items-center justify-between mb-6 group/mod">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-2xl bg-white shadow-lg border border-slate-50 flex items-center justify-center text-[#4A5DB5] group-hover/mod:scale-110 transition-transform">
-                          <TrendingUp size={24} />
-                        </div>
-                        <div>
-                          <h3 className="text-2xl font-black text-[#1A1A2E] flex items-center gap-3">
-                            {week.title}
-                            {!week.is_visible && (
-                              <span className="px-2 py-0.5 bg-rose-50 text-rose-500 text-[9px] font-black uppercase tracking-[0.2em] rounded-md border border-rose-100">
-                                Hidden
-                              </span>
-                            )}
-                          </h3>
-                          <div className="flex items-center gap-3 text-xs font-bold text-[#A0ACDC] mt-1">
-                            <Calendar size={14} />
-                            <span>{week.start_date}</span>
-                            <span>→</span>
-                            <span>{week.end_date || 'Ongoing'}</span>
+                {(event.weeks as any[])?.sort((a: any, b: any) => a.week_number - b.week_number).flatMap((week) => {
+                  const isCapstoneWeek = week.title.toLowerCase().includes('capstone');
+                  if (isCapstoneWeek) {
+                    const capstoneWeek = {
+                      ...week,
+                      id: week.id,
+                      title: 'CapStone Project',
+                      domain: week.domain,
+                      days: week.days.map((day: any) => ({
+                        ...day,
+                        id: day.id,
+                      }))
+                    };
+                    const revisionWeek = {
+                      ...week,
+                      id: week.id + '-revision',
+                      title: 'Revision & Recording Sessions (Non-Capstone)',
+                      domain: 'Revision',
+                      days: week.days.map((day: any, idx: number) => {
+                        const revisionNames = [
+                          'Week-1 Revision',
+                          'Week-2',
+                          'Week-3',
+                          'Week-4',
+                          'Week-5'
+                        ];
+                        return {
+                          ...day,
+                          id: day.id + '-revision',
+                          topic: revisionNames[idx] || `Week-${idx + 1} Revision`,
+                          tutor_name: 'Qubitedge Team',
+                          video_url: null,
+                          resource_link: null,
+                        };
+                      })
+                    };
+                    return [capstoneWeek, revisionWeek];
+                  }
+                  return [week];
+                }).map((week, wIdx) => {
+                  const isRevision = week.id.endsWith('-revision');
+                  return (
+                    <div key={week.id} className="relative">
+                      {/* Connector line dot */}
+                      <div className="absolute left-[-54px] top-8 w-4 h-4 rounded-full bg-white border-4 border-[#4A5DB5] z-10" />
+                      
+                      <div className="flex items-center justify-between mb-6 group/mod">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-2xl bg-white shadow-lg border border-slate-50 flex items-center justify-center text-[#4A5DB5] group-hover/mod:scale-110 transition-transform">
+                            <TrendingUp size={24} />
+                          </div>
+                          <div>
+                            <h3 className="text-2xl font-black text-[#1A1A2E] flex items-center gap-3">
+                              {week.title}
+                              {!week.is_visible && (
+                                <span className="px-2 py-0.5 bg-rose-50 text-rose-500 text-[9px] font-black uppercase tracking-[0.2em] rounded-md border border-rose-100">
+                                  Hidden
+                                </span>
+                              )}
+                            </h3>
+                            <div className="flex items-center gap-3 text-xs font-bold text-[#A0ACDC] mt-1">
+                              <Calendar size={14} />
+                              <span>{week.start_date}</span>
+                              <span>→</span>
+                              <span>{week.end_date || 'Ongoing'}</span>
+                            </div>
                           </div>
                         </div>
+                        {!isRevision && <ModuleEditDialog eventId={event.id} module={week} />}
                       </div>
-                      <ModuleEditDialog eventId={event.id} module={week} />
-                    </div>
 
-                    <Card className="rounded-[3rem] bg-white shadow-xl border-none overflow-hidden group/card hover:shadow-2xl transition-all duration-500">
-                      <CardContent className="p-0">
-                        <Table>
-                          <TableHeader className="bg-slate-50/50">
-                            <TableRow className="border-none">
-                              <TableHead className="font-black text-[#1A1A2E] px-10 py-8 w-[120px]">Day</TableHead>
-                              <TableHead className="font-black text-[#1A1A2E]">Topic & Curriculum</TableHead>
-                              <TableHead className="font-black text-[#1A1A2E] text-center">Materials</TableHead>
-                              <TableHead className="font-black text-[#1A1A2E] text-right px-10">Manage</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {(week.days as any[]).sort((a: any, b: any) => a.day_number - b.day_number).map((day) => (
-                              <TableRow key={day.id} className="hover:bg-blue-50/20 transition-colors border-b-slate-50 last:border-none group/row">
-                                <TableCell className="px-10 py-8 font-black text-[#4A5DB5] text-lg">
-                                  {day.day_number}
-                                </TableCell>
-                                <TableCell>
-                                  <div>
-                                    <p className="font-black text-xl text-[#1A1A2E] group-hover/row:text-[#2238A4] transition-colors leading-tight">
-                                      {day.topic}
-                                    </p>
-                                    <p className="text-xs font-bold text-[#7182C7] flex items-center gap-1.5 mt-2">
-                                      <User size={12} className="text-[#A0ACDC]" /> 
-                                      Instructor: <span className="text-[#1A1A2E]">{day.tutor_name || 'TBA'}</span>
-                                    </p>
-                                  </div>
-                                </TableCell>
-                                <TableCell className="text-center">
-                                  <div className="flex items-center justify-center gap-4">
-                                    {day.video_url && (
-                                      <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center shadow-sm" title="Video Session Available">
-                                        <Video size={18} />
-                                      </div>
-                                    )}
-                                    {day.resource_link && (
-                                      <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center shadow-sm" title="External Resources Available">
-                                        <LinkIcon size={18} />
-                                      </div>
-                                    )}
-                                  </div>
-                                </TableCell>
-                                <TableCell className="text-right px-10">
-                                  <div className="flex items-center justify-end gap-3">
-                                    <button
-                                      disabled={togglingDays[day.id]}
-                                      onClick={() => handleToggleLock(day.id)}
-                                      className={`h-10 px-4 rounded-xl font-black text-xs transition-all flex items-center gap-2 shadow-sm active:scale-95 duration-200 border ${
-                                        unlockedDays.includes(day.id)
-                                          ? 'bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 hover:shadow-rose-100 hover:shadow-md'
-                                          : 'bg-slate-50 text-slate-400 border-slate-200 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200 hover:shadow-emerald-100 hover:shadow-md'
-                                      }`}
-                                    >
-                                      {togglingDays[day.id] ? (
-                                        <Loader2 size={14} className="animate-spin" />
-                                      ) : unlockedDays.includes(day.id) ? (
-                                        <Unlock size={14} />
-                                      ) : (
-                                        <Lock size={14} />
-                                      )}
-                                      {unlockedDays.includes(day.id) ? 'Unlocked' : 'Locked'}
-                                    </button>
-                                    <DayEditDialog day={day} />
-                                  </div>
-                                </TableCell>
+                      <Card className="rounded-[3rem] bg-white shadow-xl border-none overflow-hidden group/card hover:shadow-2xl transition-all duration-500">
+                        <CardContent className="p-0">
+                          <Table>
+                            <TableHeader className="bg-slate-50/50">
+                              <TableRow className="border-none">
+                                <TableHead className="font-black text-[#1A1A2E] px-10 py-8 w-[120px]">Day</TableHead>
+                                <TableHead className="font-black text-[#1A1A2E]">Topic & Curriculum</TableHead>
+                                <TableHead className="font-black text-[#1A1A2E] text-center">Materials</TableHead>
+                                <TableHead className="font-black text-[#1A1A2E] text-right px-10">Manage</TableHead>
                               </TableRow>
-                            ))}
-                            <TableRow>
-                              <TableCell colSpan={4} className="p-8 bg-slate-50/30">
-                                <div className="flex justify-center">
-                                  <DayEditDialog weekId={week.id} />
-                                </div>
-                              </TableCell>
-                            </TableRow>
-                          </TableBody>
-                        </Table>
-                      </CardContent>
-                    </Card>
-                  </div>
-                ))}
+                            </TableHeader>
+                            <TableBody>
+                              {(week.days as any[]).sort((a: any, b: any) => a.day_number - b.day_number).map((day) => (
+                                <TableRow key={day.id} className="hover:bg-blue-50/20 transition-colors border-b-slate-50 last:border-none group/row">
+                                  <TableCell className="px-10 py-8 font-black text-[#4A5DB5] text-lg">
+                                    {day.day_number}
+                                  </TableCell>
+                                  <TableCell>
+                                    <div>
+                                      <p className="font-black text-xl text-[#1A1A2E] group-hover/row:text-[#2238A4] transition-colors leading-tight">
+                                        {day.topic}
+                                      </p>
+                                      <p className="text-xs font-bold text-[#7182C7] flex items-center gap-1.5 mt-2">
+                                        <User size={12} className="text-[#A0ACDC]" /> 
+                                        Instructor: <span className="text-[#1A1A2E]">{day.tutor_name || 'TBA'}</span>
+                                      </p>
+                                    </div>
+                                  </TableCell>
+                                  <TableCell className="text-center">
+                                    <div className="flex items-center justify-center gap-4">
+                                      {day.video_url && (
+                                        <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center shadow-sm" title="Video Session Available">
+                                          <Video size={18} />
+                                        </div>
+                                      )}
+                                      {day.resource_link && (
+                                        <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center shadow-sm" title="External Resources Available">
+                                          <LinkIcon size={18} />
+                                        </div>
+                                      )}
+                                    </div>
+                                  </TableCell>
+                                  <TableCell className="text-right px-10">
+                                    <div className="flex items-center justify-end gap-3">
+                                      <button
+                                        disabled={togglingDays[day.id]}
+                                        onClick={() => handleToggleLock(day.id)}
+                                        className={`h-10 px-4 rounded-xl font-black text-xs transition-all flex items-center gap-2 shadow-sm active:scale-95 duration-200 border ${
+                                          unlockedDays.includes(day.id)
+                                            ? 'bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 hover:shadow-rose-100 hover:shadow-md'
+                                            : 'bg-slate-50 text-slate-400 border-slate-200 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200 hover:shadow-emerald-100 hover:shadow-md'
+                                        }`}
+                                      >
+                                        {togglingDays[day.id] ? (
+                                          <Loader2 size={14} className="animate-spin" />
+                                        ) : unlockedDays.includes(day.id) ? (
+                                          <Unlock size={14} />
+                                        ) : (
+                                          <Lock size={14} />
+                                        )}
+                                        {unlockedDays.includes(day.id) ? 'Unlocked' : 'Locked'}
+                                      </button>
+                                      {!isRevision && <DayEditDialog day={day} />}
+                                    </div>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                              {!isRevision && (
+                                <TableRow>
+                                  <TableCell colSpan={4} className="p-8 bg-slate-50/30">
+                                    <div className="flex justify-center">
+                                      <DayEditDialog weekId={week.id} />
+                                    </div>
+                                  </TableCell>
+                                </TableRow>
+                              )}
+                            </TableBody>
+                          </Table>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  );
+                })}
               </div>
             </motion.div>
           ))}

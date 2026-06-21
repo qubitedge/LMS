@@ -23,14 +23,12 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
   const pageNum = Math.max(0, parseInt(page, 10) || 0);
   const supabase = await createClient();
 
-  // Count total for pagination
+  // Count total for pagination and fetch users in parallel
   let countQuery = supabase
     .from('profiles')
     .select('id', { count: 'exact', head: true })
     .eq('role', role);
   if (q) countQuery = countQuery.or(`full_name.ilike.%${q}%,email.ilike.%${q}%,address.ilike.%${q}%`);
-  const { count: totalCount } = await countQuery;
-  const totalPages = Math.ceil((totalCount || 0) / PAGE_SIZE);
 
   let query = supabase
     .from('profiles')
@@ -43,7 +41,15 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
   }
 
   const ascending = sortOrder === 'asc';
-  const { data: users } = await query.order(sortBy, { ascending });
+
+  const [countResult, usersResult] = await Promise.all([
+    countQuery,
+    query.order(sortBy, { ascending })
+  ]);
+
+  const totalCount = countResult.count;
+  const users = usersResult.data;
+  const totalPages = Math.ceil((totalCount || 0) / PAGE_SIZE);
 
   // Fetch all attendance for fast mapping circumventing the 1000 row API limit
   let allAttendance: any[] = [];

@@ -106,11 +106,11 @@ export default function ProjectSubmissionDialog({ project, submission }: { proje
         <span className="text-sm">✅ Submitted ({submission.status})</span>
         <div className="flex gap-2">
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
+            <DialogTrigger render={
               <Button variant="outline" size="sm" className="h-8 text-xs bg-white text-blue-700 hover:bg-blue-50 border-blue-200">
                 Edit
               </Button>
-            </DialogTrigger>
+            } />
             <DialogContent className="sm:max-w-[425px] rounded-3xl">
               <DialogHeader>
                 <DialogTitle className="text-xl" style={{ fontFamily: 'Playfair Display', color: '#2C2C2C' }}>
@@ -167,11 +167,11 @@ export default function ProjectSubmissionDialog({ project, submission }: { proje
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger render={
         <Button className="w-full bg-[#40C4D0] hover:bg-[#35A5B0] text-white rounded-xl shadow-sm">
           Submit Project
         </Button>
-      </DialogTrigger>
+      } />
       <DialogContent className="sm:max-w-[425px] rounded-3xl">
         <DialogHeader>
           <DialogTitle className="text-xl" style={{ fontFamily: 'Playfair Display', color: '#2C2C2C' }}>

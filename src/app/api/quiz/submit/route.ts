@@ -4,6 +4,7 @@ import { calculateStreak } from '@/lib/utils/streak';
 import { canAttemptQuiz, isWithinQuizWindow } from '@/lib/utils/dayLock';
 import { parseISO, isToday } from 'date-fns';
 import { revalidatePath } from 'next/cache';
+import capstoneTeams from '@/lib/capstone-teams.json';
 
 export async function POST(req: Request) {
   try {
@@ -45,7 +46,16 @@ export async function POST(req: Request) {
         .maybeSingle();
 
       const unlockedDays = setting?.value || [];
-      const isUnlocked = unlockedDays.includes(quiz.day_id);
+      
+      const capstoneUser = capstoneTeams.find(t => t.email === user.email);
+      const isCapstoneSelected = !!capstoneUser;
+      
+      const daysData = quiz.days as any;
+      const weekNumber = Array.isArray(daysData) ? daysData[0]?.weeks?.week_number : daysData?.weeks?.week_number;
+      
+      const isRev = weekNumber === 6 && !isCapstoneSelected;
+      const checkId = isRev ? `${quiz.day_id}-revision` : quiz.day_id;
+      const isUnlocked = unlockedDays.includes(checkId);
 
       if (!isUnlocked) {
         return NextResponse.json({ message: 'This day is currently locked by the administrator.' }, { status: 403 });

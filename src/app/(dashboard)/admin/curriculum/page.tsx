@@ -6,20 +6,21 @@ export const revalidate = 60;
 export default async function AdminCurriculumPage() {
   const supabase = await createClient();
 
-  // Fetch events with nested weeks and days
-  const { data: events } = await supabase
-    .from('events')
-    .select('*, weeks(*, days(*))')
-    .order('created_at', { ascending: false });
+  // Fetch events and settings in parallel
+  const [eventsResult, settingResult] = await Promise.all([
+    supabase
+      .from('events')
+      .select('*, weeks(*, days(*))')
+      .order('created_at', { ascending: false }),
+    supabase
+      .from('site_settings')
+      .select('value')
+      .eq('key', 'unlocked_days')
+      .maybeSingle()
+  ]);
 
-  // Fetch the unlocked days site setting
-  const { data: setting } = await supabase
-    .from('site_settings')
-    .select('value')
-    .eq('key', 'unlocked_days')
-    .maybeSingle();
-
-  const initialUnlockedDays = setting?.value || [];
+  const events = eventsResult.data;
+  const initialUnlockedDays = settingResult.data?.value || [];
 
   return <EventsManagementClient events={events} initialUnlockedDays={initialUnlockedDays} />;
 }

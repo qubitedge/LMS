@@ -126,6 +126,7 @@ export interface DayWithStatus extends DayWithQuiz {
   score?: number;
   hasAttendance?: boolean;
   hasSubmission?: boolean;
+  isRevisionDay?: boolean;
 }
 
 export interface WeekWithDays extends Week {

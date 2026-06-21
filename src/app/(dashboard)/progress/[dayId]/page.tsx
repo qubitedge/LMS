@@ -14,22 +14,49 @@ import SubmissionForm from '@/components/tasks/submission-form';
 import DeleteSubmissionButton from '@/components/tasks/delete-submission-button';
 import { Badge } from '@/components/ui/badge';
 
-export default async function DayDetailPage({ params }: { params: { dayId: string } }) {
+import capstoneTeams from '@/lib/capstone-teams.json';
+
+export default async function DayDetailPage({ 
+  params,
+  searchParams
+}: { 
+  params: { dayId: string };
+  searchParams: { play?: string; view?: string };
+}) {
   // Await params first to resolve the Promise
   const resolvedParams = await params;
   const dayId = resolvedParams.dayId;
+  const resolvedSearchParams = await searchParams;
+  const playVideoId = resolvedSearchParams?.play;
+  const viewMode = resolvedSearchParams?.view;
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) redirect('/login');
 
-  // Fetch Day + Quiz
-  const { data: day, error } = await supabase
-    .from('days')
-    .select('*, quizzes(*), weeks(week_number, title)')
-    .eq('id', dayId)
-    .single();
+  // Fetch Day + Quiz, user profile, and settings in parallel
+  const [dayResult, profileResult, settingResult] = await Promise.all([
+    supabase
+      .from('days')
+      .select('*, quizzes(*), weeks(week_number, title)')
+      .eq('id', dayId)
+      .single(),
+    supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single(),
+    supabase
+      .from('site_settings')
+      .select('value')
+      .eq('key', 'unlocked_days')
+      .maybeSingle()
+  ]);
+
+  const { data: day, error } = dayResult;
+  const profile = profileResult.data;
+  const setting = settingResult.data;
 
   if (error || !day) notFound();
 
@@ -47,30 +74,61 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
     scoreObj = data;
   }
 
-  // Fetch user profile for role check
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-
-  // Fetch the unlocked days site setting
-  const { data: setting } = await supabase
-    .from('site_settings')
-    .select('value')
-    .eq('key', 'unlocked_days')
-    .maybeSingle();
-
   const unlockedDays = setting?.value || [];
-  const isUnlocked = unlockedDays.includes(dayId);
   const isAdmin = profile?.role === 'admin';
+
+  // Check if Capstone user
+  const capstoneUser = capstoneTeams.find(t => t.email === user.email);
+  const isCapstoneSelected = !!capstoneUser;
+  const showRevision = day.weeks?.week_number === 6 && (!isCapstoneSelected && !isAdmin || (isAdmin && viewMode === 'revision'));
+
+  const checkId = showRevision ? `${dayId}-revision` : dayId;
+  const isUnlocked = unlockedDays.includes(checkId);
 
   if (!isAdmin && !isUnlocked) {
     redirect('/progress');
   }
 
   const hasAttempted = !!scoreObj;
-  const status = getDayStatus(day.date, hasAttempted);
+  let status = getDayStatus(day.date, hasAttempted);
+  if (status === 'locked' && (isAdmin || isUnlocked)) {
+    status = 'active';
+  }
+
+  let targetWeekNumber = 1;
+  let targetDaysList: any[] = [];
+  let activeVideoUrl = day.video_url;
+
+  if (showRevision) {
+    targetWeekNumber = day.day_number - 25; // Day 26 -> Week 1, Day 27 -> Week 2, etc.
+    const revisionNames = [
+      'Week-1 Revision',
+      'Week-2',
+      'Week-3',
+      'Week-4',
+      'Week-5'
+    ];
+    day.topic = revisionNames[day.day_number - 26] || `Week-${targetWeekNumber} Revision`;
+    day.description = `Review all session recordings, presentation decks, and materials from Week ${targetWeekNumber}.`;
+    day.tutor_name = 'Qubitedge Team';
+    if (day.weeks) {
+      day.weeks.title = 'Revision & Recording Sessions';
+    }
+
+    // Fetch days of that week from database
+    const { data: targetDays } = await supabase
+      .from('days')
+      .select('*, weeks!inner(*)')
+      .eq('weeks.week_number', targetWeekNumber)
+      .order('day_number', { ascending: true });
+    
+    targetDaysList = targetDays || [];
+    const selectedDayObj = playVideoId 
+      ? targetDaysList.find((d: any) => d.id === playVideoId) 
+      : targetDaysList.find((d: any) => d.video_url);
+    const finalSelectedDay = selectedDayObj || targetDaysList.find((d: any) => d.video_url) || targetDaysList[0];
+    activeVideoUrl = finalSelectedDay?.video_url || null;
+  }
 
   // Fetch Task for this day
   let { data: task } = await supabase
@@ -174,11 +232,11 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
             </div>
 
             <div className="relative aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-slate-50 mb-8 bg-slate-100 flex items-center justify-center">
-              {day.video_url ? (
-                day.video_url.includes('youtube.com') || day.video_url.includes('youtu.be') ? (
+              {activeVideoUrl ? (
+                activeVideoUrl.includes('youtube.com') || activeVideoUrl.includes('youtu.be') ? (
                   <iframe
                     className="absolute inset-0 w-full h-full"
-                    src={`https://www.youtube.com/embed/${day.video_url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/)?.[1] || day.video_url.split('/').pop()}`}
+                    src={`https://www.youtube.com/embed/${activeVideoUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/)?.[1] || activeVideoUrl.split('/').pop()}`}
                     title="YouTube video player"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -187,7 +245,7 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
                 ) : (
                   <div className="text-center p-10">
                     <p className="font-bold text-[#7182C7] mb-6">Recording available on external platform</p>
-                    <a href={day.video_url} target="_blank" rel="noopener noreferrer">
+                    <a href={activeVideoUrl} target="_blank" rel="noopener noreferrer">
                       <Button className="h-16 px-10 rounded-2xl bg-red-500 hover:bg-red-600 text-white font-black text-lg shadow-xl shadow-red-500/20">
                         Open Recording <ExternalLink size={20} className="ml-2" />
                       </Button>
@@ -226,7 +284,63 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
               </div>
             </div>
 
-            {day.task_link && (
+            {showRevision && (
+              <div className="mb-8 p-8 rounded-[2.5rem] bg-[#FAFAFA] border border-slate-100 shadow-md">
+                <h3 className="text-2xl font-black text-[#1A1A2E] italic mb-6 flex items-center gap-3">
+                  <PlayCircle className="text-[#4A5DB5]" size={28} />
+                  Week {targetWeekNumber} Session Recordings
+                </h3>
+                <div className="grid grid-cols-1 gap-4">
+                  {targetDaysList.map((d: any) => {
+                    const isPlaying = playVideoId ? d.id === playVideoId : (d.video_url === activeVideoUrl);
+                    return (
+                      <div 
+                        key={d.id} 
+                        className={`p-5 rounded-2xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4
+                          ${isPlaying 
+                            ? 'bg-[#F0F4FF] border-[#4A5DB5]/30 shadow-md' 
+                            : 'bg-white border-slate-100 hover:border-blue-100 hover:shadow-sm'
+                          }
+                        `}
+                      >
+                        <div>
+                          <p className="text-[10px] font-black text-[#7182C7] uppercase tracking-wider mb-1">
+                            Day {d.day_number}
+                          </p>
+                          <h4 className="font-bold text-lg text-[#1A1A2E]">
+                            {d.topic}
+                          </h4>
+                          {d.description && (
+                            <p className="text-xs text-[#7182C7] mt-1 line-clamp-1">{d.description}</p>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-3 self-end sm:self-center">
+                          {d.video_url ? (
+                            isPlaying ? (
+                              <Badge className="bg-[#4A5DB5] text-white font-black text-[10px] uppercase px-3 py-1.5 rounded-full border-none">
+                                Now Playing
+                              </Badge>
+                            ) : (
+                              <Link href={`/progress/${dayId}?play=${d.id}`}>
+                                <Button className="h-10 px-5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-[#4A5DB5] font-black text-xs shadow-sm">
+                                  Play Session
+                                </Button>
+                              </Link>
+                            )
+                          ) : (
+                            <Badge variant="outline" className="text-slate-400 border-slate-200 bg-slate-50 font-black text-[10px] uppercase px-3 py-1.5 rounded-full">
+                              No Recording
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {!showRevision && day.task_link && (
               <div className="mb-8 p-6 rounded-[2rem] bg-[#F4F9F6] border border-[#34C759]/20 flex flex-col items-stretch gap-6 shadow-lg shadow-[#34C759]/5 group">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                   <div className="flex items-center gap-4">
@@ -257,7 +371,7 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
               </div>
             )}
 
-            {task && (
+            {!showRevision && task && (
               <div className="mb-8 bg-[#FAFAFA] rounded-[2rem] p-8 border border-slate-100 shadow-md">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-200/50">
                   <div>
@@ -430,22 +544,298 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
             <div className="space-y-6">
               <div>
                 <h4 className="text-[10px] font-black text-[#A0ACDC] uppercase tracking-[0.2em] mb-3">Overview</h4>
-                <p className="text-md font-bold leading-relaxed text-[#7182C7] italic">
-                  {day.description || 'This session covers the fundamental principles and practical applications of the topic.'}
-                </p>
+                {showRevision && targetWeekNumber === 1 ? (
+                  <div className="text-sm font-medium leading-relaxed text-[#7182C7] space-y-4">
+                    <h5 className="font-bold text-[#1A1A2E] text-base mb-2">Data Foundations & SQL Bootcamp — Study Notes</h5>
+                    <div>
+                      <h6 className="font-bold text-[#4A5DB5] mb-1">📅 Day 1 — What is Data · Data Lifecycle · Basic Functions</h6>
+                      <p><strong>What is Data</strong><br />Data is raw facts and figures — numbers, text, dates, images — that have no meaning on their own until processed. Example: 25, "John", 90000 are just values; together they become "John earns ₹90,000 aged 25."</p>
+                      <p className="mt-2"><strong>Data Lifecycle</strong><br />The journey data takes from creation to deletion:<br />Collection → Storage → Processing → Analysis → Visualization → Archival/Deletion</p>
+                      <p className="mt-2"><strong>Basic Excel Functions</strong><br />
+                      • SUM(A1:A10) — Adds up a range of numbers<br />
+                      • AVERAGE(B1:B10) — Finds the mean value<br />
+                      • COUNT(C1:C10) — Counts numeric cells<br />
+                      • MAX / MIN — Finds highest or lowest value<br />
+                      • IF(A1&gt;50, "Pass", "Fail") — Returns value based on condition</p>
+                    </div>
+                    <div className="mt-4">
+                      <h6 className="font-bold text-[#4A5DB5] mb-1">📅 Day 2 — Lookup Functions · Logical Functions · Data Cleaning · Data Matching</h6>
+                      <p><strong>Lookup Functions</strong><br />Used to search and retrieve data from a table.<br />
+                      • VLOOKUP(102, A:C, 2, FALSE) — Looks up Employee ID 102 and retrieves corresponding data</p>
+                    </div>
+                  </div>
+                ) : showRevision && targetWeekNumber === 2 ? (
+                  <div className="text-sm font-medium leading-relaxed text-[#7182C7] space-y-4">
+                    <h5 className="font-bold text-[#1A1A2E] text-base mb-2">Data Analysis & SQL Deep Dive — Study Notes</h5>
+                    
+                    <div>
+                      <h6 className="font-bold text-[#4A5DB5] mb-1">📅 Day 6 — SQL Filtering, Sorting & Aggregations</h6>
+                      <p><strong>Filtering with WHERE</strong><br />Narrow down rows based on conditions before fetching results.<br />
+                      • SELECT * FROM employees WHERE department = 'IT' AND salary &gt; 50000;<br />
+                      • BETWEEN — WHERE salary BETWEEN 30000 AND 80000<br />
+                      • IN — WHERE city IN ('Hyderabad', 'Bangalore', 'Chennai')<br />
+                      • LIKE — WHERE name LIKE 'A%' → names starting with A</p>
+                      
+                      <p className="mt-2"><strong>Sorting with ORDER BY</strong><br />Arrange results in ascending or descending order.<br />
+                      • SELECT name, salary FROM employees ORDER BY salary DESC;<br />
+                      • ASC = lowest to highest (default)<br />
+                      • DESC = highest to lowest</p>
+                      
+                      <p className="mt-2"><strong>Aggregation Functions</strong><br />Summarize many rows into a single value.<br />
+                      • COUNT(*) — Total number of rows<br />
+                      • SUM(salary) — Total of all salaries<br />
+                      • AVG(salary) — Average salary<br />
+                      • MAX(salary) / MIN(salary) — Highest / lowest value</p>
+                      
+                      <p className="mt-2"><strong>GROUP BY & HAVING</strong><br />
+                      Group rows by a category, then apply aggregation per group.<br />
+                      • SELECT department, AVG(salary) FROM employees GROUP BY department;<br />
+                      Like WHERE but filters after grouping — used with aggregations.<br />
+                      • SELECT department, COUNT(*) FROM employees GROUP BY department HAVING COUNT(*) &gt; 5;</p>
+                    </div>
+
+                    <div className="mt-4">
+                      <h6 className="font-bold text-[#4A5DB5] mb-1">📅 Day 7 — SQL Joins</h6>
+                      <p><strong>What is a Join?</strong><br />Combines rows from two or more tables based on a related column.</p>
+                      <ul className="list-disc pl-5 mt-1 space-y-1">
+                        <li><strong>INNER JOIN:</strong> Returns only rows that have a match in both tables.</li>
+                        <li><strong>LEFT JOIN:</strong> Returns all rows from the left table + matched rows from right. Unmatched right side shows NULL.</li>
+                        <li><strong>RIGHT JOIN:</strong> Opposite of LEFT JOIN — all rows from right table, matched from left.</li>
+                        <li><strong>FULL OUTER JOIN:</strong> Returns everything from both tables. NULLs where no match exists on either side.</li>
+                        <li><strong>SELF JOIN:</strong> A table joined to itself — useful for hierarchies like employee-manager relationships.</li>
+                      </ul>
+                    </div>
+
+                    <div className="mt-4">
+                      <h6 className="font-bold text-[#4A5DB5] mb-1">📅 Day 8 — Subqueries · CTEs · Window Functions</h6>
+                      <p><strong>Subqueries:</strong> A query nested inside another query — inner query runs first, result is used by outer query.<br />
+                      <strong>CTEs:</strong> A named temporary result set using WITH — makes complex queries readable and reusable.<br />
+                      <strong>Window Functions:</strong> Perform calculations across a set of rows related to the current row.</p>
+                      <ul className="list-disc pl-5 mt-1 space-y-1">
+                        <li>ROW_NUMBER() — Assigns a unique rank to each row</li>
+                        <li>RANK() — Same but ties get the same rank (with gaps)</li>
+                        <li>DENSE_RANK() — Same rank for ties but no gaps</li>
+                        <li>LAG() / LEAD() — Fetch previous/next row's value</li>
+                      </ul>
+                    </div>
+
+                    <div className="mt-4">
+                      <h6 className="font-bold text-[#4A5DB5] mb-1">📅 Day 9 & 10 — Data Analysis Workflow & Real Data</h6>
+                      <p><strong>Types of Data Analysis:</strong> Descriptive (What happened), Diagnostic (Why), Predictive (What will happen), Prescriptive (What should we do).</p>
+                      <p className="mt-2"><strong>Key Concepts:</strong> Mean/Median/Mode, Standard Deviation, Correlation, Outliers.</p>
+                      <p className="mt-2"><strong>Handling Real Data Problems:</strong><br />
+                      • Missing values → Fill with mean/median or drop<br />
+                      • Duplicates → Identify with COUNT + GROUP BY, remove with DISTINCT<br />
+                      • Wrong data types / Inconsistent labels → Cast or standardize</p>
+                      <p className="mt-2"><strong>Insight Generation:</strong> Don't just run queries — ask "so what?" after every result to find business value.</p>
+                    </div>
+
+                  </div>
+                ) : showRevision && targetWeekNumber === 3 ? (
+                  <div className="text-sm font-medium leading-relaxed text-[#7182C7] space-y-4">
+                    <h5 className="font-bold text-[#1A1A2E] text-base mb-2">Python for Data Analysis — Study Notes</h5>
+                    
+                    <div>
+                      <h6 className="font-bold text-[#4A5DB5] mb-1">📅 Day 11 — Python Basics</h6>
+                      <p><strong>What is Python?</strong><br />A high-level, easy-to-read programming language widely used in data science, AI, web development, and automation.</p>
+                      
+                      <p className="mt-2"><strong>Variables & Data Types</strong><br />
+                      • String: <code>name = "Likhith"</code><br />
+                      • Integer: <code>age = 21</code><br />
+                      • Float: <code>gpa = 8.5</code><br />
+                      • Boolean: <code>is_student = True</code></p>
+                      
+                      <p className="mt-2"><strong>Basic Operators & Strings</strong><br />
+                      • Arithmetic: +, -, *, /, // (floor div), % (modulus), ** (power)<br />
+                      • Strings: <code>name.upper()</code>, <code>name.replace("l","L")</code>, <code>len(name)</code>, <code>f"Hello name"</code></p>
+                    </div>
+
+                    <div className="mt-4">
+                      <h6 className="font-bold text-[#4A5DB5] mb-1">📅 Day 12 — Control Flow and Functions</h6>
+                      <p><strong>Control Flow:</strong><br />
+                      • <code>if/elif/else</code> for conditional execution<br />
+                      • <code>for</code> loops for iterating over a sequence (e.g., <code>for i in range(1, 6):</code>)<br />
+                      • <code>while</code> loops repeat as long as a condition is True<br />
+                      • <code>break</code> (exit loop), <code>continue</code> (skip iteration)</p>
+                      
+                      <p className="mt-2"><strong>Functions:</strong><br />
+                      Reusable blocks of code defined using <code>def</code>.<br />
+                      • Default & Keyword Arguments: <code>def power(base, exp=2):</code><br />
+                      • Lambda Functions: One-line anonymous functions (e.g., <code>square = lambda x: x ** 2</code>)</p>
+                    </div>
+
+                    <div className="mt-4">
+                      <h6 className="font-bold text-[#4A5DB5] mb-1">📅 Day 13 — Data Structures</h6>
+                      <p><strong>List:</strong> Ordered, mutable (changeable) collection. <code>[85, 90, 78, 92]</code><br />
+                      <strong>Tuple:</strong> Ordered but immutable (cannot change). <code>(17.38, 78.48)</code><br />
+                      <strong>Dictionary:</strong> Key-value pairs. <code>{`{"name": "Likhith", "age": 21}`}</code><br />
+                      <strong>Set:</strong> Unordered collection of unique values. Removes duplicates automatically. <code>{`{"python", "sql"}`}</code></p>
+                      
+                      <p className="mt-2"><strong>List Comprehension:</strong> Compact way to create lists.<br />
+                      <code>{`[x**2 for x in range(1, 6)]`}</code> → [1, 4, 9, 16, 25]</p>
+                    </div>
+
+                    <div className="mt-4">
+                      <h6 className="font-bold text-[#4A5DB5] mb-1">📅 Day 14 & 15 — Python Data Libraries (NumPy, Pandas, Visualization)</h6>
+                      <p><strong>NumPy:</strong> Fast array operations. <code>arr.mean()</code>, <code>arr.max()</code><br />
+                      <strong>Pandas:</strong> Data manipulation using DataFrames.<br />
+                      • Load: <code>df = pd.read_csv("data.csv")</code><br />
+                      • Explore: <code>df.head()</code>, <code>df.info()</code>, <code>df.describe()</code><br />
+                      • Filter: <code>df[df["salary"] &gt; 50000]</code><br />
+                      • Missing Values: <code>df.isnull().sum()</code>, <code>df.dropna()</code><br />
+                      • Grouping: <code>df.groupby("department")["salary"].mean()</code></p>
+                      
+                      <p className="mt-2"><strong>Visualization:</strong><br />
+                      • <strong>Matplotlib:</strong> Basic charting like <code>plt.bar()</code><br />
+                      • <strong>Seaborn:</strong> Advanced charting like <code>sns.histplot()</code>, <code>sns.heatmap()</code></p>
+                    </div>
+
+                  </div>
+                ) : showRevision && targetWeekNumber === 4 ? (
+                  <div className="text-sm font-medium leading-relaxed text-[#7182C7] space-y-4">
+                    <h5 className="font-bold text-[#1A1A2E] text-base mb-2">Machine Learning & AI — Study Notes</h5>
+                    
+                    <div>
+                      <h6 className="font-bold text-[#4A5DB5] mb-1">📅 Day 16 — AI: From Fundamentals to Future Innovations</h6>
+                      <p><strong>What is AI?</strong> Simulation of human intelligence in machines — enabling them to think, learn, reason, and make decisions.</p>
+                      <p className="mt-2"><strong>AI vs ML vs DL:</strong><br />
+                      • <strong>AI:</strong> Broad concept of intelligent machines<br />
+                      • <strong>ML:</strong> Machines learning from data without explicit programming<br />
+                      • <strong>DL:</strong> ML using neural networks with many layers</p>
+                      <p className="mt-2"><strong>Types of AI:</strong> Narrow AI (ANI) for specific tasks, General AI (AGI) for human-level reasoning, Super AI (ASI) surpassing human intelligence.</p>
+                    </div>
+
+                    <div className="mt-4">
+                      <h6 className="font-bold text-[#4A5DB5] mb-1">📅 Day 17 — Supervised Learning</h6>
+                      <p><strong>Supervised Learning:</strong> Learning from labeled data where every training example has a known correct output.</p>
+                      <p className="mt-2"><strong>Two Types of Tasks:</strong><br />
+                      • <strong>Regression:</strong> Predict a continuous number (e.g., house price)<br />
+                      • <strong>Classification:</strong> Predict a category/class (e.g., Spam or Not Spam)</p>
+                      <p className="mt-2"><strong>Key Algorithms:</strong><br />
+                      • Linear Regression (y = mx + c)<br />
+                      • Logistic Regression (Probabilities for classification)<br />
+                      • Decision Trees & Random Forests (Splits data using yes/no questions)<br />
+                      • Support Vector Machines (SVM)</p>
+                    </div>
+
+                    <div className="mt-4">
+                      <h6 className="font-bold text-[#4A5DB5] mb-1">📅 Day 18 — Unsupervised Learning</h6>
+                      <p><strong>Unsupervised Learning:</strong> Learning from unlabeled data. The model finds hidden patterns or structures on its own.</p>
+                      <p className="mt-2"><strong>Two Main Tasks:</strong><br />
+                      • <strong>Clustering:</strong> Group similar data points (e.g., K-Means, DBSCAN, Hierarchical)<br />
+                      • <strong>Dimensionality Reduction:</strong> Reduce features while keeping information (e.g., PCA)</p>
+                      <p className="mt-2"><strong>K-Means:</strong> Choose K clusters, assign points to nearest centroid, update centers iteratively.</p>
+                    </div>
+
+                    <div className="mt-4">
+                      <h6 className="font-bold text-[#4A5DB5] mb-1">📅 Day 19 — Classifications</h6>
+                      <p><strong>Algorithms:</strong><br />
+                      • <strong>KNN:</strong> K-Nearest Neighbors classifies by majority vote.<br />
+                      • <strong>Naive Bayes:</strong> Fast, probability-based, good for text/spam.<br />
+                      • <strong>SVM:</strong> Max margin separator between classes.</p>
+                      <p className="mt-2"><strong>Evaluation Metrics:</strong><br />
+                      • <strong>Accuracy:</strong> Correct Predictions / Total Predictions<br />
+                      • <strong>Precision:</strong> True Positives / (True Positives + False Positives)<br />
+                      • <strong>Recall:</strong> True Positives / (True Positives + False Negatives)<br />
+                      • <strong>F1 Score:</strong> Harmonic mean of Precision and Recall</p>
+                    </div>
+
+                    <div className="mt-4">
+                      <h6 className="font-bold text-[#4A5DB5] mb-1">📅 Day 20 — Deep Learning & Model Evaluation</h6>
+                      <p><strong>Deep Learning:</strong> Neural Networks with hidden layers (Input → Hidden → Output). Uses activation functions like ReLU, Sigmoid, Softmax.</p>
+                      <p className="mt-2"><strong>Learning Process:</strong> Backpropagation and Gradient Descent to update weights based on Loss Functions (MSE, Cross-Entropy).</p>
+                      <p className="mt-2"><strong>Model Evaluation:</strong> Train/Validation/Test splits and K-Fold Cross Validation.</p>
+                      <p className="mt-2"><strong>Overfitting/Underfitting Fixes:</strong> Regularization (L1/L2), Dropout, Early Stopping. Hyperparameters to tune include Learning Rate, Batch Size, Epochs, and Network structure.</p>
+                    </div>
+
+                  </div>
+                ) : showRevision && targetWeekNumber === 5 ? (
+                  <div className="text-sm font-medium leading-relaxed text-[#7182C7] space-y-4">
+                    <h5 className="font-bold text-[#1A1A2E] text-base mb-2">IoT & LLMs — Study Notes</h5>
+                    
+                    <div>
+                      <h6 className="font-bold text-[#4A5DB5] mb-1">📅 Day 21 — IoT Fundamentals</h6>
+                      <p><strong>What is IoT?</strong> Internet of Things — a network of physical devices embedded with sensors, software, and connectivity that exchange data over the internet without human intervention.</p>
+                      <p className="mt-2"><strong>Core Components:</strong><br />
+                      • <strong>Sensors/Actuators:</strong> Collect data / perform actions (e.g., Temp sensor, Motors).<br />
+                      • <strong>Microcontrollers:</strong> The brain (e.g., Arduino, Raspberry Pi, ESP32).<br />
+                      • <strong>Connectivity:</strong> WiFi, Bluetooth, Zigbee, LoRa.<br />
+                      • <strong>Processing:</strong> Edge Computing (local) vs Cloud Computing (remote).</p>
+                    </div>
+
+                    <div className="mt-4">
+                      <h6 className="font-bold text-[#4A5DB5] mb-1">📅 Day 22 — IoT Communication & Protocols</h6>
+                      <p><strong>Key Protocols:</strong><br />
+                      • <strong>MQTT:</strong> Lightweight publish-subscribe protocol (Publisher → Broker → Subscriber).<br />
+                      • <strong>HTTP/REST:</strong> Standard web protocol (GET/POST).<br />
+                      • <strong>CoAP:</strong> Like HTTP for low-power devices, uses UDP.<br />
+                      • <strong>LoRaWAN:</strong> Long range (up to 15km), low power, low data rate.</p>
+                      <p className="mt-2"><strong>Network Topologies:</strong> Star, Mesh, Bus, P2P.</p>
+                    </div>
+
+                    <div className="mt-4">
+                      <h6 className="font-bold text-[#4A5DB5] mb-1">📅 Day 23 — IoT Cloud Integration & Security</h6>
+                      <p><strong>Cloud Integration:</strong> Scalable storage, remote access, analytics. Platforms include AWS IoT Core, Azure IoT Hub.<br />
+                      <strong>Gateway & Digital Twin:</strong> Gateways aggregate data before cloud. Digital Twins are virtual replicas of physical devices for real-time monitoring.</p>
+                      <p className="mt-2"><strong>Security Best Practices:</strong><br />
+                      • Authentication (X.509 certs)<br />
+                      • Encryption (TLS/SSL, AES)<br />
+                      • Network Segmentation (VLANs)<br />
+                      • Edge Computing for Security (processing data locally)</p>
+                    </div>
+
+                    <div className="mt-4">
+                      <h6 className="font-bold text-[#4A5DB5] mb-1">📅 Day 24 — LLMs Part 1 (Fundamentals)</h6>
+                      <p><strong>What is an LLM?</strong> Large Language Model — trained on massive amounts of text to understand and generate language.</p>
+                      <p className="mt-2"><strong>Transformer Architecture:</strong> Uses Self-Attention to weigh the importance of every word in context relative to other words.</p>
+                      <p className="mt-2"><strong>Key Concepts:</strong><br />
+                      • <strong>Tokenization:</strong> Text broken into numbers.<br />
+                      • <strong>Pretraining vs Fine-tuning:</strong> Learning language vs adapting to a specific task.<br />
+                      • <strong>Prompt Engineering:</strong> Zero-shot, Few-shot, Chain of Thought.</p>
+                    </div>
+
+                    <div className="mt-4">
+                      <h6 className="font-bold text-[#4A5DB5] mb-1">📅 Day 25 — LLMs Part 2 (Applications & Advanced Concepts)</h6>
+                      <p><strong>RAG (Retrieval Augmented Generation):</strong> Solves knowledge cutoff by retrieving relevant documents from a vector database before generating an answer.</p>
+                      <p className="mt-2"><strong>Advanced Concepts:</strong><br />
+                      • <strong>Vector Embeddings:</strong> Semantically similar text is close in vector space.<br />
+                      • <strong>Context Window:</strong> Max tokens the model can process at once (e.g., 128K for GPT-4, 1M for Gemini).<br />
+                      • <strong>AI Agents:</strong> LLMs combined with tools (browse web, run code) to act autonomously.</p>
+                    </div>
+
+                  </div>
+                ) : (
+                  <p className="text-md font-bold leading-relaxed text-[#7182C7] italic">
+                    {day.description || 'This session covers the fundamental principles and practical applications of the topic.'}
+                  </p>
+                )}
               </div>
 
-              {day.sub_topics && (
+              {showRevision ? (
                 <div>
-                  <h4 className="text-[10px] font-black text-[#A0ACDC] uppercase tracking-[0.2em] mb-4">Core Topics</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {day.sub_topics.split('-').map((topic: string, i: number) => (
-                      <span key={i} className="px-4 py-2 bg-slate-50 border border-slate-100 rounded-xl text-[11px] font-black text-[#4A5DB5] uppercase tracking-tighter">
-                        {topic.trim()}
-                      </span>
+                  <h4 className="text-[10px] font-black text-[#A0ACDC] uppercase tracking-[0.2em] mb-4">Weekly Curriculum</h4>
+                  <div className="flex flex-col gap-3">
+                    {targetDaysList.map((d: any) => (
+                      <div key={d.id} className="p-3 bg-slate-50 border border-slate-100 rounded-xl">
+                        <p className="text-[10px] font-black text-[#4A5DB5] uppercase tracking-wider">Day {d.day_number}</p>
+                        <p className="text-xs font-bold text-[#1A1A2E] mt-0.5">{d.topic}</p>
+                      </div>
                     ))}
                   </div>
                 </div>
+              ) : (
+                day.sub_topics && (
+                  <div>
+                    <h4 className="text-[10px] font-black text-[#A0ACDC] uppercase tracking-[0.2em] mb-4">Core Topics</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {day.sub_topics.split('-').map((topic: string, i: number) => (
+                        <span key={i} className="px-4 py-2 bg-slate-50 border border-slate-100 rounded-xl text-[11px] font-black text-[#4A5DB5] uppercase tracking-tighter">
+                          {topic.trim()}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )
               )}
             </div>
           </div>
@@ -464,29 +854,31 @@ export default async function DayDetailPage({ params }: { params: { dayId: strin
                 <h3 className="text-2xl font-black text-white italic">Knowledge Check</h3>
               </div>
 
-              <p className="text-white/60 font-bold mb-10 text-sm leading-relaxed">
-                Complete the daily assessment to validate your understanding and earn progress badges.
-              </p>
+              <>
+                <p className="text-white/60 font-bold mb-10 text-sm leading-relaxed">
+                  Complete the daily assessment to validate your understanding and earn progress badges.
+                </p>
 
-              {day.quiz_link ? (
-                  <a href={day.quiz_link} target="_blank" rel="noopener noreferrer" className="block">
-                    <Button className="w-full h-20 rounded-[2rem] bg-gradient-to-r from-[#4A5DB5] to-[#7182C7] hover:scale-[1.02] active:scale-95 transition-all text-white font-black text-xl shadow-2xl shadow-blue-500/40">
-                      GET QUIZ <ExternalLink size={24} className="ml-3" />
-                    </Button>
-                  </a>
-              ) : quiz ? (
-                hasAttempted ? (
-                  <ScoreCard score={scoreObj.score} maxScore={quiz.max_score} />
+                {day.quiz_link ? (
+                    <a href={day.quiz_link} target="_blank" rel="noopener noreferrer" className="block">
+                      <Button className="w-full h-20 rounded-[2rem] bg-gradient-to-r from-[#4A5DB5] to-[#7182C7] hover:scale-[1.02] active:scale-95 transition-all text-white font-black text-xl shadow-2xl shadow-blue-500/40">
+                        GET QUIZ <ExternalLink size={24} className="ml-3" />
+                      </Button>
+                    </a>
+                ) : quiz ? (
+                  hasAttempted ? (
+                    <ScoreCard score={scoreObj.score} maxScore={quiz.max_score} />
+                  ) : (
+                    <QuizPlayer quizId={quiz.id} questions={quiz.questions} />
+                  )
                 ) : (
-                  <QuizPlayer quizId={quiz.id} questions={quiz.questions} />
-                )
-              ) : (
-                <div className="text-center py-6 px-4 rounded-[2rem] border-2 border-dashed border-white/20">
-                  <p className="text-white/40 font-black italic uppercase tracking-widest text-sm">
-                    Quiz will be updated soon
-                  </p>
-                </div>
-              )}
+                  <div className="text-center py-6 px-4 rounded-[2rem] border-2 border-dashed border-white/20">
+                    <p className="text-white/40 font-black italic uppercase tracking-widest text-sm">
+                      Quiz will be updated soon
+                    </p>
+                  </div>
+                )}
+              </>
             </div>
 
             {/* Decorative background element */}

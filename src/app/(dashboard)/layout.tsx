@@ -22,14 +22,8 @@ export default async function DashboardLayout({
     redirect('/login');
   }
 
-  const profile = await getProfile(user.id);
-
-  if (profile && profile.is_active === false) {
-    await supabase.auth.signOut();
-    redirect('/login?error=account_disabled');
-  }
-
-  const [{ count: completedDays }, { data: setting }, { data: approvedProjects }, { data: capstoneSelection }] = await Promise.all([
+  const [profile, attendanceResult, settingResult, approvedProjectsResult, capstoneSelectionResult] = await Promise.all([
+    getProfile(user.id),
     supabase
       .from('attendance')
       .select('*', { count: 'exact', head: true })
@@ -51,6 +45,16 @@ export default async function DashboardLayout({
       .eq('user_id', user.id)
       .maybeSingle()
   ]);
+
+  if (profile && profile.is_active === false) {
+    await supabase.auth.signOut();
+    redirect('/login?error=account_disabled');
+  }
+
+  const completedDays = attendanceResult.count;
+  const setting = settingResult.data;
+  const approvedProjects = approvedProjectsResult.data;
+  const capstoneSelection = capstoneSelectionResult.data;
 
   const isEligibleForCapstone = approvedProjects && approvedProjects.length > 0;
   const hasSubmittedCapstone = !!capstoneSelection;

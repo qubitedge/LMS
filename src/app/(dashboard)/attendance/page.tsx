@@ -21,24 +21,32 @@ export default async function AttendancePage() {
   const totalMinutes = istHour * 60 + istMinute;
   const isWithinWindow = totalMinutes >= 615 && totalMinutes < 840;
 
-  // Fetch relevant settings
-  const { data: settings } = await supabase
-    .from('site_settings')
-    .select('key, value')
-    .in('key', ['unlocked_days', 'attendance_unlocked']);
+  // Fetch settings, module days, and user attendance history in parallel
+  const [settingsResult, allDaysResult, attendanceResult] = await Promise.all([
+    supabase
+      .from('site_settings')
+      .select('key, value')
+      .in('key', ['unlocked_days', 'attendance_unlocked']),
+    supabase
+      .from('days')
+      .select('id, date, topic')
+      .gte('date', '2026-05-18')
+      .order('date', { ascending: true }),
+    supabase
+      .from('attendance')
+      .select('*')
+      .eq('user_id', user.id)
+  ]);
+
+  const settings = settingsResult.data;
+  const allDaysData = allDaysResult.data;
+  const attendanceHistory = attendanceResult.data;
 
   const unlockedSetting = settings?.find(s => s.key === 'unlocked_days');
   const attendanceUnlockedSetting = settings?.find(s => s.key === 'attendance_unlocked');
 
   const unlockedDayIds: string[] = unlockedSetting?.value || [];
   const isAttendanceUnlocked = attendanceUnlockedSetting?.value === true;
-
-  // Fetch all module days to list in history, starting from May 18, 2026
-  const { data: allDaysData } = await supabase
-    .from('days')
-    .select('id, date, topic')
-    .gte('date', '2026-05-18')
-    .order('date', { ascending: true });
 
   const allModuleDays: any[] = [];
   const seenDates = new Set();
@@ -58,12 +66,6 @@ export default async function AttendancePage() {
   if (todayModule) {
     isTodayModuleDay = true;
   }
-
-  // Fetch all attendance for user
-  const { data: attendanceHistory } = await supabase
-    .from('attendance')
-    .select('*')
-    .eq('user_id', user.id);
 
   // Map for fast lookup
   const markedAttendanceMap = new Map();

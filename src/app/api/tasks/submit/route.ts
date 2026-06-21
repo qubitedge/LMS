@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 import { calculateStreak } from '@/lib/utils/streak';
 import { uploadToGoogleDrive } from '@/lib/googleDrive';
+import capstoneTeams from '@/lib/capstone-teams.json';
 
 export async function POST(req: Request) {
   try {
@@ -90,7 +91,7 @@ export async function POST(req: Request) {
     // Fetch task and its associated day ID
     const { data: task, error: taskErr } = await supabase
       .from('tasks')
-      .select('id, day_id')
+      .select('id, day_id, days(day_number, weeks(week_number))')
       .eq('id', taskId)
       .single();
 
@@ -116,7 +117,16 @@ export async function POST(req: Request) {
         .maybeSingle();
 
       const unlockedDays = setting?.value || [];
-      const isUnlocked = unlockedDays.includes(task.day_id);
+      
+      const capstoneUser = capstoneTeams.find(t => t.email === user.email);
+      const isCapstoneSelected = !!capstoneUser;
+      
+      const daysData = task.days as any;
+      const weekNumber = Array.isArray(daysData) ? daysData[0]?.weeks?.week_number : daysData?.weeks?.week_number;
+      
+      const isRev = weekNumber === 6 && !isCapstoneSelected;
+      const checkId = isRev ? `${task.day_id}-revision` : task.day_id;
+      const isUnlocked = unlockedDays.includes(checkId);
 
       if (!isUnlocked) {
         return NextResponse.json({ message: 'This task is currently locked by the administrator.' }, { status: 403 });

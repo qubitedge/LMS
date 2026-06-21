@@ -49,7 +49,7 @@ export default function CurriculumGrid({
   
   const totalDays = weeks.reduce((acc, week) => acc + week.days.length, 0);
   const completedDays = weeks.reduce((acc, week) => 
-    acc + week.days.filter(d => d.status !== 'locked').length, 0
+    acc + week.days.filter(d => d.status === 'completed').length, 0
   );
   const overallProgress = Math.round((completedDays / totalDays) * 100) || 0;
 
@@ -125,7 +125,7 @@ export default function CurriculumGrid({
             className="space-y-20 overflow-hidden"
           >
         {weeks.map((week, weekIdx) => {
-          const weekCompleted = week.days.filter(d => d.status !== 'locked').length;
+          const weekCompleted = week.days.filter(d => d.status === 'completed').length;
           const weekProgress = Math.round((weekCompleted / week.days.length) * 100) || 0;
 
           return (
@@ -202,7 +202,7 @@ export default function CurriculumGrid({
                               x: 10,
                               transition: { type: "spring", stiffness: 400, damping: 25 }
                             } : {}}
-                            onClick={() => (!isLocked || isAdmin) && (window.location.href = `/progress/${day.id}`)}
+                            onClick={() => (!isLocked || isAdmin) && (window.location.href = `/progress/${day.id}${day.isRevisionDay ? '?view=revision' : ''}`)}
                             className={`relative group rounded-2xl p-4 transition-all duration-300 cursor-pointer overflow-hidden border flex items-center gap-5
                               ${(isLocked && !isAdmin) ? 'opacity-60 bg-slate-50 border-slate-200 cursor-not-allowed' : 'bg-white shadow-sm border-white hover:shadow-md hover:border-blue-100'}
                               ${isActive ? 'ring-2 ring-[#4A5DB5]/10 border-[#4A5DB5]/20' : ''}
@@ -332,12 +332,12 @@ export default function CurriculumGrid({
                     </a>
                   )}
                   <div className="flex gap-4">
-                    <Link href={`/progress/${selectedDay.id}`} className="flex-1">
+                    <Link href={`/progress/${selectedDay.id}${selectedDay.isRevisionDay ? '?view=revision' : ''}`} className="flex-1">
                       <Button className="w-full h-16 rounded-[1.5rem] text-lg font-black bg-[#4A5DB5] hover:bg-[#2238A4] text-white shadow-xl shadow-blue-500/20 transition-all hover:scale-[1.02] active:scale-95">
                         <Zap size={20} className="mr-2 fill-white" /> Start Learning
                       </Button>
                     </Link>
-                    <Link href={`/progress/${selectedDay.id}?view=details`} className="flex-none">
+                    <Link href={`/progress/${selectedDay.id}?view=details${selectedDay.isRevisionDay ? '&isRevision=true' : ''}`} className="flex-none">
                       <Button variant="outline" className="h-16 w-16 rounded-[1.5rem] border-2 border-slate-100 hover:bg-slate-50 transition-all active:scale-95 text-[#4A5DB5]">
                         <ChevronRight size={28} />
                       </Button>

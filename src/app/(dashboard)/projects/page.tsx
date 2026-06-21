@@ -19,22 +19,26 @@ export default async function ProjectsPage() {
   const { data: { user } } = await supabase.auth.getUser();
   
   let isAdmin = false;
-  if (user) {
-    const profile = await getProfile(user.id);
-    isAdmin = profile?.role === 'admin';
-  }
+  let setting: any = null;
+  let userSubmissions: any[] = [];
 
-  const [{ data: setting }, { data: userSubmissions }] = await Promise.all([
-    supabase
-      .from('site_settings')
-      .select('value')
-      .eq('key', 'projects_unlocked')
-      .maybeSingle(),
-    supabase
-      .from('project_submissions')
-      .select('project_name, status, github_url')
-      .eq('user_id', user?.id || '')
-  ]);
+  if (user) {
+    const [profile, settingRes, submissionsRes] = await Promise.all([
+      getProfile(user.id),
+      supabase
+        .from('site_settings')
+        .select('value')
+        .eq('key', 'projects_unlocked')
+        .maybeSingle(),
+      supabase
+        .from('project_submissions')
+        .select('project_name, status, github_url')
+        .eq('user_id', user.id)
+    ]);
+    isAdmin = profile?.role === 'admin';
+    setting = settingRes.data;
+    userSubmissions = submissionsRes.data || [];
+  }
 
   const deadline = new Date('2026-06-11T23:59:59').getTime();
   const isPastDeadline = new Date().getTime() > deadline;
