@@ -22,7 +22,7 @@ export default async function DashboardLayout({
     redirect('/login');
   }
 
-  const [profile, attendanceResult, settingResult, approvedProjectsResult, capstoneSelectionResult] = await Promise.all([
+  const [profile, attendanceResult, settingResult, approvedProjectsResult, capstoneSelectionResult, enrollmentsResult] = await Promise.all([
     getProfile(user.id),
     supabase
       .from('attendance')
@@ -43,7 +43,11 @@ export default async function DashboardLayout({
       .from('capstone_selections')
       .select('id')
       .eq('user_id', user.id)
-      .maybeSingle()
+      .maybeSingle(),
+    supabase
+      .from('user_enrollments')
+      .select('events(has_attendance, has_projects)')
+      .eq('user_id', user.id)
   ]);
 
   if (profile && profile.is_active === false) {
@@ -55,17 +59,28 @@ export default async function DashboardLayout({
   const setting = settingResult.data;
   const approvedProjects = approvedProjectsResult.data;
   const capstoneSelection = capstoneSelectionResult.data;
+  const enrollments = enrollmentsResult.data || [];
 
   const isEligibleForCapstone = approvedProjects && approvedProjects.length > 0;
   const hasSubmittedCapstone = !!capstoneSelection;
   const showCapstonePopup = false; // Capstone voting time is over
 
-  const projectsUnlocked = setting?.value === true;
+  const isAdmin = profile?.role === 'admin';
+  const hasAttendance = isAdmin || enrollments.some((e: any) => e.events?.has_attendance);
+  const hasProjects = isAdmin || enrollments.some((e: any) => e.events?.has_projects);
+
+  const projectsUnlocked = (setting?.value === true && hasProjects) || isAdmin;
 
   return (
     <div className="flex h-[100dvh] overflow-hidden w-full relative">
       {/* Sidebar - Desktop & Bottom Nav - Mobile */}
-      <Sidebar user={profile} completedDays={completedDays || 0} projectsUnlocked={projectsUnlocked} />
+      <Sidebar 
+        user={profile} 
+        completedDays={completedDays || 0} 
+        projectsUnlocked={projectsUnlocked} 
+        hasAttendance={hasAttendance}
+      />
+
 
       {/* Topbar - Mobile only */}
       <Topbar user={profile} />

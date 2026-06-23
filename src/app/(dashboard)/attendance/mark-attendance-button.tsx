@@ -6,7 +6,7 @@ import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
-export default function MarkAttendanceButton({ disabled }: { disabled?: boolean }) {
+export default function MarkAttendanceButton({ disabled, eventId }: { disabled?: boolean; eventId: string }) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -16,6 +16,8 @@ export default function MarkAttendanceButton({ disabled }: { disabled?: boolean 
     try {
       const res = await fetch('/api/attendance/mark', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ eventId }),
       });
 
       if (!res.ok) {

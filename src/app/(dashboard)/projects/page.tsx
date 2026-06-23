@@ -1,4 +1,3 @@
-import { miniProjects } from '@/lib/projects-data';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import ProjectSubmissionDialog from '@/components/projects/project-submission-dialog';
@@ -21,10 +20,16 @@ export default async function ProjectsPage() {
   let isAdmin = false;
   let setting: any = null;
   let userSubmissions: any[] = [];
+  let enrolledEventIds: string[] = [];
+  let projects: any[] = [];
 
   if (user) {
-    const [profile, settingRes, submissionsRes] = await Promise.all([
-      getProfile(user.id),
+    // 1. Fetch profile to check if admin
+    const profile = await getProfile(user.id);
+    isAdmin = profile?.role === 'admin';
+
+    // 2. Fetch enrollments & settings in parallel
+    const [settingRes, submissionsRes, enrollmentsRes] = await Promise.all([
       supabase
         .from('site_settings')
         .select('value')
@@ -32,18 +37,79 @@ export default async function ProjectsPage() {
         .maybeSingle(),
       supabase
         .from('project_submissions')
-        .select('project_name, status, github_url')
+        .select('project_id, status, github_url')
+        .eq('user_id', user.id),
+      supabase
+        .from('user_enrollments')
+        .select('event_id, events(has_projects)')
         .eq('user_id', user.id)
     ]);
-    isAdmin = profile?.role === 'admin';
+
     setting = settingRes.data;
     userSubmissions = submissionsRes.data || [];
+
+    if (isAdmin) {
+      const { data: activeEvents } = await supabase
+        .from('events')
+        .select('id')
+        .eq('is_active', true);
+      enrolledEventIds = (activeEvents || []).map(e => e.id);
+    } else {
+      const enrollments = enrollmentsRes.data || [];
+      enrolledEventIds = enrollments
+        .map(e => e.events)
+        .filter((e: any) => e && e.has_projects)
+        .map((e: any) => e.id);
+    }
+
+    if (enrolledEventIds.length > 0) {
+      const { data: dbProjects } = await supabase
+        .from('mini_projects')
+        .select('*, events(title)')
+        .in('event_id', enrolledEventIds)
+        .order('name', { ascending: true });
+
+      projects = (dbProjects || []).map((p: any, idx: number) => ({
+        id: p.id,
+        displayId: idx + 1,
+        name: p.name,
+        eventTitle: p.events?.title,
+        problemStatement: p.problem_statement,
+        features: p.features || [],
+        technologies: p.technologies || [],
+        sqlConcepts: p.sql_concepts || [],
+        pythonSkills: p.python_skills || [],
+        tables: p.tables || [],
+        exampleReports: p.example_reports || [],
+        skillsLearned: p.skills_learned || [],
+        bonus: p.bonus,
+        realWorldRelevance: p.real_world_relevance
+      }));
+    }
   }
 
   const deadline = new Date('2026-06-11T23:59:59').getTime();
   const isPastDeadline = new Date().getTime() > deadline;
   
-  const isUnlocked = (setting?.value === true && !isPastDeadline) || isAdmin;
+  const isUnlocked = (setting?.value === true && enrolledEventIds.length > 0) || isAdmin;
+
+  if (enrolledEventIds.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="bg-gray-50 border border-gray-100 rounded-3xl p-10 max-w-md w-full text-center shadow-sm">
+          <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Lock className="text-gray-500" size={32} />
+          </div>
+          <h2 className="text-2xl font-bold text-[#2C2C2C] mb-3" style={{ fontFamily: 'Playfair Display' }}>
+            Projects Not Enabled
+          </h2>
+          <p className="text-[#7A7268] text-sm">
+            None of your enrolled programs have mini-projects enabled at this time.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isUnlocked) {
     return (
@@ -83,18 +149,25 @@ export default async function ProjectsPage() {
       </div>
 
       <div className="grid md:grid-cols-2 xl:grid-cols-2 gap-6 mb-12">
-        {miniProjects.map((project) => (
+        {projects.map((project) => (
           <Card key={project.id} className="qe-card border-none overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full">
             <CardHeader className="pb-2">
               <CardTitle className="text-xl leading-tight" style={{ fontFamily: 'Playfair Display', color: '#2C2C2C' }}>
-                {project.id}. {project.name}
+                {project.displayId}. {project.name}
               </CardTitle>
-              {project.problemStatement && (
-                <p className="text-sm mt-2 text-[#4a4a4a] italic">"{project.problemStatement}"</p>
+              {project.eventTitle && (
+                <div className="mt-1.5">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-[#4A5DB5] bg-blue-50/50 px-2.5 py-1 rounded-md border border-blue-100/50">
+                    {project.eventTitle}
+                  </span>
+                </div>
               )}
-              {project.technologies && (
+              {project.problemStatement && (
+                <p className="text-sm mt-3 text-[#4a4a4a] italic">"{project.problemStatement}"</p>
+              )}
+              {project.technologies && project.technologies.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">
-                  {project.technologies.map((tech, i) => (
+                  {project.technologies.map((tech: string, i: number) => (
                     <span key={i} className={`inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full ${
                       tech === 'Python' ? 'bg-blue-100 text-blue-700' :
                       tech === 'SQLite' ? 'bg-amber-100 text-amber-700' :
@@ -116,7 +189,7 @@ export default async function ProjectsPage() {
                       <Lightbulb size={12} /> Features
                     </h4>
                     <ul className="text-xs space-y-1 text-[#4a4a4a]">
-                      {project.features.map((feature, i) => (
+                      {project.features.map((feature: string, i: number) => (
                         <li key={i} className="flex items-start gap-1.5">
                           <span className="text-[#40C4D0] mt-0.5">•</span> {feature}
                         </li>
@@ -124,13 +197,13 @@ export default async function ProjectsPage() {
                     </ul>
                   </div>
 
-                  {project.skillsLearned && (
+                  {project.skillsLearned && project.skillsLearned.length > 0 && (
                     <div>
                       <h4 className="text-xs font-bold uppercase tracking-wider text-[#7A7268] mb-2 flex items-center gap-1">
                         <BookOpen size={12} /> Skills Learned
                       </h4>
                       <ul className="text-xs space-y-1 text-[#4a4a4a]">
-                        {project.skillsLearned.map((skill, i) => (
+                        {project.skillsLearned.map((skill: string, i: number) => (
                           <li key={i} className="flex items-start gap-1.5">
                             <span className="text-[#4A5DB5] mt-0.5">•</span> {skill}
                           </li>
@@ -142,13 +215,13 @@ export default async function ProjectsPage() {
 
                 {/* Example Reports & Tables */}
                 <div className="grid grid-cols-2 gap-4">
-                  {project.exampleReports && (
+                  {project.exampleReports && project.exampleReports.length > 0 && (
                     <div>
                       <h4 className="text-xs font-bold uppercase tracking-wider text-[#7A7268] mb-2 flex items-center gap-1">
                         <FileText size={12} /> Example Reports
                       </h4>
                       <ul className="text-xs space-y-1 text-[#4a4a4a]">
-                        {project.exampleReports.map((report, i) => (
+                        {project.exampleReports.map((report: string, i: number) => (
                           <li key={i} className="flex items-start gap-1.5">
                             <span className="text-[#40C4D0] mt-0.5">•</span> {report}
                           </li>
@@ -157,13 +230,13 @@ export default async function ProjectsPage() {
                     </div>
                   )}
 
-                  {project.tables && (
+                  {project.tables && project.tables.length > 0 && (
                     <div>
                       <h4 className="text-xs font-bold uppercase tracking-wider text-[#7A7268] mb-2 flex items-center gap-1">
                         <TableProperties size={12} /> Tables
                       </h4>
                       <div className="flex flex-wrap gap-1">
-                        {project.tables.map((table, i) => (
+                        {project.tables.map((table: string, i: number) => (
                           <Badge key={i} variant="secondary" className="bg-gray-100 text-gray-700 text-[9px] px-1.5 py-0">
                             {table}
                           </Badge>
@@ -176,12 +249,12 @@ export default async function ProjectsPage() {
                 <div>
                   <h4 className="text-xs font-bold uppercase tracking-wider text-[#7A7268] mb-2">Tech Stack Concepts</h4>
                   <div className="flex flex-wrap gap-1.5">
-                    {project.sqlConcepts.map((concept, i) => (
+                    {project.sqlConcepts.map((concept: string, i: number) => (
                       <Badge key={i} variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 text-[10px]">
                         <Database size={10} className="mr-1" /> {concept}
                       </Badge>
                     ))}
-                    {project.pythonSkills?.map((skill, i) => (
+                    {project.pythonSkills?.map((skill: string, i: number) => (
                       <Badge key={i} variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[10px]">
                         <Code size={10} className="mr-1" /> {skill}
                       </Badge>
@@ -202,7 +275,7 @@ export default async function ProjectsPage() {
               </div>
 
               <div className="mt-6 pt-4 border-t border-gray-100">
-                <ProjectSubmissionDialog project={project} submission={userSubmissions?.find(s => s.project_name === project.name)} />
+                <ProjectSubmissionDialog project={project} submission={userSubmissions?.find((s: any) => s.project_id === project.id)} />
               </div>
             </CardContent>
           </Card>
@@ -251,7 +324,6 @@ export default async function ProjectsPage() {
           </div>
         </div>
       </div>
-
     </div>
   );
 }

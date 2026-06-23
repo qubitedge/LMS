@@ -40,15 +40,20 @@ interface SidebarProps {
   user: { full_name: string; avatar_url: string | null; role: string; current_streak?: number } | null;
   completedDays: number;
   projectsUnlocked?: boolean;
+  hasAttendance?: boolean;
 }
 
-export default function Sidebar({ user, completedDays, projectsUnlocked = false }: SidebarProps) {
+export default function Sidebar({ user, completedDays, projectsUnlocked = false, hasAttendance = true }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const isAdmin = user?.role === 'admin';
   const navItems = isAdmin && pathname.startsWith('/admin') 
     ? adminNav 
-    : internNav.filter(item => item.href !== '/projects' || projectsUnlocked || isAdmin);
+    : internNav.filter(item => {
+        if (item.href === '/projects' && !projectsUnlocked && !isAdmin) return false;
+        if (item.href === '/attendance' && !hasAttendance && !isAdmin) return false;
+        return true;
+      });
   const accentColor = isAdmin && pathname.startsWith('/admin') ? '#2238A4' : '#4A5DB5';
   const activeColor = '#2238A4';
 

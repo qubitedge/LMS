@@ -6,8 +6,8 @@
 
 # Test info
 
-- Name: frontend.spec.ts >> Frontend Route Testing >> Public pages should be accessible
-- Location: tests\frontend.spec.ts:14:7
+- Name: auth.spec.ts >> Authentication Flow >> Invalid login should show error message
+- Location: tests\auth.spec.ts:12:7
 
 # Error details
 

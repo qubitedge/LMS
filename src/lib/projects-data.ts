@@ -1,5 +1,5 @@
 export interface ProjectData {
-  id: number;
+  id: string | number;
   name: string;
   problemStatement?: string;
   features: string[];

@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { calculateStreak } from '@/lib/utils/streak';
 import { revalidatePath } from 'next/cache';
 
-export async function markPastAttendance(dateStr: string) {
+export async function markPastAttendance(dateStr: string, eventId: string) {
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -13,11 +13,16 @@ export async function markPastAttendance(dateStr: string) {
       return { success: false, message: 'Unauthorized' };
     }
 
+    if (!eventId) {
+      return { success: false, message: 'Missing Event ID' };
+    }
+
     // Check if already marked
     const { data: existing } = await supabase
       .from('attendance')
       .select('id')
       .eq('user_id', user.id)
+      .eq('event_id', eventId)
       .eq('date', dateStr)
       .maybeSingle();
 
@@ -30,6 +35,7 @@ export async function markPastAttendance(dateStr: string) {
       .from('attendance')
       .insert({
         user_id: user.id,
+        event_id: eventId,
         date: dateStr,
       });
 
@@ -37,6 +43,7 @@ export async function markPastAttendance(dateStr: string) {
       console.error('Error inserting attendance:', insertError);
       return { success: false, message: 'Failed to mark attendance' };
     }
+
 
     // Update streak - even for past days we can just call calculateStreak for consistency,
     // though realistically past days shouldn't break the streak if they're backfilled,

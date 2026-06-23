@@ -7,6 +7,7 @@ import UserActions from '@/components/admin/user-actions';
 import BulkUserUpload from '@/components/admin/bulk-user-upload';
 import UserListExport from '@/components/admin/user-list-export';
 import UserSearch from '@/components/admin/user-search';
+import ProgramFilter from '@/components/admin/program-filter';
 import { Users, Mail, Shield, CheckCircle2, XCircle, FileText, Award, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
@@ -15,13 +16,25 @@ export const revalidate = 60;
 const PAGE_SIZE = 10;
 
 interface PageProps {
-  searchParams: Promise<{ role?: string; q?: string; sortBy?: string; sortOrder?: string; page?: string }>;
+  searchParams: Promise<{ role?: string; q?: string; sortBy?: string; sortOrder?: string; page?: string; eventId?: string }>;
 }
 
 export default async function AdminUsersPage({ searchParams }: PageProps) {
-  const { role = 'intern', q = '', sortBy = 'created_at', sortOrder = 'desc', page = '0' } = await searchParams;
+  const { role = 'intern', q = '', sortBy = 'created_at', sortOrder = 'desc', page = '0', eventId = '' } = await searchParams;
   const pageNum = Math.max(0, parseInt(page, 10) || 0);
   const supabase = await createClient();
+
+  // Check if we need to filter by program enrollment
+  let enrolledUserIds: string[] = [];
+  let hasEnrolls = false;
+  if (eventId) {
+    const { data: enrollments } = await supabase
+      .from('user_enrollments')
+      .select('user_id')
+      .eq('event_id', eventId);
+    enrolledUserIds = (enrollments || []).map(e => e.user_id);
+    hasEnrolls = true;
+  }
 
   // Count total for pagination and fetch users in parallel
   let countQuery = supabase
@@ -29,26 +42,43 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
     .select('id', { count: 'exact', head: true })
     .eq('role', role);
   if (q) countQuery = countQuery.or(`full_name.ilike.%${q}%,email.ilike.%${q}%,address.ilike.%${q}%`);
+  if (hasEnrolls) {
+    if (enrolledUserIds.length > 0) {
+      countQuery = countQuery.in('id', enrolledUserIds);
+    } else {
+      countQuery = countQuery.in('id', ['00000000-0000-0000-0000-000000000000']);
+    }
+  }
 
   let query = supabase
     .from('profiles')
-    .select('id, full_name, email, role, address, is_active, domain, created_at, avatar_url, offer_letter_url, certificate_url')
+    .select('id, full_name, email, role, address, is_active, domain, created_at, avatar_url, offer_letter_url, certificate_url, user_enrollments(events(id, title))')
     .eq('role', role)
     .range(pageNum * PAGE_SIZE, pageNum * PAGE_SIZE + PAGE_SIZE - 1);
 
   if (q) {
     query = query.or(`full_name.ilike.%${q}%,email.ilike.%${q}%,address.ilike.%${q}%`);
   }
+  if (hasEnrolls) {
+    if (enrolledUserIds.length > 0) {
+      query = query.in('id', enrolledUserIds);
+    } else {
+      query = query.in('id', ['00000000-0000-0000-0000-000000000000']);
+    }
+  }
 
   const ascending = sortOrder === 'asc';
 
-  const [countResult, usersResult] = await Promise.all([
+  // Fetch active events to populate filter
+  const [countResult, usersResult, eventsResult] = await Promise.all([
     countQuery,
-    query.order(sortBy, { ascending })
+    query.order(sortBy, { ascending }),
+    supabase.from('events').select('id, title').eq('is_active', true)
   ]);
 
   const totalCount = countResult.count;
   const users = usersResult.data;
+  const eventsList = eventsResult.data || [];
   const totalPages = Math.ceil((totalCount || 0) / PAGE_SIZE);
 
   // Fetch all attendance for fast mapping circumventing the 1000 row API limit
@@ -72,6 +102,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
     const params = new URLSearchParams();
     params.set('role', role);
     if (q) params.set('q', q);
+    if (eventId) params.set('eventId', eventId);
     params.set('sortBy', column);
     params.set('sortOrder', nextOrder);
     params.set('page', '0');
@@ -82,6 +113,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
     const params = new URLSearchParams();
     params.set('role', role);
     if (q) params.set('q', q);
+    if (eventId) params.set('eventId', eventId);
     params.set('sortBy', sortBy);
     params.set('sortOrder', sortOrder);
     params.set('page', String(targetPage));
@@ -128,7 +160,10 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-          <UserSearch />
+          <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto flex-1">
+            <UserSearch />
+            {role === 'intern' && <ProgramFilter events={eventsList} currentEventId={eventId} />}
+          </div>
           {q && (
             <p className="text-sm font-bold text-[#7182C7]">
               Showing results for "<span className="text-[#4A5DB5]">{q}</span>"
@@ -197,7 +232,14 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                             <div className={`w-10 h-10 rounded-xl bg-white border flex items-center justify-center font-black shadow-sm text-sm ${user.role === 'admin' ? 'text-amber-500 border-amber-100' : 'text-[#4A5DB5] border-blue-100'}`}>
                               {user.role === 'admin' ? <Shield size={18} /> : (user.full_name?.charAt(0) || 'U')}
                             </div>
-                            <p className="font-black text-[#1A1A2E] text-sm">{user.full_name}</p>
+                            <div>
+                              <p className="font-black text-[#1A1A2E] text-sm">{user.full_name}</p>
+                              {user.role === 'intern' && user.user_enrollments && (user.user_enrollments as any[]).length > 0 && (
+                                <p className="text-[10px] text-[#7182C7] font-bold mt-0.5">
+                                  📚 {(user.user_enrollments as any[]).map(ue => ue.events?.title).filter(Boolean).join(', ')}
+                                </p>
+                              )}
+                            </div>
                           </div>
                         </TableCell>
                         <TableCell className="text-xs text-[#7182C7] font-medium">{user.email}</TableCell>

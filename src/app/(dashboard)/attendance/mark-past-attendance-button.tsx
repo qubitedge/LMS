@@ -6,12 +6,12 @@ import { markPastAttendance } from './actions';
 import { Loader2, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 
-export default function MarkPastAttendanceButton({ date }: { date: string }) {
+export default function MarkPastAttendanceButton({ date, eventId }: { date: string; eventId: string }) {
   const [loading, setLoading] = useState(false);
 
   const handleMark = async () => {
     setLoading(true);
-    const result = await markPastAttendance(date);
+    const result = await markPastAttendance(date, eventId);
     setLoading(false);
 
     if (result.success) {

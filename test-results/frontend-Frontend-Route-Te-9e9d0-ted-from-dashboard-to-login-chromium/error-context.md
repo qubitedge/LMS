@@ -6,13 +6,13 @@
 
 # Test info
 
-- Name: auth.spec.ts >> Authentication Flow >> Invalid login should show error message
-- Location: tests\auth.spec.ts:12:7
+- Name: frontend.spec.ts >> Frontend Route Testing >> Unauthenticated user should be redirected from /dashboard to login
+- Location: tests\frontend.spec.ts:7:9
 
 # Error details
 
 ```
-Error: browserType.launch: Executable doesn't exist at C:\Users\user\AppData\Local\ms-playwright\chromium_headless_shell-1217\chrome-headless-shell-win64\chrome-headless-shell.exe
+Error: browserType.launch: Executable doesn't exist at C:\Users\Likhith Kumar\AppData\Local\ms-playwright\chromium_headless_shell-1217\chrome-headless-shell-win64\chrome-headless-shell.exe
 ╔════════════════════════════════════════════════════════════╗
 ║ Looks like Playwright was just installed or updated.       ║
 ║ Please run the following command to download new browsers: ║

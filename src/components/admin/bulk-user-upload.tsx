@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 import { 
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription 
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import { Upload, FileSpreadsheet, CheckCircle2, XCircle, AlertCircle, Loader2, Download } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
@@ -14,7 +15,32 @@ export default function BulkUserUpload() {
   const [isOpen, setIsOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [results, setResults] = useState<any>(null);
+  const [events, setEvents] = useState<any[]>([]);
+  const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
   const router = useRouter();
+
+  useEffect(() => {
+    if (isOpen) {
+      const fetchEvents = async () => {
+        try {
+          const res = await fetch('/api/admin/events');
+          if (res.ok) {
+            const data = await res.json();
+            setEvents(data || []);
+            const defaultBootcamp = data.find((e: any) => e.title === 'Applied AI & Data Science Bootcamp');
+            if (defaultBootcamp) {
+              setSelectedEvents([defaultBootcamp.id]);
+            } else if (data.length > 0) {
+              setSelectedEvents([data[0].id]);
+            }
+          }
+        } catch (err) {
+          console.error('Failed to fetch events for bulk upload:', err);
+        }
+      };
+      fetchEvents();
+    }
+  }, [isOpen]);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -44,7 +70,7 @@ export default function BulkUserUpload() {
         const res = await fetch('/api/admin/users/bulk-upload', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ users }),
+          body: JSON.stringify({ users, eventIds: selectedEvents }),
         });
 
         const result = await res.json();
@@ -93,8 +119,38 @@ export default function BulkUserUpload() {
         </DialogHeader>
 
         {!results ? (
-          <div className="space-y-8 py-6">
-            <div className="p-8 border-2 border-dashed border-emerald-100 rounded-[2rem] bg-emerald-50/30 text-center flex flex-col items-center gap-4 group hover:border-emerald-300 transition-colors">
+          <div className="space-y-6 py-4">
+            {/* Enrollment selector */}
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black text-[#7182C7] uppercase tracking-widest px-2">Enroll In Programs</Label>
+              {events.length === 0 ? (
+                <p className="text-xs font-bold text-slate-400 px-2">No active programs found.</p>
+              ) : (
+                <div className="space-y-2 max-h-36 overflow-y-auto p-2 bg-slate-50/50 rounded-2xl border border-slate-100 custom-scrollbar">
+                  {events.map((event) => (
+                    <div 
+                      key={event.id}
+                      onClick={() => setSelectedEvents(prev => prev.includes(event.id) ? prev.filter(id => id !== event.id) : [...prev, event.id])}
+                      className={`flex items-center justify-between p-3 rounded-xl cursor-pointer border transition-all ${
+                        selectedEvents.includes(event.id) 
+                          ? 'bg-white border-blue-200 shadow-sm text-[#4A5DB5]' 
+                          : 'bg-transparent border-transparent hover:bg-white text-slate-500'
+                      }`}
+                    >
+                      <span className="text-xs font-bold">{event.title}</span>
+                      <input 
+                        type="checkbox"
+                        checked={selectedEvents.includes(event.id)}
+                        onChange={() => {}}
+                        className="rounded border-slate-300 text-[#4A5DB5] focus:ring-[#4A5DB5]"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="p-8 border-2 border-dashed border-emerald-100 rounded-[2rem] bg-emerald-50/30 text-center flex flex-col items-center gap-4 group hover:border-emerald-300 transition-colors relative">
               <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-emerald-500 shadow-sm group-hover:scale-110 transition-transform">
                 <Upload size={32} />
               </div>
@@ -208,3 +264,4 @@ export default function BulkUserUpload() {
     </Dialog>
   );
 }
+

@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-05-20T10:00:24.523Z",
+  "timestamp": "2026-06-23T06:55:55.451Z",
   "tests": {
     "auth.spec.ts > Authentication Flow > Login page should render correctly": {
       "status": "failed",
-      "error": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+      "error": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\Likhith Kumar\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
       "diagnosis": {
         "cause": "Unexpected error. See details in the error log.",
         "fix": "Review the failing test code and the target component implementation."
@@ -11,7 +11,7 @@
     },
     "auth.spec.ts > Authentication Flow > Invalid login should show error message": {
       "status": "failed",
-      "error": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+      "error": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\Likhith Kumar\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
       "diagnosis": {
         "cause": "Unexpected error. See details in the error log.",
         "fix": "Review the failing test code and the target component implementation."
@@ -19,7 +19,7 @@
     },
     "db-validation.spec.ts > Database Validation > Check for orphan profiles (missing auth.users)": {
       "status": "failed",
-      "error": "Error: Found 251 profiles that do not have a corresponding auth user\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m251\u001b[39m",
+      "error": "Error: Found 204 profiles that do not have a corresponding auth user\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m204\u001b[39m",
       "diagnosis": {
         "cause": "Unexpected error. See details in the error log.",
         "fix": "Review the failing test code and the target component implementation."
@@ -27,7 +27,7 @@
     },
     "frontend.spec.ts > Frontend Route Testing > Unauthenticated user should be redirected from /dashboard to login": {
       "status": "failed",
-      "error": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+      "error": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\Likhith Kumar\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
       "diagnosis": {
         "cause": "Unexpected error. See details in the error log.",
         "fix": "Review the failing test code and the target component implementation."
@@ -35,7 +35,7 @@
     },
     "frontend.spec.ts > Frontend Route Testing > Unauthenticated user should be redirected from /progress to login": {
       "status": "failed",
-      "error": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+      "error": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\Likhith Kumar\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
       "diagnosis": {
         "cause": "Unexpected error. See details in the error log.",
         "fix": "Review the failing test code and the target component implementation."
@@ -43,7 +43,7 @@
     },
     "frontend.spec.ts > Frontend Route Testing > Unauthenticated user should be redirected from /leaderboard to login": {
       "status": "failed",
-      "error": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+      "error": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\Likhith Kumar\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
       "diagnosis": {
         "cause": "Unexpected error. See details in the error log.",
         "fix": "Review the failing test code and the target component implementation."
@@ -51,7 +51,7 @@
     },
     "frontend.spec.ts > Frontend Route Testing > Unauthenticated user should be redirected from /profile to login": {
       "status": "failed",
-      "error": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+      "error": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\Likhith Kumar\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
       "diagnosis": {
         "cause": "Unexpected error. See details in the error log.",
         "fix": "Review the failing test code and the target component implementation."
@@ -59,7 +59,7 @@
     },
     "frontend.spec.ts > Frontend Route Testing > Public pages should be accessible": {
       "status": "failed",
-      "error": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\user\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+      "error": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\Likhith Kumar\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1217\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
       "diagnosis": {
         "cause": "Unexpected error. See details in the error log.",
         "fix": "Review the failing test code and the target component implementation."

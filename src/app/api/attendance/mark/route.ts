@@ -2,12 +2,17 @@ import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 import { calculateStreak } from '@/lib/utils/streak';
 
-export async function POST() {
+export async function POST(req: Request) {
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+
+    const { eventId } = await req.json();
+    if (!eventId) {
+      return NextResponse.json({ message: 'Missing Event ID' }, { status: 400 });
+    }
 
     const now = new Date();
     const todayStr = now.toISOString().split('T')[0];
@@ -25,18 +30,19 @@ export async function POST() {
       }, { status: 403 });
     }
 
-    // Check if today is a module day
+    // Check if today is a module day for this event
     const { data: todayModule } = await supabase
       .from('days')
-      .select('id')
+      .select('id, date, week:weeks!inner(event_id)')
       .eq('date', todayStr)
+      .eq('week.event_id', eventId)
       .maybeSingle();
 
     const isTodayModuleDay = !!todayModule;
 
     if (!isTodayModuleDay) {
       return NextResponse.json({
-        message: 'Attendance can only be marked on module days.'
+        message: 'Attendance can only be marked on active module days.'
       }, { status: 403 });
     }
 
@@ -45,6 +51,7 @@ export async function POST() {
       .from('attendance')
       .select('id')
       .eq('user_id', user.id)
+      .eq('event_id', eventId)
       .eq('date', todayStr)
       .maybeSingle();
 
@@ -57,6 +64,7 @@ export async function POST() {
       .from('attendance')
       .insert({
         user_id: user.id,
+        event_id: eventId,
         date: todayStr,
       });
 
@@ -92,3 +100,4 @@ export async function POST() {
     return NextResponse.json({ message: error.message || 'Internal Server Error' }, { status: 500 });
   }
 }
+

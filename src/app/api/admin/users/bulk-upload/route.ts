@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
   try {
     const supabase = createAdminClient();
-    const { users } = await req.json();
+    const { users, eventIds } = await req.json();
 
     if (!Array.isArray(users)) {
       return NextResponse.json({ message: 'Invalid data format' }, { status: 400 });
@@ -65,9 +65,30 @@ export async function POST(req: Request) {
         // Cleanup Auth user if profile fails
         await supabase.auth.admin.deleteUser(authUser.user.id);
         results.errors.push({ email, error: profileError.message });
-      } else {
-        results.added.push({ email, name });
+        continue;
       }
+
+      // Create user enrollments if intern
+      if (role === 'intern' && eventIds && Array.isArray(eventIds) && eventIds.length > 0) {
+        const enrollments = eventIds.map((eventId: string) => ({
+          user_id: authUser.user.id,
+          event_id: eventId,
+        }));
+
+        const { error: enrollError } = await supabase
+          .from('user_enrollments')
+          .insert(enrollments);
+
+        if (enrollError) {
+          // Cleanup profile and Auth user if enrollment fails
+          await supabase.from('profiles').delete().eq('id', authUser.user.id);
+          await supabase.auth.admin.deleteUser(authUser.user.id);
+          results.errors.push({ email, error: enrollError.message });
+          continue;
+        }
+      }
+
+      results.added.push({ email, name });
     }
 
     return NextResponse.json({ success: true, results });
@@ -76,3 +97,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: error.message || 'Internal Server Error' }, { status: 500 });
   }
 }
+

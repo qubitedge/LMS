@@ -13,8 +13,8 @@ export default async function ProgressPage() {
 
   if (!user) return null;
 
-  // Fetch user's scores, profile, events, and settings in parallel
-  const [scoresResult, profileResult, eventsResult, settingResult] = await Promise.all([
+  // Fetch user's scores, profile, events, settings, and enrollments in parallel
+  const [scoresResult, profileResult, eventsResult, settingResult, enrollmentsResult] = await Promise.all([
     supabase
       .from('scores')
       .select('quiz_id, score')
@@ -33,18 +33,24 @@ export default async function ProgressPage() {
       .from('site_settings')
       .select('value')
       .eq('key', 'unlocked_days')
-      .maybeSingle()
+      .maybeSingle(),
+    supabase
+      .from('user_enrollments')
+      .select('event_id')
+      .eq('user_id', user.id)
   ]);
 
   const scores = scoresResult.data;
   const profile = profileResult.data;
   const eventsData = eventsResult.data;
   const setting = settingResult.data;
+  const enrollments = enrollmentsResult.data;
 
   const scoresMap = new Map((scores || []).map(s => [s.quiz_id, s.score]));
   const isAdmin = profile?.role === 'admin';
 
   const unlockedDays = setting?.value || [];
+  const enrolledEventIds = (enrollments || []).map(e => e.event_id);
 
   const capstoneUser = capstoneTeams.find(t => t.email === user.email);
   const isCapstoneSelected = !!capstoneUser;
@@ -53,9 +59,10 @@ export default async function ProgressPage() {
   const events = (eventsData || [])
     .filter(event => {
       if (isAdmin) return true;
-      // Interns should ONLY see their enrolled bootcamp in their learning path
-      return event.title === 'Applied AI & Data Science Bootcamp';
+      // Interns should ONLY see their enrolled programs in their learning path
+      return enrolledEventIds.includes(event.id);
     })
+
     .map(event => ({
     ...event,
     weeks: (event.weeks as any[] || [])

@@ -12,12 +12,12 @@
 # Error details
 
 ```
-Error: Found 252 profiles that do not have a corresponding auth user
+Error: Found 204 profiles that do not have a corresponding auth user
 
 expect(received).toBe(expected) // Object.is equality
 
 Expected: 0
-Received: 252
+Received: 204
 ```
 
 # Test source
@@ -100,7 +100,7 @@ Received: 252
   75 |     const orphanProfiles = profiles?.filter(p => !authUserIds.has(p.id));
   76 | 
 > 77 |     expect(orphanProfiles?.length, `Found ${orphanProfiles?.length} profiles that do not have a corresponding auth user`).toBe(0);
-     |                                                                                                                           ^ Error: Found 252 profiles that do not have a corresponding auth user
+     |                                                                                                                           ^ Error: Found 204 profiles that do not have a corresponding auth user
   78 |   });
   79 | });
   80 | 

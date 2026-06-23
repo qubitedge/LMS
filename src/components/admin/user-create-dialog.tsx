@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, Loader2, UserPlus, Mail, ShieldCheck, Lock, ChevronDown } from 'lucide-react';
+import { Plus, Loader2, UserPlus, Mail, ShieldCheck, Lock, CheckCircle2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
@@ -14,6 +14,8 @@ import { motion } from 'framer-motion';
 export default function UserCreateDialog() {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [events, setEvents] = useState<any[]>([]);
+  const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
@@ -25,8 +27,37 @@ export default function UserCreateDialog() {
 
   const router = useRouter();
 
+  useEffect(() => {
+    if (open) {
+      const fetchEvents = async () => {
+        try {
+          const res = await fetch('/api/admin/events');
+          if (res.ok) {
+            const data = await res.json();
+            setEvents(data || []);
+            const defaultBootcamp = data.find((e: any) => e.title === 'Applied AI & Data Science Bootcamp');
+            if (defaultBootcamp) {
+              setSelectedEvents([defaultBootcamp.id]);
+            } else if (data.length > 0) {
+              setSelectedEvents([data[0].id]);
+            }
+          }
+        } catch (err) {
+          console.error('Failed to load events:', err);
+        }
+      };
+      fetchEvents();
+    }
+  }, [open]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleToggleEvent = (eventId: string) => {
+    setSelectedEvents(prev => 
+      prev.includes(eventId) ? prev.filter(id => id !== eventId) : [...prev, eventId]
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,7 +68,7 @@ export default function UserCreateDialog() {
       const res = await fetch('/api/admin/create-user', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, eventIds: selectedEvents }),
       });
 
       if (!res.ok) {
@@ -48,6 +79,7 @@ export default function UserCreateDialog() {
       toast.success(formData.role === 'admin' ? 'Administrator account created!' : 'Intern account created!');
       setOpen(false);
       setFormData({ full_name: '', email: '', domain: '', password: '', role: 'intern', address: '' });
+      setSelectedEvents([]);
       router.refresh();
       
     } catch (error: any) {
@@ -78,7 +110,7 @@ export default function UserCreateDialog() {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="p-10 space-y-6">
+          <form onSubmit={handleSubmit} className="p-10 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label className="text-[10px] font-black text-[#7182C7] uppercase tracking-widest px-2">Account Type</Label>
@@ -130,6 +162,37 @@ export default function UserCreateDialog() {
                   />
                 </div>
               </div>
+
+              {formData.role === 'intern' && (
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black text-[#7182C7] uppercase tracking-widest px-2">Program Enrollments</Label>
+                  {events.length === 0 ? (
+                    <p className="text-xs font-bold text-slate-400 px-2">No active programs found.</p>
+                  ) : (
+                    <div className="space-y-2 max-h-36 overflow-y-auto p-2 bg-slate-50/50 rounded-2xl border border-slate-100 custom-scrollbar">
+                      {events.map((event) => (
+                        <div 
+                          key={event.id}
+                          onClick={() => handleToggleEvent(event.id)}
+                          className={`flex items-center justify-between p-3 rounded-xl cursor-pointer border transition-all ${
+                            selectedEvents.includes(event.id) 
+                              ? 'bg-white border-blue-200 shadow-sm text-[#4A5DB5]' 
+                              : 'bg-transparent border-transparent hover:bg-white text-slate-500'
+                          }`}
+                        >
+                          <span className="text-xs font-bold">{event.title}</span>
+                          <input 
+                            type="checkbox"
+                            checked={selectedEvents.includes(event.id)}
+                            onChange={() => {}}
+                            className="rounded border-slate-300 text-[#4A5DB5] focus:ring-[#4A5DB5]"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
 
               <div className="space-y-2">
                 <Label className="text-[10px] font-black text-[#7182C7] uppercase tracking-widest px-2">College Name</Label>
@@ -197,3 +260,4 @@ export default function UserCreateDialog() {
     </Dialog>
   );
 }
+

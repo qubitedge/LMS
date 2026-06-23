@@ -5,7 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, Loader2, BookOpen, Edit3, Trash2, Eye, EyeOff } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Plus, Loader2, BookOpen, Edit3, Trash2, Eye, EyeOff, CalendarCheck, ClipboardList, Target, Award } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
@@ -20,9 +22,27 @@ export default function EventEditDialog({ event }: EventEditDialogProps) {
     title: event?.title || '',
     description: event?.description || '',
     is_active: event?.is_active ?? true,
+    type: event?.type || 'bootcamp',
+    has_attendance: event?.has_attendance ?? true,
+    has_projects: event?.has_projects ?? true,
+    has_quizzes: event?.has_quizzes ?? true,
+    has_capstone: event?.has_capstone ?? true,
   });
 
   const router = useRouter();
+
+  const handleTypeChange = (type: string) => {
+    // Automatically set defaults based on type but allow customization
+    const isWorkshop = type === 'workshop';
+    setFormData(prev => ({
+      ...prev,
+      type,
+      has_attendance: !isWorkshop,
+      has_projects: !isWorkshop,
+      has_quizzes: !isWorkshop,
+      has_capstone: !isWorkshop,
+    }));
+  };
 
   const handleDelete = async () => {
     if (!confirm('CRITICAL: Are you sure you want to delete this event? This will permanently remove ALL modules, days, and content associated with it.')) return;
@@ -82,11 +102,11 @@ export default function EventEditDialog({ event }: EventEditDialogProps) {
           </Button>
         )
       } />
-      <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden rounded-[3rem] border-none bg-white shadow-2xl">
+      <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden rounded-[3rem] border-none bg-white shadow-2xl">
         <div className="h-32 bg-gradient-to-br from-[#4A5DB5] to-[#1A1A2E] flex items-center px-10">
           <DialogTitle className="text-3xl font-black text-white">{event ? 'Edit Event' : 'Create Event'}</DialogTitle>
         </div>
-        <form onSubmit={handleSubmit} className="p-10 space-y-6">
+        <form onSubmit={handleSubmit} className="p-10 space-y-6 max-h-[75vh] overflow-y-auto custom-scrollbar">
           <div className="space-y-4">
             <div className="space-y-2">
               <Label className="text-[10px] font-black text-[#7182C7] uppercase tracking-widest px-2">Event Title</Label>
@@ -98,6 +118,7 @@ export default function EventEditDialog({ event }: EventEditDialogProps) {
                 className="h-14 rounded-2xl border-slate-200 bg-slate-50/50 px-6 font-bold focus:bg-white transition-all"
               />
             </div>
+            
             <div className="space-y-2">
               <Label className="text-[10px] font-black text-[#7182C7] uppercase tracking-widest px-2">Description</Label>
               <Input 
@@ -106,6 +127,71 @@ export default function EventEditDialog({ event }: EventEditDialogProps) {
                 placeholder="Briefly describe the event..."
                 className="h-14 rounded-2xl border-slate-200 bg-slate-50/50 px-6 font-bold focus:bg-white transition-all"
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black text-[#7182C7] uppercase tracking-widest px-2">Event Type</Label>
+              <Select onValueChange={handleTypeChange} defaultValue={formData.type}>
+                <SelectTrigger className="h-14 rounded-2xl border-slate-200 bg-slate-50/50 px-6 font-bold focus:bg-white transition-all">
+                  <SelectValue placeholder="Select event type" />
+                </SelectTrigger>
+                <SelectContent className="rounded-2xl border-none shadow-2xl bg-white p-2">
+                  <SelectItem value="bootcamp" className="rounded-xl font-bold py-3 hover:bg-slate-50">Bootcamp</SelectItem>
+                  <SelectItem value="internship" className="rounded-xl font-bold py-3 hover:bg-slate-50">Internship</SelectItem>
+                  <SelectItem value="workshop" className="rounded-xl font-bold py-3 hover:bg-slate-50">Workshop</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Feature Flags Section */}
+            <div className="space-y-3 pt-2">
+              <Label className="text-[10px] font-black text-[#7182C7] uppercase tracking-widest px-2">Feature Modules</Label>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center justify-between p-4 bg-slate-50/50 rounded-2xl border border-slate-100">
+                  <div className="flex items-center gap-2">
+                    <CalendarCheck size={16} className="text-[#4A5DB5]" />
+                    <span className="text-xs font-black text-[#1A1A2E]">Attendance</span>
+                  </div>
+                  <Switch 
+                    checked={formData.has_attendance}
+                    onCheckedChange={(checked) => setFormData({ ...formData, has_attendance: checked })}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between p-4 bg-slate-50/50 rounded-2xl border border-slate-100">
+                  <div className="flex items-center gap-2">
+                    <ClipboardList size={16} className="text-[#4A5DB5]" />
+                    <span className="text-xs font-black text-[#1A1A2E]">Projects</span>
+                  </div>
+                  <Switch 
+                    checked={formData.has_projects}
+                    onCheckedChange={(checked) => setFormData({ ...formData, has_projects: checked })}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between p-4 bg-slate-50/50 rounded-2xl border border-slate-100">
+                  <div className="flex items-center gap-2">
+                    <Target size={16} className="text-[#4A5DB5]" />
+                    <span className="text-xs font-black text-[#1A1A2E]">Quizzes</span>
+                  </div>
+                  <Switch 
+                    checked={formData.has_quizzes}
+                    onCheckedChange={(checked) => setFormData({ ...formData, has_quizzes: checked })}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between p-4 bg-slate-50/50 rounded-2xl border border-slate-100">
+                  <div className="flex items-center gap-2">
+                    <Award size={16} className="text-[#4A5DB5]" />
+                    <span className="text-xs font-black text-[#1A1A2E]">Capstone</span>
+                  </div>
+                  <Switch 
+                    checked={formData.has_capstone}
+                    onCheckedChange={(checked) => setFormData({ ...formData, has_capstone: checked })}
+                  />
+                </div>
+              </div>
             </div>
 
             <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
@@ -126,11 +212,12 @@ export default function EventEditDialog({ event }: EventEditDialogProps) {
               </Button>
             </div>
           </div>
-          <div className="flex gap-2">
+
+          <div className="flex gap-2 pt-2">
             <Button 
               type="submit" 
               disabled={isLoading}
-              className="flex-1 h-16 rounded-[1.5rem] bg-[#4A5DB5] hover:bg-[#2238A4] text-white font-black text-lg shadow-xl shadow-blue-500/20 mt-4 transition-all hover:scale-[1.02] active:scale-95"
+              className="flex-1 h-16 rounded-[1.5rem] bg-[#4A5DB5] hover:bg-[#2238A4] text-white font-black text-lg shadow-xl shadow-blue-500/20 transition-all hover:scale-[1.02] active:scale-95"
             >
               {isLoading ? <Loader2 className="animate-spin mr-2" /> : <BookOpen size={20} className="mr-2" />}
               {isLoading ? 'Saving...' : event ? 'Update Event' : 'Deploy Event'}
@@ -141,7 +228,7 @@ export default function EventEditDialog({ event }: EventEditDialogProps) {
                 onClick={handleDelete}
                 disabled={isLoading}
                 variant="outline"
-                className="h-16 w-16 rounded-[1.5rem] border-rose-100 text-rose-500 hover:bg-rose-50 hover:text-rose-600 mt-4 transition-all shadow-sm"
+                className="h-16 w-16 rounded-[1.5rem] border-rose-100 text-rose-500 hover:bg-rose-50 hover:text-rose-600 transition-all shadow-sm"
               >
                 <Trash2 size={24} />
               </Button>
@@ -152,3 +239,4 @@ export default function EventEditDialog({ event }: EventEditDialogProps) {
     </Dialog>
   );
 }
+

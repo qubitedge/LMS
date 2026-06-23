@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Trash2, Edit3, MoreVertical, Loader2, User, Mail, Shield, Lock, CheckCircle2, FileText, Eye, EyeOff } from 'lucide-react';
 import { 
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, 
@@ -42,6 +42,8 @@ export default function UserActions({ user }: UserActionsProps) {
   const [isTogglingStatus, setIsTogglingStatus] = useState(false);
   const [isPromoting, setIsPromoting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [events, setEvents] = useState<any[]>([]);
+  const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
   const [editData, setEditData] = useState({
     full_name: user.full_name,
     email: user.email,
@@ -51,6 +53,40 @@ export default function UserActions({ user }: UserActionsProps) {
   });
 
   const router = useRouter();
+
+  useEffect(() => {
+    if (showEditDialog && user.role === 'intern') {
+      const loadEnrollments = async () => {
+        try {
+          const supabaseClient = createClient();
+          
+          // Fetch active events
+          const { data: eventsData } = await supabaseClient
+            .from('events')
+            .select('id, title')
+            .eq('is_active', true);
+          setEvents(eventsData || []);
+
+          // Fetch user enrollments
+          const { data: enrolledData } = await supabaseClient
+            .from('user_enrollments')
+            .select('event_id')
+            .eq('user_id', user.id);
+          
+          setSelectedEvents((enrolledData || []).map((e: any) => e.event_id));
+        } catch (err) {
+          console.error('Failed to load user enrollments:', err);
+        }
+      };
+      loadEnrollments();
+    }
+  }, [showEditDialog, user.id, user.role]);
+
+  const handleToggleEvent = (eventId: string) => {
+    setSelectedEvents(prev => 
+      prev.includes(eventId) ? prev.filter(id => id !== eventId) : [...prev, eventId]
+    );
+  };
 
   const handleToggleStatus = async () => {
     setIsTogglingStatus(true);
@@ -156,6 +192,9 @@ export default function UserActions({ user }: UserActionsProps) {
       if (editData.password.trim() !== '') {
         payload.password = editData.password;
       }
+      if (user.role === 'intern') {
+        payload.eventIds = selectedEvents;
+      }
 
       const res = await fetch('/api/admin/update-user', {
         method: 'POST',
@@ -253,7 +292,7 @@ export default function UserActions({ user }: UserActionsProps) {
           <div className="h-24 bg-gradient-to-br from-[#4A5DB5] to-[#1A1A2E] flex items-center px-10">
             <DialogTitle className="text-2xl font-black text-white">Edit Intern Profile</DialogTitle>
           </div>
-          <div className="p-10 space-y-6">
+          <div className="p-10 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label className="text-[10px] font-black text-[#7182C7] uppercase tracking-widest px-2">Full Name</Label>
@@ -289,6 +328,38 @@ export default function UserActions({ user }: UserActionsProps) {
                   />
                 </div>
               </div>
+
+              {user.role === 'intern' && (
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black text-[#7182C7] uppercase tracking-widest px-2">Program Enrollments</Label>
+                  {events.length === 0 ? (
+                    <p className="text-xs font-bold text-slate-400 px-2">No active programs found.</p>
+                  ) : (
+                    <div className="space-y-2 max-h-36 overflow-y-auto p-2 bg-slate-50/50 rounded-2xl border border-slate-100 custom-scrollbar">
+                      {events.map((event) => (
+                        <div 
+                          key={event.id}
+                          onClick={() => handleToggleEvent(event.id)}
+                          className={`flex items-center justify-between p-3 rounded-xl cursor-pointer border transition-all ${
+                            selectedEvents.includes(event.id) 
+                              ? 'bg-white border-blue-200 shadow-sm text-[#4A5DB5]' 
+                              : 'bg-transparent border-transparent hover:bg-white text-slate-500'
+                          }`}
+                        >
+                          <span className="text-xs font-bold">{event.title}</span>
+                          <input 
+                            type="checkbox"
+                            checked={selectedEvents.includes(event.id)}
+                            onChange={() => {}}
+                            className="rounded border-slate-300 text-[#4A5DB5] focus:ring-[#4A5DB5]"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
               <div className="space-y-2">
                 <Label className="text-[10px] font-black text-[#7182C7] uppercase tracking-widest px-2">Category</Label>
                 <Select 

@@ -2,16 +2,73 @@ import { createClient } from '@/lib/supabase/server';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle2, Clock, CalendarX, XCircle } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
+import Link from 'next/link';
 import MarkAttendanceButton from './mark-attendance-button';
 import MarkPastAttendanceButton from './mark-past-attendance-button';
 
 export const revalidate = 60;
 
-export default async function AttendancePage() {
+interface AttendancePageProps {
+  searchParams: Promise<{ eventId?: string }>;
+}
+
+export default async function AttendancePage({ searchParams }: AttendancePageProps) {
+  const { eventId } = await searchParams;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) return null;
+
+  // Check if admin or intern to fetch respective programs
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
+  const isAdmin = profile?.role === 'admin';
+
+  let attendancePrograms: any[] = [];
+  if (isAdmin) {
+    const { data: activeEvents } = await supabase
+      .from('events')
+      .select('*')
+      .eq('is_active', true)
+      .eq('has_attendance', true)
+      .order('created_at', { ascending: true });
+    attendancePrograms = activeEvents || [];
+  } else {
+    const { data: enrollments } = await supabase
+      .from('user_enrollments')
+      .select('event_id, events(*)')
+      .eq('user_id', user.id);
+    attendancePrograms = enrollments
+      ?.map(e => e.events)
+      .filter((e: any) => e && e.has_attendance && e.is_active) || [];
+  }
+
+  if (attendancePrograms.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh]">
+        <Card className="qe-card border-none shadow-xl max-w-md w-full p-8 text-center bg-white/70 backdrop-blur-xl">
+          <CardContent className="pt-6">
+            <div className="w-16 h-16 bg-slate-50 border border-slate-100 rounded-[1.5rem] flex items-center justify-center mx-auto mb-6">
+              <CalendarX size={32} className="text-[#A0ACDC]" />
+            </div>
+            <h2 className="text-2xl font-black text-[#1A1A2E] mb-3" style={{ fontFamily: 'Playfair Display' }}>
+              No Attendance Tracked
+            </h2>
+            <p className="text-[#7182C7] text-sm leading-relaxed">
+              None of your enrolled programs have attendance tracking enabled at this time.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  const selectedEventId = eventId || attendancePrograms[0]?.id;
+  const currentProgram = attendancePrograms.find(p => p.id === selectedEventId) || attendancePrograms[0];
 
   const now = new Date();
   // Get date and hour in IST
@@ -21,7 +78,7 @@ export default async function AttendancePage() {
   const totalMinutes = istHour * 60 + istMinute;
   const isWithinWindow = totalMinutes >= 615 && totalMinutes < 840;
 
-  // Fetch settings, module days, and user attendance history in parallel
+  // Fetch settings, program-specific module days, and user attendance history in parallel
   const [settingsResult, allDaysResult, attendanceResult] = await Promise.all([
     supabase
       .from('site_settings')
@@ -29,13 +86,14 @@ export default async function AttendancePage() {
       .in('key', ['unlocked_days', 'attendance_unlocked']),
     supabase
       .from('days')
-      .select('id, date, topic')
-      .gte('date', '2026-05-18')
+      .select('id, date, topic, week:weeks!inner(event_id)')
+      .eq('week.event_id', currentProgram.id)
       .order('date', { ascending: true }),
     supabase
       .from('attendance')
       .select('*')
       .eq('user_id', user.id)
+      .eq('event_id', currentProgram.id)
   ]);
 
   const settings = settingsResult.data;
@@ -88,6 +146,27 @@ export default async function AttendancePage() {
         </p>
       </div>
 
+      {attendancePrograms.length > 1 && (
+        <div className="flex flex-wrap gap-3 mb-8">
+          {attendancePrograms.map((program) => {
+            const isActive = program.id === currentProgram.id;
+            return (
+              <Link
+                key={program.id}
+                href={`?eventId=${program.id}`}
+                className={`px-6 py-3 rounded-2xl font-black text-sm transition-all shadow-sm ${
+                  isActive
+                    ? 'bg-[#2238A4] text-white shadow-blue-500/20 scale-[1.02]'
+                    : 'bg-white hover:bg-slate-50 text-[#4A5DB5] border border-blue-50'
+                }`}
+              >
+                {program.title}
+              </Link>
+            );
+          })}
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         <div className="lg:col-span-1">
           <Card className="qe-card border-none shadow-xl text-center p-6">
@@ -122,7 +201,7 @@ export default async function AttendancePage() {
                             ? 'Window closed at 2:00 PM' 
                             : 'Window: 10:15 AM - 2:00 PM'}
                       </p>
-                      <MarkAttendanceButton disabled={!isWithinWindow} />
+                      <MarkAttendanceButton disabled={!isWithinWindow} eventId={currentProgram.id} />
                     </>
                   ) : (
                     <>
@@ -145,7 +224,7 @@ export default async function AttendancePage() {
                     <CalendarX size={48} className="text-[#A0ACDC]" />
                   </div>
                   <h3 className="text-2xl font-black text-[#A0ACDC] mb-2 uppercase tracking-tight">No Class Today</h3>
-                  <p className="text-xs font-bold text-[#A0ACDC] uppercase tracking-widest">Attendance is only available on module days.</p>
+                  <p className="text-xs font-bold text-[#A0ACDC] uppercase tracking-widest text-center">Attendance is only available on module days.</p>
                 </div>
               )}
             </CardContent>
@@ -220,7 +299,7 @@ export default async function AttendancePage() {
                               Unmarked
                             </span>
                           ) : (
-                            <MarkPastAttendanceButton date={moduleDay.date} />
+                            <MarkPastAttendanceButton date={moduleDay.date} eventId={currentProgram.id} />
                           )}
                         </div>
                       </div>

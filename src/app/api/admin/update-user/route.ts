@@ -5,7 +5,7 @@ import { revalidatePath } from 'next/cache';
 export async function POST(req: Request) {
   try {
     const adminAuthClient = createAdminClient();
-    const { id, email, password, full_name, domain, role, is_active, address } = await req.json();
+    const { id, email, password, full_name, domain, role, is_active, address, eventIds } = await req.json();
 
     if (!id) {
       return NextResponse.json({ message: 'User ID is required' }, { status: 400 });
@@ -43,6 +43,31 @@ export async function POST(req: Request) {
       if (profileError) throw profileError;
     }
 
+    // 3. Update Enrollments if eventIds is provided
+    if (eventIds && Array.isArray(eventIds)) {
+      // Delete existing enrollments
+      const { error: deleteError } = await adminAuthClient
+        .from('user_enrollments')
+        .delete()
+        .eq('user_id', id);
+
+      if (deleteError) throw deleteError;
+
+      // Insert new enrollments
+      if (eventIds.length > 0) {
+        const enrollments = eventIds.map((eventId: string) => ({
+          user_id: id,
+          event_id: eventId,
+        }));
+
+        const { error: enrollError } = await adminAuthClient
+          .from('user_enrollments')
+          .insert(enrollments);
+
+        if (enrollError) throw enrollError;
+      }
+    }
+
     revalidatePath('/admin/users');
     return NextResponse.json({ success: true });
     
@@ -50,3 +75,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: error.message || 'Internal Server Error' }, { status: 500 });
   }
 }
+

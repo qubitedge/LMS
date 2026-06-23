@@ -6,8 +6,8 @@
 
 # Test info
 
-- Name: frontend.spec.ts >> Frontend Route Testing >> Public pages should be accessible
-- Location: tests\frontend.spec.ts:14:7
+- Name: frontend.spec.ts >> Frontend Route Testing >> Unauthenticated user should be redirected from /leaderboard to login
+- Location: tests\frontend.spec.ts:7:9
 
 # Error details
 
