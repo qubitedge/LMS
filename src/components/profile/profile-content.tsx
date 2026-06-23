@@ -138,14 +138,15 @@ export default function ProfileContent({ initialProfile, stats }: ProfileContent
         body: JSON.stringify({ password: newPassword }),
       });
 
-      if (!res.ok) throw new Error('Failed to update password');
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Failed to update password');
 
       toast.success('Password changed successfully!');
       setShowPasswordDialog(false);
       setNewPassword('');
       setShowNewPassword(false);
-    } catch (error) {
-      toast.error('Failed to update password');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to update password');
     } finally {
       setIsUpdatingPassword(false);
     }
